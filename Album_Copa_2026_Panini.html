@@ -1,0 +1,1793 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+<meta name="theme-color" content="#0F4C5C">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="mobile-web-app-capable" content="yes">
+<title>Álbum Copa do Mundo 2026 · Panini</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E🏆%3C/text%3E%3C/svg%3E">
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { background: #F5F7FA; min-height: 100vh; }
+body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; color: #1F2937; padding: 14px; max-width: 1100px; margin: 0 auto; line-height: 1.4; }
+
+/* Tela de autenticação */
+.auth-container { display: none; position: fixed; inset: 0; background: linear-gradient(135deg, #0F4C5C 0%, #185FA5 100%); z-index: 10000; align-items: center; justify-content: center; padding: 20px; }
+.auth-container.show { display: flex; }
+.auth-card { background: #fff; border-radius: 16px; width: 100%; max-width: 360px; padding: 32px 24px; box-shadow: 0 10px 40px rgba(0,0,0,0.15); }
+.auth-header { text-align: center; margin-bottom: 28px; }
+.auth-header .icon { font-size: 48px; margin-bottom: 12px; }
+.auth-header h1 { color: #0F4C5C; font-size: 20px; font-weight: 700; margin-bottom: 4px; }
+.auth-header p { color: #6B7280; font-size: 13px; }
+.auth-form { display: none; }
+.auth-form.show { display: block; }
+.auth-form-group { margin-bottom: 16px; }
+.auth-form-group label { display: block; color: #1F2937; font-size: 12px; font-weight: 600; margin-bottom: 6px; }
+.auth-form-group input, .auth-form-group select { width: 100%; padding: 10px 12px; border: 1px solid #E5E7EB; border-radius: 8px; font-size: 14px; font-family: inherit; }
+.auth-form-group input:focus, .auth-form-group select:focus { outline: none; border-color: #185FA5; box-shadow: 0 0 0 3px rgba(24,95,165,0.1); }
+.auth-btn { width: 100%; padding: 11px; background: #0F4C5C; color: #fff; border: none; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; margin-top: 8px; }
+.auth-btn:hover { background: #0B3F4A; }
+.auth-btn.secondary { background: #E6F1FB; color: #0F4C5C; margin-top: 12px; }
+.auth-btn.secondary:hover { background: #DBEAFE; }
+.auth-divider { text-align: center; margin: 20px 0; position: relative; }
+.auth-divider::before { content: ""; position: absolute; top: 50%; left: 0; right: 0; height: 1px; background: #E5E7EB; }
+.auth-divider span { background: #fff; padding: 0 10px; color: #6B7280; font-size: 12px; position: relative; }
+.auth-message { padding: 12px; border-radius: 8px; font-size: 12px; margin-bottom: 16px; }
+.auth-message.error { background: #FEE2E2; color: #991B1B; }
+.auth-message.success { background: #DBEAFE; color: #0C4A6E; }
+.auth-link { text-align: center; margin-top: 16px; color: #6B7280; font-size: 12px; }
+.auth-link a { color: #185FA5; cursor: pointer; text-decoration: none; font-weight: 600; }
+.auth-link a:hover { text-decoration: underline; }
+.cidades-lista { max-height: 200px; overflow-y: auto; background: #F8FAFC; border: 1px solid #E5E7EB; border-radius: 8px; padding: 8px; margin-top: 4px; display: none; }
+.cidades-lista.show { display: block; }
+.cidades-lista .cidade { padding: 8px; cursor: pointer; border-radius: 4px; font-size: 13px; color: #1F2937; }
+.cidades-lista .cidade:hover { background: #E6F1FB; }
+
+/* App principal */
+.app-container { display: none; }
+.app-container.show { display: block; }
+
+.hero { background: linear-gradient(135deg, #0F4C5C 0%, #0B3F4A 100%); color: #fff; padding: 22px 24px; border-radius: 14px; margin-bottom: 16px; position: relative; overflow: hidden; }
+.hero::before { content: ""; position: absolute; top: -50px; right: -50px; width: 180px; height: 180px; background: rgba(255,255,255,0.05); border-radius: 50%; }
+.hero .tag { display: inline-block; background: rgba(255,255,255,0.18); padding: 4px 10px; border-radius: 12px; font-size: 10px; font-weight: 700; margin-bottom: 8px; letter-spacing: 0.5px; position: relative; }
+.hero h1 { font-size: 22px; font-weight: 700; margin: 0 0 4px; color: #fff; position: relative; }
+.hero p { font-size: 13px; margin: 0; color: #B5D4F4; position: relative; }
+.hero .user-bar { margin-top: 12px; display: flex; gap: 8px; align-items: center; position: relative; flex-wrap: wrap; }
+.user-pill { background: rgba(255,255,255,0.2); color: #fff; padding: 5px 12px; border-radius: 14px; font-size: 12px; font-weight: 600; border: none; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; }
+.user-pill:hover { background: rgba(255,255,255,0.3); }
+.status-indicator { width: 10px; height: 10px; border-radius: 50%; display: inline-block; margin-right: 4px; }
+.status-indicator.sincronizado { background: #10B981; }
+.status-indicator.salvando { background: #F59E0B; animation: pulse 1s infinite; }
+.status-indicator.offline { background: #EF4444; }
+.status-indicator.conectando { background: #94A3B8; animation: pulse 1s infinite; }
+@keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+
+.tabs { display: flex; gap: 4px; margin-bottom: 16px; background: #F1F5F9; padding: 4px; border-radius: 10px; overflow-x: auto; }
+.tabs::-webkit-scrollbar { display: none; }
+.tab { flex: 1; min-width: 76px; padding: 10px 12px; font-size: 12px; font-weight: 600; cursor: pointer; border: none; background: transparent; color: #64748B; border-radius: 7px; white-space: nowrap; }
+.tab.active { background: #fff; color: #0F4C5C; box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
+
+.kpis { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 16px; }
+.kpi { background: #fff; border: 1px solid #E5E7EB; border-radius: 10px; padding: 12px; }
+.kpi-lbl { font-size: 10px; color: #6B7280; font-weight: 700; text-transform: uppercase; letter-spacing: 0.3px; margin-bottom: 4px; }
+.kpi-val { font-size: 24px; font-weight: 700; color: #0B3F4A; line-height: 1; }
+.kpi.tenho { background: #E6F1FB; }
+.kpi.tenho .kpi-val { color: #185FA5; }
+.kpi.falta { background: #F8FAFC; }
+.kpi.rep { background: #DBEAFE; }
+.kpi.rep .kpi-val { color: #1E40AF; }
+
+.prog { background: linear-gradient(135deg, #0F4C5C 0%, #185FA5 100%); border-radius: 12px; padding: 18px 20px; margin-bottom: 16px; color: #fff; }
+.prog-top { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 10px; }
+.prog-top .lbl { font-size: 13px; font-weight: 600; opacity: 0.9; }
+.prog-top .pct { font-size: 26px; font-weight: 700; }
+.prog-bg { height: 10px; background: rgba(255,255,255,0.2); border-radius: 8px; overflow: hidden; }
+.prog-fl { height: 100%; background: #F4C430; border-radius: 8px; transition: width 0.3s; }
+.prog-bot { display: flex; justify-content: space-between; margin-top: 8px; font-size: 12px; opacity: 0.85; }
+
+.sec-ttl { font-size: 14px; font-weight: 700; color: #0F4C5C; margin: 20px 0 10px; }
+
+.gp { background: #fff; border: 1px solid #E5E7EB; border-radius: 10px; padding: 12px 14px; margin-bottom: 8px; }
+.gp-top { display: flex; justify-content: space-between; gap: 10px; margin-bottom: 7px; }
+.gp-name { font-size: 13px; font-weight: 600; color: #0F4C5C; flex: 1; }
+.gp-name small { display: block; color: #6B7280; font-weight: 400; font-size: 11px; margin-top: 2px; }
+.gp-pct { font-size: 14px; font-weight: 700; color: #185FA5; }
+.gp-bg { height: 6px; background: #F1F5F9; border-radius: 5px; overflow: hidden; }
+.gp-fl { height: 100%; background: linear-gradient(90deg, #0F4C5C, #185FA5); border-radius: 5px; transition: width 0.3s; }
+.gp-stats { display: flex; gap: 14px; margin-top: 7px; font-size: 11px; color: #6B7280; }
+.gp-stats strong { color: #1F2937; }
+
+.acts { display: flex; gap: 6px; margin-bottom: 12px; flex-wrap: wrap; }
+.btn { background: #fff; border: 1px solid #E5E7EB; border-radius: 8px; padding: 8px 13px; font-size: 12px; font-weight: 600; color: #0F4C5C; cursor: pointer; display: inline-flex; align-items: center; gap: 5px; }
+.btn:hover { background: #E6F1FB; border-color: #185FA5; }
+.btn.danger { color: #B91C1C; }
+.btn.danger:hover { background: #FEE2E2; border-color: #DC2626; }
+.btn.primary { background: #0F4C5C; color: #fff; border-color: #0F4C5C; }
+.btn.primary:hover { background: #0B3F4A; }
+
+.leg { background: #F8FAFC; border-radius: 9px; padding: 9px 14px; margin-bottom: 14px; display: flex; gap: 16px; flex-wrap: wrap; font-size: 11px; color: #475569; align-items: center; }
+.leg-item { display: flex; align-items: center; gap: 6px; }
+.leg-box { width: 14px; height: 14px; border-radius: 3px; border: 1px solid #E5E7EB; }
+.leg .hint { margin-left: auto; color: #94A3B8; font-style: italic; font-size: 10px; }
+
+.card { background: #fff; border: 1px solid #E5E7EB; border-radius: 11px; margin-bottom: 10px; overflow: hidden; }
+.card.open { border-color: #B5D4F4; box-shadow: 0 2px 8px rgba(15,76,92,0.06); }
+.head { background: linear-gradient(135deg, #0F4C5C 0%, #185FA5 100%); color: #fff; padding: 12px 16px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; user-select: none; gap: 10px; }
+.head.esp { background: linear-gradient(135deg, #185FA5 0%, #378ADD 100%); }
+.head-ttl { font-size: 13px; font-weight: 700; color: #fff; display: flex; align-items: center; gap: 8px; flex: 1; }
+.head-bdg { background: rgba(255,255,255,0.22); padding: 2px 8px; border-radius: 7px; font-size: 10px; font-weight: 700; }
+.head-st { font-size: 11px; color: #DBEAFE; display: flex; gap: 10px; align-items: center; }
+.chev { transition: transform 0.2s; }
+.card.open .chev { transform: rotate(180deg); }
+.body { display: none; }
+.card.open .body { display: block; }
+
+.row { padding: 12px 16px; border-top: 1px solid #F1F5F9; }
+.row:first-child { border-top: none; }
+.row-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 9px; gap: 8px; flex-wrap: wrap; }
+.row-left { display: flex; align-items: center; gap: 10px; flex: 1; }
+.cod { font-size: 11px; font-weight: 700; color: #fff; background: #0F4C5C; padding: 4px 10px; border-radius: 6px; min-width: 44px; text-align: center; }
+.name { font-size: 13px; font-weight: 600; color: #0F4C5C; }
+.cnt { font-size: 11px; color: #6B7280; font-weight: 600; background: #F1F5F9; padding: 4px 10px; border-radius: 10px; }
+.cnt strong { color: #185FA5; }
+
+.nums { display: grid; grid-template-columns: repeat(20, 1fr); gap: 4px; }
+.nums.cc { grid-template-columns: repeat(14, 1fr); }
+.num { aspect-ratio: 1; min-width: 22px; min-height: 26px; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 700; border-radius: 6px; cursor: pointer; user-select: none; border: 1px solid #E5E7EB; background: #fff; color: #94A3B8; position: relative; transition: all 0.1s; -webkit-tap-highlight-color: transparent; }
+.num:hover { border-color: #185FA5; transform: scale(1.08); z-index: 1; }
+.num.tem { background: linear-gradient(135deg, #185FA5, #0F4C5C); color: #fff; border-color: #0F4C5C; box-shadow: 0 1px 3px rgba(15,76,92,0.2); }
+.num.rep { background: linear-gradient(135deg, #DBEAFE, #BFDBFE); color: #1E3A8A; border-color: #378ADD; }
+.num.rep::after { content: attr(data-qtd); position: absolute; top: -5px; right: -5px; background: #F4C430; color: #0B3F4A; font-size: 9px; padding: 1px 5px; border-radius: 8px; font-weight: 700; border: 1.5px solid #fff; box-shadow: 0 1px 2px rgba(0,0,0,0.15); }
+
+.empty { text-align: center; padding: 36px 20px; color: #94A3B8; font-size: 13px; background: #F8FAFC; border-radius: 11px; }
+.empty .big { font-size: 40px; color: #B5D4F4; margin-bottom: 10px; }
+
+.tr { background: #fff; border: 1px solid #E5E7EB; border-radius: 10px; padding: 11px 14px; margin-bottom: 7px; display: flex; justify-content: space-between; align-items: center; gap: 10px; }
+.tr-l { display: flex; align-items: center; gap: 10px; flex: 1; min-width: 0; }
+.tr-c { background: #E6F1FB; color: #0F4C5C; padding: 5px 10px; border-radius: 6px; font-size: 11px; font-weight: 700; min-width: 50px; text-align: center; }
+.tr-i { font-size: 13px; min-width: 0; }
+.tr-i strong { color: #0F4C5C; display: block; }
+.tr-i small { color: #6B7280; font-size: 11px; }
+.tr-q { background: linear-gradient(135deg, #F4C430, #E0B52A); color: #0B3F4A; padding: 5px 12px; border-radius: 11px; font-size: 12px; font-weight: 700; }
+
+.friend-card { background: #fff; border: 1px solid #E5E7EB; border-radius: 11px; padding: 14px; margin-bottom: 12px; }
+.friend-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; }
+.friend-name { font-size: 14px; font-weight: 600; color: #0F4C5C; }
+.friend-city { font-size: 11px; color: #6B7280; margin-top: 2px; }
+.friend-status { font-size: 11px; padding: 3px 8px; border-radius: 6px; background: #E6F1FB; color: #0F4C5C; font-weight: 600; }
+.friend-matches { margin-top: 10px; }
+.match-item { font-size: 12px; color: #475569; padding: 6px 0; border-top: 1px solid #F1F5F9; }
+.match-item:first-child { border-top: none; padding-top: 0; }
+.match-label { color: #6B7280; }
+.match-count { color: #0F4C5C; font-weight: 600; }
+
+.print-opt { display: flex; gap: 13px; align-items: center; padding: 14px; background: #fff; border: 1px solid #E5E7EB; border-radius: 10px; cursor: pointer; margin-bottom: 8px; transition: all 0.15s; }
+.print-opt:hover { border-color: #185FA5; background: #E6F1FB; }
+.print-ic { background: linear-gradient(135deg, #0F4C5C, #185FA5); color: #fff; width: 42px; height: 42px; border-radius: 9px; display: flex; align-items: center; justify-content: center; font-size: 19px; flex-shrink: 0; }
+.print-ic.am { background: linear-gradient(135deg, #F4C430, #E0B52A); color: #0B3F4A; }
+.print-tx { flex: 1; min-width: 0; }
+.print-tx strong { display: block; color: #0F4C5C; font-size: 13px; }
+.print-tx small { color: #6B7280; font-size: 11px; }
+
+.modal-bg { display: none; position: fixed; inset: 0; background: rgba(15,76,92,0.6); z-index: 9999; align-items: center; justify-content: center; padding: 20px; }
+.modal-bg.show { display: flex; }
+.modal { background: #fff; border-radius: 14px; max-width: 480px; width: 100%; padding: 22px; max-height: 90vh; overflow-y: auto; }
+.modal h2 { color: #0F4C5C; font-size: 18px; margin-bottom: 6px; }
+.modal p { color: #6B7280; font-size: 13px; margin-bottom: 16px; }
+.modal-sec { background: #F8FAFC; border: 1px solid #E5E7EB; border-radius: 10px; padding: 14px; margin-bottom: 12px; }
+.modal-sec h3 { color: #0F4C5C; font-size: 13px; font-weight: 700; margin-bottom: 6px; display: flex; align-items: center; gap: 6px; }
+.modal-sec p { font-size: 12px; margin-bottom: 10px; }
+.modal-foot { display: flex; gap: 8px; justify-content: flex-end; margin-top: 12px; flex-wrap: wrap; }
+
+.toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%); background: #0F4C5C; color: #fff; padding: 11px 18px; border-radius: 24px; font-size: 13px; font-weight: 600; box-shadow: 0 4px 14px rgba(0,0,0,0.2); opacity: 0; pointer-events: none; transition: opacity 0.2s; z-index: 10000; max-width: 90vw; text-align: center; }
+.toast.show { opacity: 1; }
+
+@media (max-width: 700px) {
+  body { padding: 10px; }
+  .hero { padding: 18px 20px; }
+  .hero h1 { font-size: 19px; }
+  .kpis { grid-template-columns: repeat(2, 1fr); }
+  .row-head { flex-direction: column; align-items: flex-start; }
+  .cnt { align-self: flex-end; }
+  .nums { grid-template-columns: repeat(10, 1fr); }
+  .nums.cc { grid-template-columns: repeat(7, 1fr); }
+  .num { font-size: 11px; min-height: 30px; }
+  .head-st { font-size: 10px; gap: 7px; }
+  .head-ttl { font-size: 12px; }
+  .tab { font-size: 11px; padding: 9px 10px; }
+  .gp-stats { gap: 10px; flex-wrap: wrap; }
+}
+@media (max-width: 420px) {
+  .nums, .nums.cc { grid-template-columns: repeat(7, 1fr); }
+  .num { font-size: 11px; min-height: 32px; }
+}
+
+/* BADGE CHAT */
+.chat-badge { background: #EF4444; color: #fff; border-radius: 10px; font-size: 9px; font-weight: 700; padding: 1px 5px; margin-left: 3px; display: none; vertical-align: middle; }
+
+/* LISTA DE CONVERSAS */
+.chat-conv-item { display: flex; align-items: center; gap: 12px; padding: 12px 4px; border-bottom: 1px solid #F1F5F9; cursor: pointer; border-radius: 8px; }
+.chat-conv-item:hover { background: #F8FAFC; padding-left: 8px; }
+.chat-avatar { width: 40px; height: 40px; border-radius: 50%; background: linear-gradient(135deg, #0F4C5C, #185FA5); color: #fff; display: flex; align-items: center; justify-content: center; font-size: 16px; font-weight: 700; flex-shrink: 0; }
+.chat-conv-info { flex: 1; min-width: 0; }
+.chat-conv-name { font-size: 13px; font-weight: 600; color: #0F4C5C; }
+.chat-conv-prev { font-size: 11px; color: #6B7280; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-top: 2px; }
+.chat-conv-time { font-size: 10px; color: #94A3B8; flex-shrink: 0; }
+.chat-conv-unread { background: #EF4444; color: #fff; border-radius: 10px; font-size: 10px; font-weight: 700; padding: 2px 6px; flex-shrink: 0; }
+
+/* TELA DE CONVERSA */
+.chat-header { display: flex; align-items: center; gap: 10px; padding: 10px 0 12px; border-bottom: 1px solid #E5E7EB; margin-bottom: 0; }
+.chat-header-name { flex: 1; font-size: 15px; font-weight: 700; color: #0F4C5C; }
+.chat-mensagens { min-height: 280px; max-height: 52vh; overflow-y: auto; padding: 12px 0; display: flex; flex-direction: column; gap: 6px; }
+.chat-bubble-wrap { display: flex; }
+.chat-bubble-wrap.minha { justify-content: flex-end; }
+.chat-bubble-wrap.dele { justify-content: flex-start; }
+.chat-bubble { max-width: 78%; padding: 9px 13px; border-radius: 14px; font-size: 13px; line-height: 1.4; word-break: break-word; }
+.chat-bubble.minha { background: linear-gradient(135deg, #0F4C5C, #185FA5); color: #fff; border-bottom-right-radius: 4px; }
+.chat-bubble.dele { background: #F1F5F9; color: #1F2937; border-bottom-left-radius: 4px; }
+.chat-meta { font-size: 10px; margin-top: 4px; opacity: 0.75; text-align: right; }
+.chat-bubble.dele .chat-meta { text-align: left; }
+.chat-input-area { display: flex; gap: 8px; padding: 12px 0 4px; border-top: 1px solid #E5E7EB; margin-top: 6px; }
+.chat-input { flex: 1; padding: 10px 13px; border: 1px solid #E5E7EB; border-radius: 22px; font-size: 13px; font-family: inherit; outline: none; }
+.chat-input:focus { border-color: #185FA5; box-shadow: 0 0 0 3px rgba(24,95,165,0.1); }
+.chat-input:disabled { background: #F1F5F9; color: #94A3B8; }
+
+/* ADMIN */
+.admin-user-card { background: #fff; border: 1px solid #E5E7EB; border-radius: 10px; padding: 13px 14px; margin-bottom: 8px; display: flex; align-items: flex-start; gap: 12px; }
+.admin-user-info { flex: 1; min-width: 0; }
+.admin-user-name { font-size: 14px; font-weight: 700; color: #0F4C5C; }
+.admin-user-detail { font-size: 11px; color: #6B7280; margin-top: 3px; }
+.admin-user-actions { display: flex; flex-direction: column; gap: 4px; flex-shrink: 0; }
+.admin-status-badge { font-size: 11px; padding: 3px 8px; border-radius: 6px; font-weight: 600; display: inline-block; margin-top: 4px; }
+.admin-status-badge.ativo { background: #D1FAE5; color: #065F46; }
+.admin-status-badge.banido { background: #FEE2E2; color: #991B1B; }
+.admin-msg-card { background: #fff; border: 1px solid #E5E7EB; border-radius: 10px; padding: 13px 14px; margin-bottom: 8px; }
+.admin-msg-card.nao-lido { border-color: #185FA5; background: #EFF6FF; }
+.admin-msg-header { font-size: 12px; color: #0F4C5C; margin-bottom: 8px; }
+.admin-msg-texto { font-size: 13px; color: #1F2937; background: #F8FAFC; border-radius: 8px; padding: 10px 12px; }
+
+/* BLOQUEADOS NO PERFIL */
+.blocked-item { display: flex; align-items: center; justify-content: space-between; padding: 8px 0; border-top: 1px solid #F1F5F9; font-size: 12px; color: #1F2937; }
+.blocked-item:first-child { border-top: none; }
+</style>
+</head>
+<body>
+
+<!-- Tela de Autenticação -->
+<div class="auth-container show" id="auth-container">
+  <div class="auth-card">
+    <div class="auth-header">
+      <div class="icon">🏆</div>
+      <h1>Álbum Copa 2026</h1>
+      <p>Controle e troque figurinhas com amigos</p>
+    </div>
+
+    <div id="auth-message"></div>
+
+    <!-- Formulário de Login -->
+    <div class="auth-form show" id="form-login">
+      <div class="auth-form-group">
+        <label>📧 E-mail</label>
+        <input type="email" id="login-email" placeholder="seu@email.com" autocomplete="email">
+      </div>
+      <div class="auth-form-group">
+        <label>🔐 Senha</label>
+        <input type="password" id="login-password" placeholder="Digite sua senha" autocomplete="current-password">
+      </div>
+      <button class="auth-btn" onclick="fnEntrar()">Entrar</button>
+      <div class="auth-link">
+        Não tem conta? <a onclick="trocarFormulario('signup')">Criar conta</a>
+      </div>
+      <div class="auth-divider"><span>ou</span></div>
+      <button class="auth-btn secondary" onclick="trocarFormulario('reset')">Esqueci a senha</button>
+    </div>
+
+    <!-- Formulário de Cadastro -->
+    <div class="auth-form" id="form-signup">
+      <div class="auth-form-group">
+        <label>😊 Apelido (como você quer ser visto)</label>
+        <input type="text" id="signup-apelido" placeholder="Ex: João, Marina..." maxlength="30">
+      </div>
+      <div class="auth-form-group">
+        <label>📧 E-mail</label>
+        <input type="email" id="signup-email" placeholder="seu@email.com" autocomplete="email">
+      </div>
+      <div class="auth-form-group">
+        <label>🔐 Senha (mínimo 6 caracteres)</label>
+        <input type="password" id="signup-password" placeholder="Digite uma senha segura" autocomplete="new-password">
+      </div>
+      <div class="auth-form-group">
+        <label>📍 Sua cidade</label>
+        <input type="text" id="signup-cidade" placeholder="Ex: João Monlevade, Belo Horizonte..." autocomplete="off">
+        <div class="cidades-lista" id="cidades-sugestoes"></div>
+      </div>
+      <button class="auth-btn" onclick="fnCadastrar()">Criar conta e entrar</button>
+      <div class="auth-link">
+        Já tem conta? <a onclick="trocarFormulario('login')">Fazer login</a>
+      </div>
+    </div>
+
+    <!-- Formulário de Recuperação de Senha -->
+    <div class="auth-form" id="form-reset">
+      <div class="auth-form-group">
+        <label>📧 E-mail</label>
+        <input type="email" id="reset-email" placeholder="seu@email.com" autocomplete="email">
+      </div>
+      <p style="font-size: 12px; color: #6B7280; margin-bottom: 16px;">Enviaremos um link para redefinir sua senha.</p>
+      <button class="auth-btn" onclick="fnEnviarReset()">Enviar link de redefinição</button>
+      <div class="auth-link">
+        <a onclick="trocarFormulario('login')">← Voltar para login</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- App Principal -->
+<div class="app-container" id="app-container">
+
+<div class="hero">
+  <span class="tag">FIFA WORLD CUP 2026</span>
+  <h1>🏆 Álbum Panini · Copa do Mundo</h1>
+  <p>Controle interativo da coleção · sincronizado em tempo real</p>
+  <div class="user-bar">
+    <button class="user-pill" id="user-btn">
+      <span class="status-indicator sincronizado" id="status-indicator"></span>
+      👤 <span id="user-name">Usuário</span> · <span id="user-cidade">Cidade</span>
+    </button>
+    <button class="user-pill" onclick="fnSair()">🚪 Sair</button>
+  </div>
+</div>
+
+<div class="tabs">
+  <button class="tab active" data-tab="dashboard">📊 Dashboard</button>
+  <button class="tab" data-tab="controle">📋 Controle</button>
+  <button class="tab" data-tab="trocas">🔄 Trocas</button>
+  <button class="tab" data-tab="chat">💬 Chat<span class="chat-badge" id="chat-badge"></span></button>
+  <button class="tab" data-tab="imprimir">🖨️ Imprimir</button>
+  <button class="tab" data-tab="admin" id="tab-admin" style="display:none">🛡️ Admin</button>
+</div>
+
+<div id="content"></div>
+
+<!-- Modal de Perfil -->
+<div class="modal-bg" id="modal-perfil">
+  <div class="modal">
+    <h2>👤 Meu Perfil</h2>
+    <div class="modal-sec">
+      <h3>Informações da conta</h3>
+      <p><strong>Apelido:</strong> <span id="perfil-apelido">-</span></p>
+      <p><strong>E-mail:</strong> <span id="perfil-email">-</span></p>
+      <p><strong>Cidade:</strong> <span id="perfil-cidade">-</span></p>
+      <p><strong>Membro desde:</strong> <span id="perfil-data">-</span></p>
+    </div>
+    <div class="modal-sec">
+      <h3>🚫 Usuários bloqueados</h3>
+      <div id="perfil-bloqueados"><p style="font-size:12px;color:#6B7280">Nenhum usuário bloqueado</p></div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn" onclick="abrirContatoDev()" style="margin-right:auto">📩 Falar com Dev</button>
+      <button class="btn danger" onclick="fnMudarSenha()">🔐 Mudar senha</button>
+      <button class="btn" onclick="fecharModal('modal-perfil')">Fechar</button>
+    </div>
+  </div>
+</div>
+
+</div>
+
+<!-- Modal Falar com o Desenvolvedor -->
+<div class="modal-bg" id="modal-contato-dev">
+  <div class="modal">
+    <h2>📩 Falar com o Desenvolvedor</h2>
+    <p>Envie uma dúvida, sugestão ou relate um problema.</p>
+    <div class="modal-sec">
+      <h3>Sua mensagem</h3>
+      <textarea id="contato-dev-texto" style="width:100%;min-height:120px;padding:10px;border:1px solid #E5E7EB;border-radius:8px;font-family:inherit;font-size:13px;resize:vertical;outline:none" placeholder="Digite aqui..."></textarea>
+    </div>
+    <div class="modal-foot">
+      <button class="btn" onclick="fecharModal('modal-contato-dev')">Cancelar</button>
+      <button class="btn primary" onclick="enviarMensagemDev()">📤 Enviar</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast" class="toast"></div>
+
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+
+<script>
+// ============================================================
+// FIREBASE CONFIG - SUBSTITUA COM SUAS CREDENCIAIS!
+// ============================================================
+const firebaseConfig = {
+  apiKey: "AIzaSyCJqB0T2jx3-7t5NhX26gBp1Ca49Bqbjwk",
+  authDomain: "album-copa-2026-66cf6.firebaseapp.com",
+  projectId: "album-copa-2026-66cf6",
+  storageBucket: "album-copa-2026-66cf6.firebasestorage.app",
+  messagingSenderId: "715434634506",
+  appId: "1:715434634506:web:5cb0e5b2d34804d6bf9ef3"
+};
+
+firebase.initializeApp(firebaseConfig);
+const auth = firebase.auth();
+const db = firebase.firestore();
+
+// Habilitar persistência offline
+db.enablePersistence().catch((err) => {
+  if (err.code === 'failed-precondition') {
+    console.log('Persistência offline indisponível');
+  }
+});
+
+// ============================================================
+// DADOS E ESTADO
+// ============================================================
+var GRUPOS = {
+  A: [["México","MEX"],["África do Sul","RSA"],["Coréia do Sul","KOR"],["Rep. Tcheca","CZE"]],
+  B: [["Canadá","CAN"],["Bósnia","BIH"],["Catar","QAT"],["Suíça","SUI"]],
+  C: [["Brasil","BRA"],["Marrocos","MAR"],["Haiti","HAI"],["Escócia","SCO"]],
+  D: [["Estados Unidos","USA"],["Paraguai","PAR"],["Austrália","AUS"],["Turquia","TUR"]],
+  E: [["Alemanha","GER"],["Curaçao","CUW"],["Costa do Marfim","CIV"],["Equador","ECU"]],
+  F: [["Holanda","NED"],["Japão","JPN"],["Suécia","SWE"],["Tunísia","TUN"]],
+  G: [["Bélgica","BEL"],["Egito","EGY"],["Irã","IRN"],["Nova Zelândia","NZL"]],
+  H: [["Espanha","ESP"],["Cabo Verde","CPV"],["Arábia Saudita","KSA"],["Uruguai","URU"]],
+  I: [["França","FRA"],["Senegal","SEN"],["Iraque","IRQ"],["Noruega","NOR"]],
+  J: [["Argentina","ARG"],["Argélia","ALG"],["Áustria","AUT"],["Jordânia","JOR"]],
+  K: [["Portugal","POR"],["Congo","COD"],["Uzbequistão","UZB"],["Colômbia","COL"]],
+  L: [["Inglaterra","ENG"],["Croácia","CRO"],["Gana","GHA"],["Panamá","PAN"]]
+};
+
+const TOTAL = 48*20 + 20 + 14;
+const CIDADES_BR = [
+  "João Monlevade", "Belo Horizonte", "Brasília", "Rio de Janeiro", "São Paulo",
+  "Curitiba", "Porto Alegre", "Salvador", "Fortaleza", "Recife", "Goiânia",
+  "Manaus", "Belém", "Cuiabá", "Campo Grande", "Maceió", "Teresina", "Natal",
+  "João Pessoa", "Vitória", "Aracaju", "Florianópolis", "Santa Maria"
+].sort();
+
+var currentUser = null;
+var userData = {};
+var dados = {};
+var abertos = {};
+var syncStatus = 'conectando';
+var unsubscribeFn = null;
+var bloqueados = [];
+var chatAtivo = null;
+var chatConvUnsubscribe = null;
+var chatsListUnsubscribe = null;
+var badgeUnsubscribe = null;
+
+// ============================================================
+// AUTENTICAÇÃO
+// ============================================================
+auth.onAuthStateChanged((user) => {
+  if (user) {
+    currentUser = user;
+    carregarPerfil();
+    esconderAuth();
+    mostraApp();
+    inicializarSincronizacao();
+    carregarBloqueados();
+    iniciarBadgeChat();
+  } else {
+    currentUser = null;
+    bloqueados = [];
+    chatAtivo = null;
+    if (chatsListUnsubscribe) { chatsListUnsubscribe(); chatsListUnsubscribe = null; }
+    if (chatConvUnsubscribe) { chatConvUnsubscribe(); chatConvUnsubscribe = null; }
+    if (badgeUnsubscribe) { badgeUnsubscribe(); badgeUnsubscribe = null; }
+    mostrarAuth();
+    esconderApp();
+  }
+});
+
+function mostrarAuth() {
+  document.getElementById('auth-container').classList.add('show');
+}
+
+function esconderAuth() {
+  document.getElementById('auth-container').classList.remove('show');
+}
+
+function mostraApp() {
+  document.getElementById('app-container').classList.add('show');
+}
+
+function esconderApp() {
+  document.getElementById('app-container').classList.remove('show');
+}
+
+function trocarFormulario(form) {
+  document.querySelectorAll('.auth-form').forEach(f => f.classList.remove('show'));
+  document.getElementById('form-' + form).classList.add('show');
+  document.getElementById('auth-message').innerHTML = '';
+}
+
+function showAuthMessage(msg, type) {
+  const el = document.getElementById('auth-message');
+  el.innerHTML = '<div class="auth-message ' + type + '">' + msg + '</div>';
+}
+
+function fnEntrar() {
+  const email = document.getElementById('login-email').value.trim();
+  const senha = document.getElementById('login-password').value;
+  
+  if (!email || !senha) {
+    showAuthMessage('⚠️ Preencha e-mail e senha', 'error');
+    return;
+  }
+  
+  auth.signInWithEmailAndPassword(email, senha)
+    .catch(err => {
+      let msg = 'Erro ao entrar';
+      if (err.code === 'auth/user-not-found') msg = '❌ E-mail não encontrado';
+      else if (err.code === 'auth/wrong-password') msg = '❌ Senha incorreta';
+      else if (err.code === 'auth/invalid-email') msg = '❌ E-mail inválido';
+      showAuthMessage(msg, 'error');
+    });
+}
+
+function fnCadastrar() {
+  const apelido = document.getElementById('signup-apelido').value.trim();
+  const email = document.getElementById('signup-email').value.trim();
+  const senha = document.getElementById('signup-password').value;
+  const cidade = document.getElementById('signup-cidade').value.trim();
+  
+  if (!apelido || !email || !senha || !cidade) {
+    showAuthMessage('⚠️ Preencha todos os campos', 'error');
+    return;
+  }
+  
+  if (senha.length < 6) {
+    showAuthMessage('⚠️ Senha deve ter pelo menos 6 caracteres', 'error');
+    return;
+  }
+  
+  auth.createUserWithEmailAndPassword(email, senha)
+    .then(cred => {
+      return db.collection('users').doc(cred.user.uid).set({
+        apelido: apelido,
+        email: email,
+        cidade: cidade,
+        createdAt: new Date(),
+        lastLogin: new Date(),
+        status: 'ativo',
+        role: 'user'
+      }).then(() => cred.user);
+    })
+    .then(user => {
+      showAuthMessage('✅ Conta criada! Entrando...', 'success');
+      setTimeout(() => {}, 1500);
+    })
+    .catch(err => {
+      let msg = 'Erro ao criar conta';
+      if (err.code === 'auth/email-already-in-use') msg = '❌ Este e-mail já está registrado';
+      else if (err.code === 'auth/weak-password') msg = '❌ Senha muito fraca';
+      showAuthMessage(msg, 'error');
+    });
+}
+
+function fnEnviarReset() {
+  const email = document.getElementById('reset-email').value.trim();
+  
+  if (!email) {
+    showAuthMessage('⚠️ Digite seu e-mail', 'error');
+    return;
+  }
+  
+  auth.sendPasswordResetEmail(email)
+    .then(() => {
+      showAuthMessage('✅ E-mail enviado! Verifique sua caixa de entrada', 'success');
+      setTimeout(() => trocarFormulario('login'), 2000);
+    })
+    .catch(err => {
+      let msg = 'Erro ao enviar';
+      if (err.code === 'auth/user-not-found') msg = '❌ E-mail não encontrado';
+      showAuthMessage(msg, 'error');
+    });
+}
+
+function fnMudarSenha() {
+  const novaSenha = prompt('Digite a nova senha (mínimo 6 caracteres):');
+  if (!novaSenha || novaSenha.length < 6) return;
+  
+  auth.currentUser.updatePassword(novaSenha)
+    .then(() => {
+      toast('✅ Senha alterada com sucesso');
+      fecharModal('modal-perfil');
+    })
+    .catch(err => toast('❌ Erro ao alterar senha'));
+}
+
+function fnSair() {
+  if (confirm('Tem certeza que quer sair?')) {
+    if (unsubscribeFn) unsubscribeFn();
+    if (chatsListUnsubscribe) { chatsListUnsubscribe(); chatsListUnsubscribe = null; }
+    if (chatConvUnsubscribe) { chatConvUnsubscribe(); chatConvUnsubscribe = null; }
+    if (badgeUnsubscribe) { badgeUnsubscribe(); badgeUnsubscribe = null; }
+    auth.signOut();
+  }
+}
+
+// ============================================================
+// PERFIL DO USUÁRIO
+// ============================================================
+function carregarPerfil() {
+  if (!currentUser) return;
+
+  db.collection('users').doc(currentUser.uid).onSnapshot(doc => {
+    if (doc.exists) {
+      userData = doc.data();
+
+      if (userData.status === 'banido') {
+        auth.signOut().then(() => {
+          showAuthMessage('❌ Sua conta foi suspensa. Entre em contato com o desenvolvedor.', 'error');
+        });
+        return;
+      }
+
+      const tabAdmin = document.getElementById('tab-admin');
+      if (tabAdmin) tabAdmin.style.display = userData.role === 'admin' ? '' : 'none';
+
+      document.getElementById('user-name').textContent = userData.apelido || 'Usuário';
+      document.getElementById('user-cidade').textContent = userData.cidade || 'Cidade';
+      document.getElementById('perfil-apelido').textContent = userData.apelido;
+      document.getElementById('perfil-email').textContent = userData.email;
+      document.getElementById('perfil-cidade').textContent = userData.cidade;
+      document.getElementById('perfil-data').textContent = userData.createdAt ? new Date(userData.createdAt.toDate()).toLocaleDateString('pt-BR') : '-';
+    }
+  });
+}
+
+// ============================================================
+// SINCRONIZAÇÃO COM FIRESTORE
+// ============================================================
+function inicializarSincronizacao() {
+  if (!currentUser) return;
+  
+  const docRef = db.collection('colecoes').doc(currentUser.uid);
+  
+  unsubscribeFn = docRef.onSnapshot(
+    (doc) => {
+      if (doc.exists) {
+        dados = doc.data().figurinhas || {};
+      } else {
+        docRef.set({ figurinhas: {}, ultimaAtualizacao: new Date() });
+      }
+      atualizarUI();
+      setStatusSync('sincronizado');
+    },
+    (error) => {
+      console.log('Erro no sync:', error);
+      setStatusSync('offline');
+      carregarDoLocalStorage();
+    }
+  );
+}
+
+function setStatusSync(status) {
+  syncStatus = status;
+  const el = document.getElementById('status-indicator');
+  if (!el) return;
+  
+  el.className = 'status-indicator ' + status;
+}
+
+function atualizarFigurinha(chave, qtd) {
+  if (!currentUser) return;
+  
+  setStatusSync('salvando');
+  
+  const updates = {};
+  if (qtd <= 0) {
+    updates['figurinhas.' + chave] = firebase.firestore.FieldValue.delete();
+  } else {
+    updates['figurinhas.' + chave] = qtd;
+  }
+  updates['ultimaAtualizacao'] = new Date();
+  
+  db.collection('colecoes').doc(currentUser.uid).update(updates)
+    .then(() => {
+      setStatusSync('sincronizado');
+    })
+    .catch(err => {
+      console.log('Erro ao atualizar:', err);
+      salvarNoLocalStorage();
+      setStatusSync('offline');
+    });
+}
+
+function salvarNoLocalStorage() {
+  try {
+    localStorage.setItem('album_backup_' + currentUser.uid, JSON.stringify(dados));
+  } catch(e) {}
+}
+
+function carregarDoLocalStorage() {
+  try {
+    const backup = localStorage.getItem('album_backup_' + currentUser.uid);
+    if (backup) dados = JSON.parse(backup);
+  } catch(e) {}
+}
+
+// ============================================================
+// FUNÇÕES AUXILIARES
+// ============================================================
+function getQ(k) { return dados[k] || 0; }
+function esc(s) { return String(s).replace(/[&<>"']/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]; }); }
+
+function toast(msg) {
+  const t = document.getElementById("toast");
+  t.textContent = msg;
+  t.classList.add("show");
+  clearTimeout(t._t);
+  t._t = setTimeout(function(){ t.classList.remove("show"); }, 1800);
+}
+
+function fecharModal(id) {
+  document.getElementById(id).classList.remove("show");
+}
+
+function statsGeral() {
+  let t = 0, r = 0;
+  for (let k in dados) {
+    const q = dados[k];
+    if (q >= 1) t++;
+    if (q > 1) r += q - 1;
+  }
+  return { t, f: TOTAL - t, r, total: TOTAL };
+}
+
+function statsGrupo(g) {
+  let t = 0, r = 0, total = 0;
+  if (g === "FWC") {
+    total = 20;
+    for (let i = 0; i < 20; i++) {
+      const q = getQ("FWC-FWC-" + i);
+      if (q >= 1) t++;
+      if (q > 1) r += q - 1;
+    }
+  } else if (g === "CC") {
+    total = 14;
+    for (let i = 1; i <= 14; i++) {
+      const q = getQ("CC-CC-" + i);
+      if (q >= 1) t++;
+      if (q > 1) r += q - 1;
+    }
+  } else {
+    total = GRUPOS[g].length * 20;
+    for (let idx = 0; idx < GRUPOS[g].length; idx++) {
+      const sel = GRUPOS[g][idx];
+      for (let i = 1; i <= 20; i++) {
+        const q = getQ(g + "-" + sel[1] + "-" + i);
+        if (q >= 1) t++;
+        if (q > 1) r += q - 1;
+      }
+    }
+  }
+  return { t, f: total - t, r, total };
+}
+
+function statsSel(g, cod, max, start) {
+  let t = 0;
+  for (let i = 0; i < max; i++) {
+    const n = start === 0 ? i : i + 1;
+    if (getQ(g + "-" + cod + "-" + n) >= 1) t++;
+  }
+  return t;
+}
+
+// ============================================================
+// RENDERIZAÇÃO - DASHBOARD
+// ============================================================
+function renderDashboard() {
+  const s = statsGeral();
+  const pct = ((s.t / s.total) * 100).toFixed(1);
+  let h = '<div class="kpis">' +
+    '<div class="kpi"><div class="kpi-lbl">📦 Total</div><div class="kpi-val">' + s.total + '</div></div>' +
+    '<div class="kpi tenho"><div class="kpi-lbl">✓ Coladas</div><div class="kpi-val">' + s.t + '</div></div>' +
+    '<div class="kpi falta"><div class="kpi-lbl">○ Faltam</div><div class="kpi-val">' + s.f + '</div></div>' +
+    '<div class="kpi rep"><div class="kpi-lbl">⇄ Repetidas</div><div class="kpi-val">' + s.r + '</div></div>' +
+    '</div>' +
+    '<div class="prog">' +
+      '<div class="prog-top"><span class="lbl">Progresso geral · ' + esc(userData.apelido || 'Você') + '</span><span class="pct">' + pct + '%</span></div>' +
+      '<div class="prog-bg"><div class="prog-fl" style="width:' + pct + '%"></div></div>' +
+      '<div class="prog-bot"><span>' + s.t + ' de ' + s.total + '</span><span>' + s.f + ' p/ completar</span></div>' +
+    '</div>' +
+    '<div class="sec-ttl">📈 Progresso por grupo</div>';
+
+  const todos = Object.keys(GRUPOS).concat(["FWC", "CC"]);
+  for (let i = 0; i < todos.length; i++) {
+    const g = todos[i];
+    const st = statsGrupo(g);
+    const p = ((st.t / st.total) * 100).toFixed(0);
+    let nome, sub;
+    if (g === "FWC") { nome = "Especial · FIFA World Cup History"; sub = "20 figurinhas"; }
+    else if (g === "CC") { nome = "Especial · Coca-Cola"; sub = "14 figurinhas"; }
+    else { nome = "Grupo " + g; sub = GRUPOS[g].map(x => x[0]).join(" · "); }
+    h += '<div class="gp">' +
+      '<div class="gp-top"><div class="gp-name">' + nome + '<small>' + sub + '</small></div><span class="gp-pct">' + p + '%</span></div>' +
+      '<div class="gp-bg"><div class="gp-fl" style="width:' + p + '%"></div></div>' +
+      '<div class="gp-stats"><span>✓ <strong>' + st.t + '</strong>/' + st.total + '</span><span>○ faltam <strong>' + st.f + '</strong></span><span>⇄ <strong>' + st.r + '</strong></span></div>' +
+    '</div>';
+  }
+  document.getElementById("content").innerHTML = h;
+}
+
+// ============================================================
+// RENDERIZAÇÃO - CONTROLE
+// ============================================================
+function renderControle() {
+  let h = '<div class="acts">' +
+    '<button class="btn" onclick="expandirTodos()">⌄ Expandir</button>' +
+    '<button class="btn" onclick="recolherTodos()">⌃ Recolher</button>' +
+    '<button class="btn danger" onclick="resetar()">🗑 Limpar tudo</button>' +
+  '</div>' +
+  '<div class="leg">' +
+    '<div class="leg-item"><div class="leg-box" style="background:#fff"></div>Não tenho</div>' +
+    '<div class="leg-item"><div class="leg-box" style="background:linear-gradient(135deg,#185FA5,#0F4C5C);border-color:#0F4C5C"></div>Tenho</div>' +
+    '<div class="leg-item"><div class="leg-box" style="background:linear-gradient(135deg,#DBEAFE,#BFDBFE);border-color:#378ADD"></div>Repetida</div>' +
+    '<span class="hint">Toque: +1 · Segurar / botão direito: −1</span>' +
+  '</div>';
+
+  const todos = Object.keys(GRUPOS).concat(["FWC", "CC"]);
+  for (let i = 0; i < todos.length; i++) {
+    const g = todos[i];
+    const st = statsGrupo(g);
+    const esp = g === "FWC" || g === "CC";
+    const ttl = g === "FWC" ? "FIFA World Cup History" : g === "CC" ? "Coca-Cola" : "Grupo " + g;
+    const ab = abertos[g] ? "open" : "";
+    h += '<div class="card ' + ab + '" data-grupo="' + g + '">' +
+      '<div class="head ' + (esp ? "esp" : "") + '" data-toggle="' + g + '">' +
+        '<div class="head-ttl"><span class="head-bdg">' + (esp ? "ESP" : g) + '</span>' + ttl + '</div>' +
+        '<div class="head-st"><span>✓ ' + st.t + '/' + st.total + '</span><span>⇄ ' + st.r + '</span><span class="chev">⌄</span></div>' +
+      '</div>' +
+      '<div class="body">';
+    if (g === "FWC") h += linhaSel("FIFA World Cup History", "FWC", "FWC", 20, 0, statsSel("FWC", "FWC", 20, 0), false);
+    else if (g === "CC") h += linhaSel("Figurinhas Coca-Cola", "CC", "CC", 14, 1, statsSel("CC", "CC", 14, 1), true);
+    else {
+      for (let j = 0; j < GRUPOS[g].length; j++) {
+        const s = GRUPOS[g][j];
+        h += linhaSel(s[0], s[1], g, 20, 1, statsSel(g, s[1], 20, 1), false);
+      }
+    }
+    h += '</div></div>';
+  }
+  document.getElementById("content").innerHTML = h;
+  bindControle();
+}
+
+function linhaSel(nome, cod, g, max, start, cont, isCC) {
+  let nums = "";
+  for (let i = 0; i < max; i++) {
+    const n = start === 0 ? i : i + 1;
+    const q = getQ(g + "-" + cod + "-" + n);
+    const cls = q === 0 ? "" : (q === 1 ? "tem" : "rep");
+    let lbl;
+    if (g === "FWC") lbl = (n < 10 ? "0" : "") + n;
+    else if (g === "CC") lbl = "CC" + n;
+    else lbl = n;
+    nums += '<div class="num ' + cls + '" data-key="' + g + "-" + cod + "-" + n + '" data-qtd="' + q + '">' + lbl + '</div>';
+  }
+  return '<div class="row">' +
+    '<div class="row-head">' +
+      '<div class="row-left"><span class="cod">' + cod + '</span><span class="name">' + esc(nome) + '</span></div>' +
+      '<span class="cnt"><strong>' + cont + '</strong>/' + max + ' coladas</span>' +
+    '</div>' +
+    '<div class="nums ' + (isCC ? "cc" : "") + '">' + nums + '</div>' +
+  '</div>';
+}
+
+function bindControle() {
+  const headers = document.querySelectorAll("[data-toggle]");
+  for (let i = 0; i < headers.length; i++) {
+    headers[i].addEventListener("click", function(e) {
+      const g = e.currentTarget.dataset.toggle;
+      abertos[g] = !abertos[g];
+      e.currentTarget.parentElement.classList.toggle("open");
+    });
+  }
+  const nums = document.querySelectorAll(".num");
+  for (let i = 0; i < nums.length; i++) {
+    const el = nums[i];
+    el.addEventListener("click", function(e) {
+      e.stopPropagation();
+      if (this._lpDone) { this._lpDone = false; return; }
+      const k = this.dataset.key;
+      const novaQtd = getQ(k) + 1;
+      atualizarFigurinha(k, novaQtd);
+      updateNum(this, novaQtd);
+    });
+    el.addEventListener("contextmenu", function(e) {
+      e.preventDefault();
+      e.stopPropagation();
+      const k = this.dataset.key;
+      const q = getQ(k);
+      if (q > 0) {
+        atualizarFigurinha(k, q - 1);
+        updateNum(this, q - 1);
+      }
+    });
+    el.addEventListener("touchstart", function(e) {
+      const self = this;
+      self._lpDone = false;
+      self._lp = setTimeout(function() {
+        self._lpDone = true;
+        const k = self.dataset.key;
+        const q = getQ(k);
+        if (q > 0) {
+          atualizarFigurinha(k, q - 1);
+          updateNum(self, q - 1);
+          if (navigator.vibrate) navigator.vibrate(30);
+        }
+      }, 500);
+    }, { passive: true });
+    el.addEventListener("touchend", function() { if (this._lp) clearTimeout(this._lp); });
+    el.addEventListener("touchmove", function() { if (this._lp) clearTimeout(this._lp); });
+  }
+}
+
+function updateNum(el, q) {
+  el.classList.remove("tem", "rep");
+  if (q === 1) el.classList.add("tem");
+  else if (q > 1) el.classList.add("rep");
+  el.dataset.qtd = q;
+  const row = el.closest(".row");
+  let coladas = 0;
+  row.querySelectorAll(".num").forEach(n => { if (parseInt(n.dataset.qtd) >= 1) coladas++; });
+  row.querySelector(".cnt strong").textContent = coladas;
+  const card = el.closest(".card");
+  const g = card.dataset.grupo;
+  const st = statsGrupo(g);
+  const sp = card.querySelector(".head-st").children;
+  sp[0].textContent = "✓ " + st.t + "/" + st.total;
+  sp[1].textContent = "⇄ " + st.r;
+}
+
+function expandirTodos() {
+  const todos = Object.keys(GRUPOS).concat(["FWC", "CC"]);
+  for (let i = 0; i < todos.length; i++) abertos[todos[i]] = true;
+  document.querySelectorAll(".card").forEach(c => { c.classList.add("open"); });
+}
+
+function recolherTodos() {
+  abertos = {};
+  document.querySelectorAll(".card").forEach(c => { c.classList.remove("open"); });
+}
+
+function resetar() {
+  if (confirm("Apagar TODO o progresso de " + userData.apelido + "?")) {
+    db.collection('colecoes').doc(currentUser.uid).update({
+      figurinhas: {},
+      ultimaAtualizacao: new Date()
+    }).then(() => {
+      toast("Coleção zerada");
+      renderControle();
+    });
+  }
+}
+
+// ============================================================
+// RENDERIZAÇÃO - TROCAS (COM MATCHING)
+// ============================================================
+function renderTrocas() {
+  let trocas = [];
+  for (let k in dados) {
+    const q = dados[k];
+    if (q > 1) {
+      const parts = k.split("-");
+      const grupo = parts[0], cod = parts[1], num = parts[2];
+      let nomeSel, lbl;
+      if (grupo === "FWC") { nomeSel = "FIFA World Cup History"; lbl = "FWC " + (num.length < 2 ? "0" : "") + num; }
+      else if (grupo === "CC") { nomeSel = "Coca-Cola"; lbl = "CC" + num; }
+      else {
+        const sel = GRUPOS[grupo].find(x => x[1] === cod);
+        nomeSel = sel ? sel[0] : cod;
+        lbl = "Nº " + num;
+      }
+      trocas.push({ grupo, nomeSel, cod, lbl, qtd: q - 1, chave: k });
+    }
+  }
+  trocas.sort((a, b) => a.grupo !== b.grupo ? a.grupo.localeCompare(b.grupo) : a.nomeSel.localeCompare(b.nomeSel));
+  const total = trocas.reduce((s, t) => s + t.qtd, 0);
+  
+  let h = '<div class="kpis" style="grid-template-columns:repeat(2,1fr)">' +
+    '<div class="kpi rep"><div class="kpi-lbl">⇄ Total p/ troca</div><div class="kpi-val">' + total + '</div></div>' +
+    '<div class="kpi"><div class="kpi-lbl">≡ Diferentes</div><div class="kpi-val">' + trocas.length + '</div></div>' +
+  '</div>';
+  
+  if (trocas.length === 0) {
+    h += '<div class="empty"><div class="big">⇄</div><strong style="color:#0F4C5C">Nenhuma repetida ainda</strong><br><span style="font-size:11px">Marque uma figurinha mais de uma vez para vê-la aqui.</span></div>';
+  } else {
+    h += '<div class="sec-ttl">📋 Suas repetidas para troca</div>';
+    for (let i = 0; i < trocas.length; i++) {
+      const t = trocas[i];
+      const gLbl = (t.grupo === "FWC" || t.grupo === "CC") ? "Especial" : "Grupo " + t.grupo;
+      h += '<div class="tr"><div class="tr-l"><span class="tr-c">' + t.cod + '</span><div class="tr-i"><strong>' + esc(t.nomeSel) + '</strong><small>' + gLbl + ' · ' + t.lbl + '</small></div></div><span class="tr-q">' + t.qtd + '× rep.</span></div>';
+    }
+  }
+  
+  h += '<div class="sec-ttl" style="margin-top: 24px">👥 Possíveis trocas por amigo</div>';
+  h += '<p style="font-size: 12px; color: #6B7280; margin-bottom: 12px;">Mostrando usuários de <strong>' + userData.cidade + '</strong> que podem fazer trocas com você.</p>';
+  
+  h += '<div id="friends-container">' +
+    '<div class="empty"><div class="big">🔄</div><p>Carregando amigos de sua cidade...</p></div>' +
+  '</div>';
+  
+  document.getElementById("content").innerHTML = h;
+  carregarAmigosParaTroca();
+}
+
+function carregarAmigosParaTroca() {
+  if (!userData.cidade) {
+    document.getElementById("friends-container").innerHTML = '<div class="empty"><p>Configure sua cidade para ver amigos para trocar</p></div>';
+    return;
+  }
+  
+  db.collection('users')
+    .where('cidade', '==', userData.cidade)
+    .get()
+    .then(snapshot => {
+      const amigos = [];
+      snapshot.forEach(doc => {
+        if (doc.id !== currentUser.uid) {
+          amigos.push({ uid: doc.id, ...doc.data() });
+        }
+      });
+      
+      if (amigos.length === 0) {
+        document.getElementById("friends-container").innerHTML = '<div class="empty"><p>Nenhum amigo em ' + userData.cidade + ' ainda</p></div>';
+        return;
+      }
+      
+      let amigosComTroca = 0;
+
+      amigos.forEach(amigo => {
+        if (bloqueados.includes(amigo.uid)) return;
+        db.collection('colecoes').doc(amigo.uid).get().then(doc => {
+          if (doc.exists) {
+            const amigoData = doc.data().figurinhas || {};
+
+            let minhasCom = [];
+            for (let chave in dados) {
+              if (dados[chave] > 1 && (!amigoData[chave] || amigoData[chave] === 0)) {
+                minhasCom.push(chave);
+              }
+            }
+
+            let deleComFalta = [];
+            for (let chave in amigoData) {
+              if (amigoData[chave] >= 1 && (!dados[chave] || dados[chave] === 0)) {
+                deleComFalta.push(chave);
+              }
+            }
+
+            if (minhasCom.length > 0 && deleComFalta.length > 0) {
+              amigosComTroca++;
+              let card = '<div class="friend-card">' +
+                '<div class="friend-header">' +
+                  '<div>' +
+                    '<div class="friend-name">' + esc(amigo.apelido) + '</div>' +
+                    '<div class="friend-city">📍 ' + esc(amigo.cidade) + '</div>' +
+                  '</div>' +
+                  '<span class="friend-status">' + minhasCom.length + ' + ' + deleComFalta.length + '</span>' +
+                '</div>' +
+                '<div class="friend-matches">' +
+                  '<div class="match-item"><span class="match-label">✓ Você tem para ele:</span> <span class="match-count">' + minhasCom.length + '</span></div>' +
+                  '<div class="match-item"><span class="match-label">○ Ele tem para você:</span> <span class="match-count">' + deleComFalta.length + '</span></div>' +
+                '</div>' +
+                '<div style="margin-top:10px;text-align:right">' +
+                  '<button class="btn primary" onclick="abrirChatComAmigo(\'' + amigo.uid + '\',\'' + esc(amigo.apelido) + '\')" style="font-size:12px;padding:7px 13px">💬 Chat</button>' +
+                '</div>' +
+              '</div>';
+              
+              let container = document.getElementById("friends-container");
+              if (amigosComTroca === 1) container.innerHTML = '';
+              
+              container.innerHTML += card;
+            }
+          }
+        });
+      });
+      
+      setTimeout(() => {
+        if (amigosComTroca === 0) {
+          document.getElementById("friends-container").innerHTML = '<div class="empty"><p>Nenhum amigo em ' + userData.cidade + ' tem figurinhas que você queira</p></div>';
+        }
+      }, 1000);
+    });
+}
+
+// ============================================================
+// RENDERIZAÇÃO - IMPRIMIR
+// ============================================================
+function renderImprimir() {
+  const s = statsGeral();
+  let h = '<div style="background:linear-gradient(135deg,#0F4C5C,#185FA5);border-radius:12px;padding:18px 20px;margin-bottom:14px;color:#fff">' +
+    '<h2 style="margin:0 0 4px;font-size:17px;font-weight:700">🖨️ Modo Impressão</h2>' +
+    '<p style="margin:0;font-size:12px;opacity:0.9">Gere uma versão para imprimir e levar para qualquer lugar</p>' +
+  '</div>' +
+  '<div class="sec-ttl">Escolha o que imprimir</div>' +
+  '<div class="print-opt" onclick="imprimir(\'completo\')">' +
+    '<div class="print-ic">📋</div>' +
+    '<div class="print-tx"><strong>Planilha completa em branco</strong><small>Tudo · 1 página A4 · marque com caneta</small></div>' +
+  '</div>' +
+  '<div class="print-opt" onclick="imprimir(\'progresso\')">' +
+    '<div class="print-ic">📊</div>' +
+    '<div class="print-tx"><strong>Planilha com progresso atual</strong><small>Mostra o que você já tem</small></div>' +
+  '</div>' +
+  '<div class="print-opt" onclick="imprimir(\'faltam\')">' +
+    '<div class="print-ic">📝</div>' +
+    '<div class="print-tx"><strong>Lista do que falta</strong><small>Leve para a banca · ' + s.f + ' figurinhas</small></div>' +
+  '</div>' +
+  '<div class="print-opt" onclick="imprimir(\'repetidas\')">' +
+    '<div class="print-ic am">🔄</div>' +
+    '<div class="print-tx"><strong>Lista de repetidas para troca</strong><small>' + (s.r > 0 ? s.r + " figurinhas para trocar" : "Nenhuma repetida ainda") + '</small></div>' +
+  '</div>' +
+  '<div style="background:#F8FAFC;border:1px solid #E5E7EB;border-radius:9px;padding:11px 13px;font-size:11px;color:#475569;margin-top:14px">' +
+    '<strong style="color:#0F4C5C">💡 Como funciona:</strong> abre uma nova aba pronta para imprimir. Use o botão <strong>"🖨️ Imprimir"</strong> ou pressione <strong>Ctrl+P</strong> (Cmd+P no Mac).' +
+  '</div>';
+  document.getElementById("content").innerHTML = h;
+}
+
+function imprimir(tipo) {
+  const html = gerarHTMLImpressao(tipo);
+  const w = window.open("", "_blank");
+  if (!w) { toast("Permita pop-ups para imprimir"); return; }
+  w.document.open();
+  w.document.write(html);
+  w.document.close();
+}
+
+function gerarHTMLImpressao(tipo) {
+  const hoje = new Date().toLocaleDateString("pt-BR");
+  const s = statsGeral();
+  let titulo, conteudo;
+  if (tipo === "completo") { titulo = "Planilha de Controle — Em Branco"; conteudo = gerarTabela(false); }
+  else if (tipo === "progresso") { titulo = "Planilha de Controle — Progresso Atual"; conteudo = gerarTabela(true); }
+  else if (tipo === "faltam") { titulo = "Figurinhas que Faltam"; conteudo = gerarListaFaltam(); }
+  else if (tipo === "repetidas") { titulo = "Figurinhas Repetidas"; conteudo = gerarListaRep(); }
+
+  const css = "@page{size:A4;margin:1cm}*{box-sizing:border-box;margin:0;padding:0}" +
+    "body{font-family:-apple-system,Roboto,sans-serif;color:#0B3F4A;padding:14px;background:#fff;font-size:11px;line-height:1.3}" +
+    ".pa{background:#0F4C5C;color:#fff;padding:12px 16px;border-radius:9px;margin-bottom:12px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px}" +
+    ".pa .i{font-size:13px}.pa .i strong{display:block;font-size:15px}" +
+    ".pa button{background:#F4C430;color:#0B3F4A;border:none;padding:9px 17px;border-radius:7px;font-weight:700;cursor:pointer;font-size:13px}" +
+    ".pa button.x{background:#fff;color:#0F4C5C;margin-left:5px}" +
+    ".hd{text-align:center;margin-bottom:12px;padding-bottom:9px;border-bottom:2px solid #0F4C5C}" +
+    ".hd h1{font-size:17px;color:#0F4C5C;font-weight:700;margin-bottom:2px}" +
+    ".hd .s{font-size:11px;color:#6B7280}" +
+    ".hd .m{display:flex;justify-content:space-between;margin-top:7px;font-size:10px;color:#6B7280;flex-wrap:wrap;gap:5px}" +
+    ".hd .m strong{color:#0F4C5C}" +
+    "table{width:100%;border-collapse:collapse}.tf{font-size:9px}" +
+    ".tf th{background:#0F4C5C;color:#fff;padding:5px 3px;font-weight:700;border:0.5px solid #0B3F4A;font-size:9px}" +
+    ".tf td{border:0.5px solid #E5E7EB;padding:3px;text-align:center}" +
+    ".tf td.g{background:#0F4C5C;color:#fff;font-weight:700;vertical-align:middle;font-size:10px;padding:4px 6px}" +
+    ".tf td.g.e{background:#185FA5}" +
+    ".tf td.n{text-align:left;padding-left:7px;font-weight:600;background:#F8FAFC;color:#0F4C5C;min-width:85px;font-size:10px}" +
+    ".tf td.c{background:#E6F1FB;font-weight:700;color:#0F4C5C;font-size:9px}" +
+    ".tf td.x{width:3%;height:21px;font-size:9px;color:#94A3B8}" +
+    ".tf td.x.t{background:#185FA5;color:#fff;font-weight:700}" +
+    ".tf td.x.r{background:#DBEAFE;color:#0B3F4A;font-weight:700}" +
+    ".sb{display:flex;gap:7px;margin-bottom:12px}" +
+    ".sc{flex:1;background:#F8FAFC;border:1px solid #E5E7EB;border-radius:7px;padding:7px 9px;text-align:center}" +
+    ".sc .l{font-size:9px;color:#6B7280;text-transform:uppercase;font-weight:700}" +
+    ".sc .v{font-size:17px;font-weight:700;color:#0F4C5C;margin-top:2px}" +
+    ".sc.z{background:#E6F1FB}.sc.z .v{color:#185FA5}" +
+    ".li{display:grid;grid-template-columns:repeat(3,1fr);gap:5px}" +
+    ".li-i{background:#F8FAFC;border:1px solid #E5E7EB;border-radius:5px;padding:5px 7px;font-size:10px;display:flex;align-items:center;gap:5px}" +
+    ".li-i .cp{background:#0F4C5C;color:#fff;font-size:9px;padding:2px 5px;border-radius:3px;font-weight:700}" +
+    ".li-i .n{flex:1;min-width:0}" +
+    ".li-i .n strong{display:block;color:#0F4C5C;font-size:10px;font-weight:600}" +
+    ".li-i .n small{color:#6B7280;font-size:9px}" +
+    ".li-i .q{background:#F4C430;color:#0B3F4A;padding:2px 5px;border-radius:3px;font-weight:700;font-size:9px}" +
+    ".li-i.f .cp{background:#6B7280}" +
+    ".ft{margin-top:12px;padding-top:7px;border-top:1px solid #E5E7EB;text-align:center;font-size:9px;color:#94A3B8}" +
+    ".em{text-align:center;padding:28px;color:#6B7280;font-size:12px}" +
+    "@media print{body{padding:0}.pa{display:none}.hd{margin-bottom:9px}}";
+
+  return '<!DOCTYPE html><html><head><meta charset="utf-8"><title>' + titulo + ' - Copa 2026</title><style>' + css + '</style></head><body>' +
+    '<div class="pa"><div class="i"><strong>' + titulo + '</strong>Copa 2026 · Panini · ' + esc(userData.apelido || 'Você') + '</div>' +
+    '<div><button onclick="window.print()">🖨️ Imprimir</button><button class="x" onclick="window.close()">✕ Fechar</button></div></div>' +
+    '<div class="hd"><h1>🏆 ÁLBUM COPA DO MUNDO 2026</h1>' +
+    '<div class="s">' + titulo + '</div>' +
+    '<div class="m"><span>Coleção: <strong>' + esc(userData.apelido || 'Você') + '</strong></span>' +
+    '<span>Data: <strong>' + hoje + '</strong></span>' +
+    '<span>Progresso: <strong>' + s.t + '/' + s.total + ' (' + ((s.t / s.total) * 100).toFixed(1) + '%)</strong></span></div></div>' +
+    conteudo +
+    '<div class="ft">Álbum FIFA World Cup 2026 · Panini · Controle pessoal</div></body></html>';
+}
+
+function gerarTabela(comProgresso) {
+  let h = '<table class="tf"><thead><tr><th style="width:5%">Grupo</th><th style="width:13%">Seleção</th><th style="width:5%">Cód</th>';
+  for (let i = 1; i <= 20; i++) h += '<th>' + i + '</th>';
+  h += '</tr></thead><tbody>';
+  for (let grupo in GRUPOS) {
+    const sels = GRUPOS[grupo];
+    for (let idx = 0; idx < sels.length; idx++) {
+      const s = sels[idx];
+      h += '<tr>';
+      if (idx === 0) h += '<td class="g" rowspan="' + sels.length + '">GRUPO ' + grupo + '</td>';
+      h += '<td class="n">' + esc(s[0]) + '</td><td class="c">' + s[1] + '</td>';
+      for (let i = 1; i <= 20; i++) {
+        const q = comProgresso ? getQ(grupo + "-" + s[1] + "-" + i) : 0;
+        const cls = q === 0 ? "" : (q === 1 ? "t" : "r");
+        const txt = q === 0 ? "" : (q === 1 ? "✓" : q);
+        h += '<td class="x ' + cls + '">' + txt + '</td>';
+      }
+      h += '</tr>';
+    }
+  }
+  h += '<tr><td class="g e">ESP</td><td class="n">FIFA World Cup History</td><td class="c">FWC</td>';
+  for (let i = 0; i < 20; i++) {
+    const q = comProgresso ? getQ("FWC-FWC-" + i) : 0;
+    const cls = q === 0 ? "" : (q === 1 ? "t" : "r");
+    const txt = q === 0 ? (i < 10 ? "0" : "") + i : (q === 1 ? "✓" : q);
+    h += '<td class="x ' + cls + '">' + txt + '</td>';
+  }
+  h += '</tr>';
+  h += '<tr><td class="g e">ESP</td><td class="n">Coca-Cola</td><td class="c">CC</td>';
+  for (let i = 1; i <= 14; i++) {
+    const q = comProgresso ? getQ("CC-CC-" + i) : 0;
+    const cls = q === 0 ? "" : (q === 1 ? "t" : "r");
+    const txt = q === 0 ? "CC" + i : (q === 1 ? "✓" : q);
+    h += '<td class="x ' + cls + '">' + txt + '</td>';
+  }
+  for (let i = 15; i <= 20; i++) h += '<td style="background:#F1F5F9"></td>';
+  h += '</tr></tbody></table>';
+  if (!comProgresso) {
+    h += '<div style="margin-top:11px;padding:7px 11px;background:#F8FAFC;border-left:3px solid #0F4C5C;font-size:10px;color:#475569;border-radius:3px">' +
+      '<strong style="color:#0F4C5C">Como usar:</strong> marque com X ou pinte cada quadradinho conforme for colando as figurinhas.</div>';
+  }
+  return h;
+}
+
+function gerarListaFaltam() {
+  let f = [];
+  for (let grupo in GRUPOS) {
+    for (let idx = 0; idx < GRUPOS[grupo].length; idx++) {
+      const s = GRUPOS[grupo][idx];
+      for (let i = 1; i <= 20; i++) {
+        if (getQ(grupo + "-" + s[1] + "-" + i) < 1) f.push({ grupo, nome: s[0], cod: s[1], lbl: "Nº " + i });
+      }
+    }
+  }
+  for (let i = 0; i < 20; i++) if (getQ("FWC-FWC-" + i) < 1) f.push({ grupo: "ESP", nome: "FIFA World Cup History", cod: "FWC", lbl: (i < 10 ? "0" : "") + i });
+  for (let i = 1; i <= 14; i++) if (getQ("CC-CC-" + i) < 1) f.push({ grupo: "ESP", nome: "Coca-Cola", cod: "CC", lbl: "CC" + i });
+  if (f.length === 0) return '<div class="em">🎉 Parabéns! Coleção completa!</div>';
+  const s = statsGeral();
+  let h = '<div class="sb">' +
+    '<div class="sc"><div class="l">Total álbum</div><div class="v">' + s.total + '</div></div>' +
+    '<div class="sc z"><div class="l">Você tem</div><div class="v">' + s.t + '</div></div>' +
+    '<div class="sc"><div class="l">Faltam</div><div class="v" style="color:#B91C1C">' + f.length + '</div></div>' +
+  '</div><div class="li">';
+  for (let i = 0; i < f.length; i++) {
+    const item = f[i];
+    const gl = item.grupo === "ESP" ? "Especial" : "Grupo " + item.grupo;
+    h += '<div class="li-i f"><span class="cp">' + item.cod + '</span><div class="n"><strong>' + esc(item.nome) + '</strong><small>' + gl + ' · ' + item.lbl + '</small></div></div>';
+  }
+  h += '</div>';
+  return h;
+}
+
+function gerarListaRep() {
+  let trocas = [];
+  for (let k in dados) {
+    const q = dados[k];
+    if (q > 1) {
+      const parts = k.split("-");
+      const grupo = parts[0], cod = parts[1], num = parts[2];
+      let nomeSel, lbl;
+      if (grupo === "FWC") { nomeSel = "FIFA World Cup History"; lbl = (num.length < 2 ? "0" : "") + num; }
+      else if (grupo === "CC") { nomeSel = "Coca-Cola"; lbl = "CC" + num; }
+      else {
+        const sel = GRUPOS[grupo].find(x => x[1] === cod);
+        nomeSel = sel ? sel[0] : cod;
+        lbl = "Nº " + num;
+      }
+      trocas.push({ grupo, nomeSel, cod, lbl, qtd: q - 1 });
+    }
+  }
+  trocas.sort((a, b) => a.grupo !== b.grupo ? a.grupo.localeCompare(b.grupo) : a.nomeSel.localeCompare(b.nomeSel));
+  if (trocas.length === 0) return '<div class="em">Nenhuma repetida ainda. Volte aqui quando começar a juntar para trocar!</div>';
+  const total = trocas.reduce((s, t) => s + t.qtd, 0);
+  let h = '<div class="sb">' +
+    '<div class="sc z"><div class="l">Total p/ troca</div><div class="v">' + total + '</div></div>' +
+    '<div class="sc"><div class="l">Diferentes</div><div class="v">' + trocas.length + '</div></div>' +
+  '</div><div class="li">';
+  for (let i = 0; i < trocas.length; i++) {
+    const t = trocas[i];
+    const gl = (t.grupo === "FWC" || t.grupo === "CC") ? "Especial" : "Grupo " + t.grupo;
+    h += '<div class="li-i"><span class="cp">' + t.cod + '</span><div class="n"><strong>' + esc(t.nomeSel) + '</strong><small>' + gl + ' · ' + t.lbl + '</small></div><span class="q">' + t.qtd + '×</span></div>';
+  }
+  h += '</div>';
+  h += '<div style="margin-top:11px;padding:7px 11px;background:#FEF3C7;border-left:3px solid #F4C430;font-size:10px;color:#78350F;border-radius:3px"><strong>💡 Dica:</strong> leve esta lista nos encontros de troca.</div>';
+  return h;
+}
+
+// ============================================================
+// ATUALIZAR UI
+// ============================================================
+function atualizarUI() {
+  const tabs = document.querySelectorAll('.tab');
+  let tabAtiva = 'dashboard';
+  for (let i = 0; i < tabs.length; i++) {
+    if (tabs[i].classList.contains('active')) {
+      tabAtiva = tabs[i].dataset.tab;
+      break;
+    }
+  }
+  if (tabAtiva !== 'chat' && tabAtiva !== 'admin') switchTab(tabAtiva);
+}
+
+// ============================================================
+// NAVEGAÇÃO
+// ============================================================
+function switchTab(tab) {
+  const tabs = document.querySelectorAll(".tab");
+  for (let i = 0; i < tabs.length; i++) tabs[i].classList.toggle("active", tabs[i].dataset.tab === tab);
+  if (tab !== 'chat') {
+    if (chatsListUnsubscribe) { chatsListUnsubscribe(); chatsListUnsubscribe = null; }
+    if (chatConvUnsubscribe) { chatConvUnsubscribe(); chatConvUnsubscribe = null; }
+  }
+  if (tab === "dashboard") renderDashboard();
+  else if (tab === "controle") renderControle();
+  else if (tab === "trocas") renderTrocas();
+  else if (tab === "imprimir") renderImprimir();
+  else if (tab === "chat") renderChat();
+  else if (tab === "admin") renderAdmin();
+}
+
+document.querySelectorAll(".tab").forEach(t => {
+  t.addEventListener("click", function() { switchTab(t.dataset.tab); });
+});
+
+document.getElementById("user-btn").addEventListener("click", () => {
+  document.getElementById('modal-perfil').classList.add('show');
+  renderListaBloqueados();
+});
+
+document.querySelectorAll(".modal-bg").forEach(m => {
+  m.addEventListener("click", function(e) { if (e.target === m) m.classList.remove("show"); });
+});
+
+// SUGESTÕES DE CIDADES
+document.getElementById('signup-cidade').addEventListener('input', function(e) {
+  const input = e.target.value.toLowerCase();
+  const sugestoes = document.getElementById('cidades-sugestoes');
+  
+  if (input.length < 2) {
+    sugestoes.classList.remove('show');
+    return;
+  }
+  
+  const filtered = CIDADES_BR.filter(c => c.toLowerCase().includes(input));
+  if (filtered.length > 0) {
+    sugestoes.innerHTML = filtered.map(c => '<div class="cidade" onclick="document.getElementById(\'signup-cidade\').value=\'' + c + '\'; document.getElementById(\'cidades-sugestoes\').classList.remove(\'show\')">' + c + '</div>').join('');
+    sugestoes.classList.add('show');
+  } else {
+    sugestoes.classList.remove('show');
+  }
+});
+
+document.getElementById('login-password').addEventListener('keypress', e => {
+  if (e.key === 'Enter') fnEntrar();
+});
+
+document.getElementById('signup-password').addEventListener('keypress', e => {
+  if (e.key === 'Enter') fnCadastrar();
+});
+
+document.getElementById('reset-email').addEventListener('keypress', e => {
+  if (e.key === 'Enter') fnEnviarReset();
+});
+
+// ============================================================
+// BLOQUEIO DE USUÁRIOS
+// ============================================================
+function carregarBloqueados() {
+  if (!currentUser) return;
+  db.collection('bloqueios').doc(currentUser.uid).onSnapshot(doc => {
+    bloqueados = doc.exists ? (doc.data().lista || []) : [];
+  }, () => { bloqueados = []; });
+}
+
+function bloquearUsuario(uid, apelido) {
+  if (!confirm('Bloquear ' + apelido + '?\nVocê não verá mais este usuário em Trocas e o chat ficará desabilitado.')) return;
+  db.collection('bloqueios').doc(currentUser.uid).set(
+    { lista: firebase.firestore.FieldValue.arrayUnion(uid) }, { merge: true }
+  ).then(() => {
+    toast('🚫 ' + apelido + ' bloqueado');
+    voltarChat();
+  }).catch(() => toast('Erro ao bloquear'));
+}
+
+function desbloquearUsuario(uid, apelido) {
+  if (!confirm('Desbloquear ' + apelido + '?')) return;
+  db.collection('bloqueios').doc(currentUser.uid).update(
+    { lista: firebase.firestore.FieldValue.arrayRemove(uid) }
+  ).then(() => {
+    toast('✅ ' + apelido + ' desbloqueado');
+    renderListaBloqueados();
+  }).catch(() => toast('Erro ao desbloquear'));
+}
+
+function renderListaBloqueados() {
+  const container = document.getElementById('perfil-bloqueados');
+  if (!container) return;
+  if (bloqueados.length === 0) {
+    container.innerHTML = '<p style="font-size:12px;color:#6B7280">Nenhum usuário bloqueado</p>';
+    return;
+  }
+  container.innerHTML = '<p style="font-size:12px;color:#6B7280">Carregando...</p>';
+  const promises = bloqueados.map(uid =>
+    db.collection('users').doc(uid).get().then(doc => ({
+      uid, apelido: doc.exists ? doc.data().apelido : 'Usuário'
+    }))
+  );
+  Promise.all(promises).then(users => {
+    let h = '';
+    users.forEach(u => {
+      h += '<div class="blocked-item"><span>' + esc(u.apelido) + '</span>' +
+        '<button class="btn" onclick="desbloquearUsuario(\'' + u.uid + '\',\'' + esc(u.apelido) + '\')" style="font-size:11px;padding:4px 9px">↩ Desbloquear</button></div>';
+    });
+    container.innerHTML = h;
+  });
+}
+
+// ============================================================
+// BADGE DE NÃO LIDAS
+// ============================================================
+function iniciarBadgeChat() {
+  if (badgeUnsubscribe) badgeUnsubscribe();
+  if (!currentUser) return;
+  badgeUnsubscribe = db.collection('chats')
+    .where('participantes', 'array-contains', currentUser.uid)
+    .onSnapshot(snap => {
+      let total = 0;
+      snap.forEach(doc => {
+        const d = doc.data();
+        if (d.naoLidas && d.naoLidas[currentUser.uid]) total += d.naoLidas[currentUser.uid];
+      });
+      const badge = document.getElementById('chat-badge');
+      if (badge) {
+        badge.textContent = total > 0 ? total : '';
+        badge.style.display = total > 0 ? 'inline-flex' : 'none';
+      }
+    }, () => {});
+}
+
+// ============================================================
+// CHAT
+// ============================================================
+function getChatId(uid1, uid2) {
+  return [uid1, uid2].sort().join('_');
+}
+
+function abrirChatComAmigo(amigoUid, amigoApelido) {
+  chatAtivo = { chatId: getChatId(currentUser.uid, amigoUid), amigoUid, amigoApelido };
+  switchTab('chat');
+}
+
+function renderChat() {
+  if (chatAtivo) { renderConversa(); return; }
+  renderListaChats();
+}
+
+function renderListaChats() {
+  document.getElementById('content').innerHTML =
+    '<div class="sec-ttl">💬 Chat com amigos</div>' +
+    '<div class="empty"><div class="big">💬</div><p>Carregando conversas...</p></div>';
+
+  if (chatsListUnsubscribe) chatsListUnsubscribe();
+
+  chatsListUnsubscribe = db.collection('chats')
+    .where('participantes', 'array-contains', currentUser.uid)
+    .onSnapshot(snap => {
+      const chats = [];
+      snap.forEach(doc => chats.push({ id: doc.id, ...doc.data() }));
+      chats.sort((a, b) => {
+        const ta = a.ultimaMensagemEm ? a.ultimaMensagemEm.seconds : 0;
+        const tb = b.ultimaMensagemEm ? b.ultimaMensagemEm.seconds : 0;
+        return tb - ta;
+      });
+
+      if (chats.length === 0) {
+        document.getElementById('content').innerHTML =
+          '<div class="sec-ttl">💬 Chat com amigos</div>' +
+          '<div class="empty"><div class="big">💬</div><p>Nenhuma conversa ainda.<br><small>Vá em <strong>🔄 Trocas</strong> e clique em <strong>💬 Chat</strong> em um amigo para começar!</small></p></div>';
+        return;
+      }
+
+      const promises = chats.map(chat => {
+        const amigoUid = chat.participantes.find(u => u !== currentUser.uid);
+        return db.collection('users').doc(amigoUid).get().then(doc => ({
+          chat, amigoUid,
+          apelido: doc.exists ? doc.data().apelido : 'Usuário'
+        }));
+      });
+
+      Promise.all(promises).then(itens => {
+        let h = '<div class="sec-ttl">💬 Conversas</div>';
+        itens.forEach(({ chat, amigoUid, apelido }) => {
+          const naoLidas = chat.naoLidas && chat.naoLidas[currentUser.uid] ? chat.naoLidas[currentUser.uid] : 0;
+          const prev = chat.ultimaMensagem ? esc(chat.ultimaMensagem).substring(0, 45) : 'Sem mensagens';
+          const tempo = chat.ultimaMensagemEm ? formatarTempo(chat.ultimaMensagemEm.toDate()) : '';
+          const chatId = chat.id;
+          h += '<div class="chat-conv-item" onclick="abrirConversaById(\'' + chatId + '\',\'' + amigoUid + '\',\'' + esc(apelido) + '\')">' +
+            '<div class="chat-avatar">' + esc(apelido)[0].toUpperCase() + '</div>' +
+            '<div class="chat-conv-info">' +
+              '<div class="chat-conv-name">' + esc(apelido) + '</div>' +
+              '<div class="chat-conv-prev">' + prev + '</div>' +
+            '</div>' +
+            (naoLidas > 0 ? '<span class="chat-conv-unread">' + naoLidas + '</span>' : '<span class="chat-conv-time">' + tempo + '</span>') +
+          '</div>';
+        });
+        document.getElementById('content').innerHTML = h;
+      });
+    }, () => {
+      document.getElementById('content').innerHTML =
+        '<div class="sec-ttl">💬 Chat com amigos</div>' +
+        '<div class="empty"><p>Vá em <strong>🔄 Trocas</strong> e clique em <strong>💬 Chat</strong> em um amigo para iniciar uma conversa!</p></div>';
+    });
+}
+
+function abrirConversaById(chatId, amigoUid, amigoApelido) {
+  chatAtivo = { chatId, amigoUid, amigoApelido };
+  renderConversa();
+}
+
+function renderConversa() {
+  if (!chatAtivo) { renderListaChats(); return; }
+  const { chatId, amigoUid, amigoApelido } = chatAtivo;
+  const bloqueado = bloqueados.includes(amigoUid);
+
+  document.getElementById('content').innerHTML =
+    '<div class="chat-header">' +
+      '<button class="btn" onclick="voltarChat()" style="padding:6px 10px">← Voltar</button>' +
+      '<div class="chat-header-name">💬 ' + esc(amigoApelido) + '</div>' +
+      (!bloqueado ? '<button class="btn danger" onclick="bloquearUsuario(\'' + amigoUid + '\',\'' + esc(amigoApelido) + '\')" style="padding:5px 9px;font-size:11px" title="Bloquear">🚫</button>' : '') +
+    '</div>' +
+    '<div class="chat-mensagens" id="chat-msgs"><div style="text-align:center;color:#94A3B8;font-size:12px;padding:20px">Carregando...</div></div>' +
+    '<div class="chat-input-area">' +
+      '<input type="text" id="chat-input" class="chat-input" placeholder="' + (bloqueado ? 'Você bloqueou este usuário' : 'Mensagem...') + '" maxlength="500"' + (bloqueado ? ' disabled' : '') + ' onkeypress="if(event.key===\'Enter\')enviarMensagem()">' +
+      '<button class="btn primary" onclick="enviarMensagem()" style="padding:8px 14px"' + (bloqueado ? ' disabled' : '') + '>Enviar</button>' +
+    '</div>';
+
+  if (chatConvUnsubscribe) chatConvUnsubscribe();
+
+  chatConvUnsubscribe = db.collection('chats').doc(chatId).collection('mensagens')
+    .orderBy('enviadaEm', 'asc')
+    .onSnapshot(snap => {
+      const msgsDiv = document.getElementById('chat-msgs');
+      if (!msgsDiv) return;
+      let h = '';
+      snap.forEach(doc => {
+        const msg = doc.data();
+        const minha = msg.remetente === currentUser.uid;
+        const hora = msg.enviadaEm ? formatarHora(msg.enviadaEm.toDate()) : '';
+        const lida = msg.lida;
+        h += '<div class="chat-bubble-wrap ' + (minha ? 'minha' : 'dele') + '">' +
+          '<div class="chat-bubble ' + (minha ? 'minha' : 'dele') + '">' +
+            esc(msg.texto) +
+            '<div class="chat-meta">' + hora + (minha ? (lida ? ' ✓✓' : ' ✓') : '') + '</div>' +
+          '</div></div>';
+        if (!minha && !msg.lida) {
+          db.collection('chats').doc(chatId).collection('mensagens').doc(doc.id)
+            .update({ lida: true, lidaEm: new Date() }).catch(() => {});
+        }
+      });
+      if (!h) h = '<div style="text-align:center;color:#94A3B8;font-size:12px;padding:20px">Início da conversa</div>';
+      msgsDiv.innerHTML = h;
+      msgsDiv.scrollTop = msgsDiv.scrollHeight;
+    });
+
+  // Zerar badge ao abrir conversa
+  db.collection('chats').doc(chatId).get().then(doc => {
+    if (!doc.exists) {
+      db.collection('chats').doc(chatId).set({
+        participantes: [currentUser.uid, amigoUid].sort(),
+        criadoEm: new Date(),
+        ultimaMensagem: '',
+        ultimaMensagemEm: new Date(),
+        naoLidas: {}
+      });
+    } else {
+      const upd = {};
+      upd['naoLidas.' + currentUser.uid] = 0;
+      db.collection('chats').doc(chatId).update(upd).catch(() => {});
+    }
+  });
+}
+
+function voltarChat() {
+  if (chatConvUnsubscribe) { chatConvUnsubscribe(); chatConvUnsubscribe = null; }
+  chatAtivo = null;
+  renderListaChats();
+}
+
+function enviarMensagem() {
+  const input = document.getElementById('chat-input');
+  if (!input) return;
+  const texto = input.value.trim();
+  if (!texto || !chatAtivo) return;
+  const { chatId, amigoUid } = chatAtivo;
+  if (bloqueados.includes(amigoUid)) return;
+
+  const msg = {
+    remetente: currentUser.uid,
+    texto: texto,
+    enviadaEm: firebase.firestore.FieldValue.serverTimestamp(),
+    lida: false,
+    lidaEm: null
+  };
+  input.value = '';
+
+  db.collection('chats').doc(chatId).collection('mensagens').add(msg).then(() => {
+    const upd = {
+      ultimaMensagem: texto.substring(0, 100),
+      ultimaMensagemEm: firebase.firestore.FieldValue.serverTimestamp()
+    };
+    upd['naoLidas.' + amigoUid] = firebase.firestore.FieldValue.increment(1);
+    return db.collection('chats').doc(chatId).update(upd);
+  }).catch(() => toast('❌ Erro ao enviar mensagem'));
+}
+
+function formatarTempo(date) {
+  const diff = new Date() - date;
+  if (diff < 60000) return 'agora';
+  if (diff < 3600000) return Math.floor(diff / 60000) + 'm';
+  if (diff < 86400000) return formatarHora(date);
+  return date.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' });
+}
+
+function formatarHora(date) {
+  return date.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+}
+
+// ============================================================
+// PAINEL ADMIN
+// ============================================================
+function renderAdmin() {
+  if (!userData || userData.role !== 'admin') {
+    document.getElementById('content').innerHTML = '<div class="empty"><p>Acesso negado</p></div>';
+    return;
+  }
+  document.getElementById('content').innerHTML =
+    '<div class="sec-ttl">🛡️ Painel Admin</div>' +
+    '<div class="acts" style="margin-bottom:12px">' +
+      '<button class="btn primary" onclick="adminVerUsuarios()">👥 Usuários</button>' +
+      '<button class="btn" onclick="adminVerMensagens()">📩 Mensagens Dev</button>' +
+    '</div>' +
+    '<div id="admin-content"><div class="empty"><p>Carregando...</p></div></div>';
+  adminVerUsuarios();
+}
+
+function adminVerUsuarios() {
+  const cont = document.getElementById('admin-content');
+  if (!cont) return;
+  cont.innerHTML = '<div class="empty"><p>Carregando...</p></div>';
+  db.collection('users').get().then(snap => {
+    const users = [];
+    snap.forEach(doc => users.push({ uid: doc.id, ...doc.data() }));
+    users.sort((a, b) => {
+      const ta = a.createdAt ? a.createdAt.seconds : 0;
+      const tb = b.createdAt ? b.createdAt.seconds : 0;
+      return tb - ta;
+    });
+    if (users.length === 0) { cont.innerHTML = '<div class="empty"><p>Nenhum usuário</p></div>'; return; }
+    let h = '';
+    users.forEach(u => {
+      const banido = u.status === 'banido';
+      const data = u.createdAt ? new Date(u.createdAt.toDate()).toLocaleDateString('pt-BR') : '-';
+      const euMesmo = u.uid === currentUser.uid;
+      h += '<div class="admin-user-card">' +
+        '<div class="admin-user-info">' +
+          '<div class="admin-user-name">' + esc(u.apelido || '?') + (euMesmo ? ' <span style="font-size:10px;color:#6B7280">(você)</span>' : '') + '</div>' +
+          '<div class="admin-user-detail">' + esc(u.email || '') + ' · ' + esc(u.cidade || '') + ' · desde ' + data + '</div>' +
+          '<span class="admin-status-badge ' + (banido ? 'banido' : 'ativo') + '">' + (banido ? '🚫 Banido' : '✅ Ativo') + '</span>' +
+        '</div>' +
+        (!euMesmo ?
+          '<div class="admin-user-actions">' +
+            (banido
+              ? '<button class="btn" onclick="adminReativar(\'' + u.uid + '\',\'' + esc(u.apelido) + '\')" style="font-size:11px">✅ Reativar</button>'
+              : '<button class="btn danger" onclick="adminBanir(\'' + u.uid + '\',\'' + esc(u.apelido) + '\')" style="font-size:11px">🚫 Banir</button>'
+            ) +
+            '<button class="btn" onclick="adminIniciarChat(\'' + u.uid + '\',\'' + esc(u.apelido) + '\')" style="font-size:11px">💬 Chat</button>' +
+          '</div>'
+        : '') +
+      '</div>';
+    });
+    cont.innerHTML = h;
+  }).catch(() => { cont.innerHTML = '<div class="empty"><p>Erro ao carregar usuários</p></div>'; });
+}
+
+function adminVerMensagens() {
+  const cont = document.getElementById('admin-content');
+  if (!cont) return;
+  cont.innerHTML = '<div class="empty"><p>Carregando...</p></div>';
+  db.collection('contato_dev').get().then(snap => {
+    const msgs = [];
+    snap.forEach(doc => msgs.push({ id: doc.id, ...doc.data() }));
+    msgs.sort((a, b) => {
+      const ta = a.enviadaEm ? a.enviadaEm.seconds : 0;
+      const tb = b.enviadaEm ? b.enviadaEm.seconds : 0;
+      return tb - ta;
+    });
+    if (msgs.length === 0) { cont.innerHTML = '<div class="empty"><p>Nenhuma mensagem ainda</p></div>'; return; }
+    let h = '';
+    msgs.forEach(m => {
+      const data = m.enviadaEm ? new Date(m.enviadaEm.toDate()).toLocaleString('pt-BR') : '-';
+      h += '<div class="admin-msg-card' + (m.lido ? '' : ' nao-lido') + '" id="admsg-' + m.id + '">' +
+        '<div class="admin-msg-header">' +
+          '<strong>' + esc(m.apelido || '?') + '</strong> · <span style="color:#6B7280">' + esc(m.email || '') + '</span>' +
+          ' <span style="font-size:10px;color:#94A3B8;margin-left:6px">' + data + '</span>' +
+        '</div>' +
+        '<div class="admin-msg-texto">' + esc(m.texto) + '</div>' +
+        '<div style="display:flex;gap:6px;margin-top:8px">' +
+          (!m.lido ? '<button class="btn primary" onclick="adminMarcarLido(\'' + m.id + '\')" style="font-size:11px">✓ Marcar lido</button>' : '<span style="font-size:11px;color:#6B7280">✓ Lido</span>') +
+          (m.uid ? '<button class="btn" onclick="adminIniciarChat(\'' + m.uid + '\',\'' + esc(m.apelido) + '\')" style="font-size:11px">💬 Responder</button>' : '') +
+        '</div>' +
+      '</div>';
+    });
+    cont.innerHTML = h;
+  }).catch(() => { cont.innerHTML = '<div class="empty"><p>Sem permissão ou erro ao carregar mensagens</p></div>'; });
+}
+
+function adminBanir(uid, apelido) {
+  if (!confirm('Banir ' + apelido + '?\nO usuário perderá o acesso imediatamente.')) return;
+  db.collection('users').doc(uid).update({ status: 'banido' })
+    .then(() => { toast('🚫 ' + apelido + ' banido'); adminVerUsuarios(); })
+    .catch(() => toast('Erro ao banir'));
+}
+
+function adminReativar(uid, apelido) {
+  db.collection('users').doc(uid).update({ status: 'ativo' })
+    .then(() => { toast('✅ ' + apelido + ' reativado'); adminVerUsuarios(); })
+    .catch(() => toast('Erro ao reativar'));
+}
+
+function adminMarcarLido(docId) {
+  db.collection('contato_dev').doc(docId).update({ lido: true }).then(() => {
+    const el = document.getElementById('admsg-' + docId);
+    if (el) { el.classList.remove('nao-lido'); adminVerMensagens(); }
+  }).catch(() => toast('Erro'));
+}
+
+function adminIniciarChat(uid, apelido) {
+  chatAtivo = { chatId: getChatId(currentUser.uid, uid), amigoUid: uid, amigoApelido: apelido };
+  switchTab('chat');
+}
+
+// ============================================================
+// FALAR COM O DESENVOLVEDOR
+// ============================================================
+function abrirContatoDev() {
+  fecharModal('modal-perfil');
+  document.getElementById('modal-contato-dev').classList.add('show');
+}
+
+function enviarMensagemDev() {
+  const texto = document.getElementById('contato-dev-texto').value.trim();
+  if (!texto) { toast('⚠️ Digite uma mensagem'); return; }
+  db.collection('contato_dev').add({
+    uid: currentUser.uid,
+    apelido: userData.apelido || '',
+    email: userData.email || currentUser.email || '',
+    texto: texto,
+    enviadaEm: firebase.firestore.FieldValue.serverTimestamp(),
+    lido: false
+  }).then(() => {
+    toast('✅ Mensagem enviada ao desenvolvedor!');
+    document.getElementById('contato-dev-texto').value = '';
+    fecharModal('modal-contato-dev');
+  }).catch(() => toast('❌ Erro ao enviar mensagem'));
+}
+</script>
+
+</body>
+</html>

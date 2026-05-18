@@ -1,0 +1,903 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+<meta name="theme-color" content="#0F4C5C">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="mobile-web-app-capable" content="yes">
+<title>Álbum Copa do Mundo 2026 · Panini</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E🏆%3C/text%3E%3C/svg%3E">
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { background: #F5F7FA; min-height: 100vh; }
+body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; color: #1F2937; padding: 14px; max-width: 1100px; margin: 0 auto; line-height: 1.4; }
+
+.hero { background: linear-gradient(135deg, #0F4C5C 0%, #0B3F4A 100%); color: #fff; padding: 22px 24px; border-radius: 14px; margin-bottom: 16px; position: relative; overflow: hidden; }
+.hero::before { content: ""; position: absolute; top: -50px; right: -50px; width: 180px; height: 180px; background: rgba(255,255,255,0.05); border-radius: 50%; }
+.hero .tag { display: inline-block; background: rgba(255,255,255,0.18); padding: 4px 10px; border-radius: 12px; font-size: 10px; font-weight: 700; margin-bottom: 8px; letter-spacing: 0.5px; position: relative; }
+.hero h1 { font-size: 22px; font-weight: 700; margin: 0 0 4px; color: #fff; position: relative; }
+.hero p { font-size: 13px; margin: 0; color: #B5D4F4; position: relative; }
+.hero .user-bar { margin-top: 12px; display: flex; gap: 8px; align-items: center; position: relative; flex-wrap: wrap; }
+.user-pill { background: rgba(255,255,255,0.2); color: #fff; padding: 5px 12px; border-radius: 14px; font-size: 12px; font-weight: 600; border: none; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; }
+.user-pill:hover { background: rgba(255,255,255,0.3); }
+
+.tabs { display: flex; gap: 4px; margin-bottom: 16px; background: #F1F5F9; padding: 4px; border-radius: 10px; overflow-x: auto; }
+.tabs::-webkit-scrollbar { display: none; }
+.tab { flex: 1; min-width: 76px; padding: 10px 12px; font-size: 12px; font-weight: 600; cursor: pointer; border: none; background: transparent; color: #64748B; border-radius: 7px; white-space: nowrap; }
+.tab.active { background: #fff; color: #0F4C5C; box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
+
+.kpis { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 16px; }
+.kpi { background: #fff; border: 1px solid #E5E7EB; border-radius: 10px; padding: 12px; }
+.kpi-lbl { font-size: 10px; color: #6B7280; font-weight: 700; text-transform: uppercase; letter-spacing: 0.3px; margin-bottom: 4px; }
+.kpi-val { font-size: 24px; font-weight: 700; color: #0B3F4A; line-height: 1; }
+.kpi.tenho { background: #E6F1FB; }
+.kpi.tenho .kpi-val { color: #185FA5; }
+.kpi.falta { background: #F8FAFC; }
+.kpi.rep { background: #DBEAFE; }
+.kpi.rep .kpi-val { color: #1E40AF; }
+
+.prog { background: linear-gradient(135deg, #0F4C5C 0%, #185FA5 100%); border-radius: 12px; padding: 18px 20px; margin-bottom: 16px; color: #fff; }
+.prog-top { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 10px; }
+.prog-top .lbl { font-size: 13px; font-weight: 600; opacity: 0.9; }
+.prog-top .pct { font-size: 26px; font-weight: 700; }
+.prog-bg { height: 10px; background: rgba(255,255,255,0.2); border-radius: 8px; overflow: hidden; }
+.prog-fl { height: 100%; background: #F4C430; border-radius: 8px; transition: width 0.3s; }
+.prog-bot { display: flex; justify-content: space-between; margin-top: 8px; font-size: 12px; opacity: 0.85; }
+
+.sec-ttl { font-size: 14px; font-weight: 700; color: #0F4C5C; margin: 20px 0 10px; }
+
+.gp { background: #fff; border: 1px solid #E5E7EB; border-radius: 10px; padding: 12px 14px; margin-bottom: 8px; }
+.gp-top { display: flex; justify-content: space-between; gap: 10px; margin-bottom: 7px; }
+.gp-name { font-size: 13px; font-weight: 600; color: #0F4C5C; flex: 1; }
+.gp-name small { display: block; color: #6B7280; font-weight: 400; font-size: 11px; margin-top: 2px; }
+.gp-pct { font-size: 14px; font-weight: 700; color: #185FA5; }
+.gp-bg { height: 6px; background: #F1F5F9; border-radius: 5px; overflow: hidden; }
+.gp-fl { height: 100%; background: linear-gradient(90deg, #0F4C5C, #185FA5); border-radius: 5px; transition: width 0.3s; }
+.gp-stats { display: flex; gap: 14px; margin-top: 7px; font-size: 11px; color: #6B7280; }
+.gp-stats strong { color: #1F2937; }
+
+.acts { display: flex; gap: 6px; margin-bottom: 12px; flex-wrap: wrap; }
+.btn { background: #fff; border: 1px solid #E5E7EB; border-radius: 8px; padding: 8px 13px; font-size: 12px; font-weight: 600; color: #0F4C5C; cursor: pointer; display: inline-flex; align-items: center; gap: 5px; }
+.btn:hover { background: #E6F1FB; border-color: #185FA5; }
+.btn.danger { color: #B91C1C; }
+.btn.danger:hover { background: #FEE2E2; border-color: #DC2626; }
+.btn.primary { background: #0F4C5C; color: #fff; border-color: #0F4C5C; }
+.btn.primary:hover { background: #0B3F4A; }
+
+.leg { background: #F8FAFC; border-radius: 9px; padding: 9px 14px; margin-bottom: 14px; display: flex; gap: 16px; flex-wrap: wrap; font-size: 11px; color: #475569; align-items: center; }
+.leg-item { display: flex; align-items: center; gap: 6px; }
+.leg-box { width: 14px; height: 14px; border-radius: 3px; border: 1px solid #E5E7EB; }
+.leg .hint { margin-left: auto; color: #94A3B8; font-style: italic; font-size: 10px; }
+
+.card { background: #fff; border: 1px solid #E5E7EB; border-radius: 11px; margin-bottom: 10px; overflow: hidden; }
+.card.open { border-color: #B5D4F4; box-shadow: 0 2px 8px rgba(15,76,92,0.06); }
+.head { background: linear-gradient(135deg, #0F4C5C 0%, #185FA5 100%); color: #fff; padding: 12px 16px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; user-select: none; gap: 10px; }
+.head.esp { background: linear-gradient(135deg, #185FA5 0%, #378ADD 100%); }
+.head-ttl { font-size: 13px; font-weight: 700; color: #fff; display: flex; align-items: center; gap: 8px; flex: 1; }
+.head-bdg { background: rgba(255,255,255,0.22); padding: 2px 8px; border-radius: 7px; font-size: 10px; font-weight: 700; }
+.head-st { font-size: 11px; color: #DBEAFE; display: flex; gap: 10px; align-items: center; }
+.chev { transition: transform 0.2s; }
+.card.open .chev { transform: rotate(180deg); }
+.body { display: none; }
+.card.open .body { display: block; }
+
+.row { padding: 12px 16px; border-top: 1px solid #F1F5F9; }
+.row:first-child { border-top: none; }
+.row-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 9px; gap: 8px; flex-wrap: wrap; }
+.row-left { display: flex; align-items: center; gap: 10px; flex: 1; }
+.cod { font-size: 11px; font-weight: 700; color: #fff; background: #0F4C5C; padding: 4px 10px; border-radius: 6px; min-width: 44px; text-align: center; }
+.name { font-size: 13px; font-weight: 600; color: #0F4C5C; }
+.cnt { font-size: 11px; color: #6B7280; font-weight: 600; background: #F1F5F9; padding: 4px 10px; border-radius: 10px; }
+.cnt strong { color: #185FA5; }
+
+.nums { display: grid; grid-template-columns: repeat(20, 1fr); gap: 4px; }
+.nums.cc { grid-template-columns: repeat(14, 1fr); }
+.num { aspect-ratio: 1; min-width: 22px; min-height: 26px; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 700; border-radius: 6px; cursor: pointer; user-select: none; border: 1px solid #E5E7EB; background: #fff; color: #94A3B8; position: relative; transition: all 0.1s; -webkit-tap-highlight-color: transparent; }
+.num:hover { border-color: #185FA5; transform: scale(1.08); z-index: 1; }
+.num.tem { background: linear-gradient(135deg, #185FA5, #0F4C5C); color: #fff; border-color: #0F4C5C; box-shadow: 0 1px 3px rgba(15,76,92,0.2); }
+.num.rep { background: linear-gradient(135deg, #DBEAFE, #BFDBFE); color: #1E3A8A; border-color: #378ADD; }
+.num.rep::after { content: attr(data-qtd); position: absolute; top: -5px; right: -5px; background: #F4C430; color: #0B3F4A; font-size: 9px; padding: 1px 5px; border-radius: 8px; font-weight: 700; border: 1.5px solid #fff; box-shadow: 0 1px 2px rgba(0,0,0,0.15); }
+
+.empty { text-align: center; padding: 36px 20px; color: #94A3B8; font-size: 13px; background: #F8FAFC; border-radius: 11px; }
+.empty .big { font-size: 40px; color: #B5D4F4; margin-bottom: 10px; }
+
+.tr { background: #fff; border: 1px solid #E5E7EB; border-radius: 10px; padding: 11px 14px; margin-bottom: 7px; display: flex; justify-content: space-between; align-items: center; gap: 10px; }
+.tr-l { display: flex; align-items: center; gap: 10px; flex: 1; min-width: 0; }
+.tr-c { background: #E6F1FB; color: #0F4C5C; padding: 5px 10px; border-radius: 6px; font-size: 11px; font-weight: 700; min-width: 50px; text-align: center; }
+.tr-i { font-size: 13px; min-width: 0; }
+.tr-i strong { color: #0F4C5C; display: block; }
+.tr-i small { color: #6B7280; font-size: 11px; }
+.tr-q { background: linear-gradient(135deg, #F4C430, #E0B52A); color: #0B3F4A; padding: 5px 12px; border-radius: 11px; font-size: 12px; font-weight: 700; }
+
+.print-opt { display: flex; gap: 13px; align-items: center; padding: 14px; background: #fff; border: 1px solid #E5E7EB; border-radius: 10px; cursor: pointer; margin-bottom: 8px; transition: all 0.15s; }
+.print-opt:hover { border-color: #185FA5; background: #E6F1FB; }
+.print-ic { background: linear-gradient(135deg, #0F4C5C, #185FA5); color: #fff; width: 42px; height: 42px; border-radius: 9px; display: flex; align-items: center; justify-content: center; font-size: 19px; flex-shrink: 0; }
+.print-ic.am { background: linear-gradient(135deg, #F4C430, #E0B52A); color: #0B3F4A; }
+.print-tx { flex: 1; min-width: 0; }
+.print-tx strong { display: block; color: #0F4C5C; font-size: 13px; }
+.print-tx small { color: #6B7280; font-size: 11px; }
+
+/* Modal de Compartilhar/Sincronizar */
+.modal-bg { display: none; position: fixed; inset: 0; background: rgba(15,76,92,0.6); z-index: 9999; align-items: center; justify-content: center; padding: 20px; }
+.modal-bg.show { display: flex; }
+.modal { background: #fff; border-radius: 14px; max-width: 480px; width: 100%; padding: 22px; max-height: 90vh; overflow-y: auto; }
+.modal h2 { color: #0F4C5C; font-size: 18px; margin-bottom: 6px; }
+.modal p { color: #6B7280; font-size: 13px; margin-bottom: 16px; }
+.modal-sec { background: #F8FAFC; border: 1px solid #E5E7EB; border-radius: 10px; padding: 14px; margin-bottom: 12px; }
+.modal-sec h3 { color: #0F4C5C; font-size: 13px; font-weight: 700; margin-bottom: 6px; display: flex; align-items: center; gap: 6px; }
+.modal-sec p { font-size: 12px; margin-bottom: 10px; }
+.modal textarea { width: 100%; min-height: 100px; max-height: 200px; padding: 10px; border: 1px solid #E5E7EB; border-radius: 8px; font-family: monospace; font-size: 11px; resize: vertical; background: #fff; color: #1F2937; }
+.modal-input { width: 100%; padding: 10px 12px; border: 1px solid #E5E7EB; border-radius: 8px; font-size: 14px; font-family: inherit; margin-bottom: 10px; }
+.modal-input:focus { outline: none; border-color: #185FA5; }
+.modal-foot { display: flex; gap: 8px; justify-content: flex-end; margin-top: 12px; flex-wrap: wrap; }
+
+.toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%); background: #0F4C5C; color: #fff; padding: 11px 18px; border-radius: 24px; font-size: 13px; font-weight: 600; box-shadow: 0 4px 14px rgba(0,0,0,0.2); opacity: 0; pointer-events: none; transition: opacity 0.2s; z-index: 10000; max-width: 90vw; text-align: center; }
+.toast.show { opacity: 1; }
+
+@media (max-width: 700px) {
+  body { padding: 10px; }
+  .hero { padding: 18px 20px; }
+  .hero h1 { font-size: 19px; }
+  .kpis { grid-template-columns: repeat(2, 1fr); }
+  .row-head { flex-direction: column; align-items: flex-start; }
+  .cnt { align-self: flex-end; }
+  .nums { grid-template-columns: repeat(10, 1fr); }
+  .nums.cc { grid-template-columns: repeat(7, 1fr); }
+  .num { font-size: 11px; min-height: 30px; }
+  .head-st { font-size: 10px; gap: 7px; }
+  .head-ttl { font-size: 12px; }
+  .tab { font-size: 11px; padding: 9px 10px; }
+  .gp-stats { gap: 10px; flex-wrap: wrap; }
+}
+@media (max-width: 420px) {
+  .nums, .nums.cc { grid-template-columns: repeat(7, 1fr); }
+  .num { font-size: 11px; min-height: 32px; }
+}
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <span class="tag">FIFA WORLD CUP 2026</span>
+  <h1>🏆 Álbum Panini · Copa do Mundo</h1>
+  <p>Controle interativo da coleção · dados salvos no seu dispositivo</p>
+  <div class="user-bar">
+    <button class="user-pill" id="user-btn">👤 <span id="user-name">Convidado</span></button>
+    <button class="user-pill" onclick="abrirSync()">🔄 Sincronizar entre dispositivos</button>
+  </div>
+</div>
+
+<div class="tabs">
+  <button class="tab active" data-tab="dashboard">📊 Dashboard</button>
+  <button class="tab" data-tab="controle">📋 Controle</button>
+  <button class="tab" data-tab="trocas">🔄 Trocas</button>
+  <button class="tab" data-tab="imprimir">🖨️ Imprimir</button>
+</div>
+
+<div id="content"></div>
+
+<!-- Modal Usuário -->
+<div class="modal-bg" id="modal-user">
+  <div class="modal">
+    <h2>👤 Quem está usando?</h2>
+    <p>Escolha um nome. Cada pessoa terá seu próprio progresso salvo separadamente neste dispositivo.</p>
+    <input type="text" class="modal-input" id="user-input" placeholder="Ex: Anderson, Mariana, Pedro..." maxlength="30">
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); gap: 6px;" id="user-quick"></div>
+    <div class="modal-foot">
+      <button class="btn" onclick="fecharModal('modal-user')">Cancelar</button>
+      <button class="btn primary" onclick="salvarUsuario()">Confirmar</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Sincronizar -->
+<div class="modal-bg" id="modal-sync">
+  <div class="modal">
+    <h2>🔄 Sincronizar entre dispositivos</h2>
+    <p>Esta planilha salva o progresso no próprio dispositivo. Para sincronizar com outros aparelhos, use exportar/importar:</p>
+
+    <div class="modal-sec">
+      <h3>📤 Exportar meus dados</h3>
+      <p>Copie o texto abaixo e envie por WhatsApp, e-mail ou Telegram para os outros aparelhos:</p>
+      <textarea id="export-data" readonly></textarea>
+      <div style="display: flex; gap: 6px; margin-top: 8px; flex-wrap: wrap;">
+        <button class="btn primary" onclick="copiarExport()">📋 Copiar texto</button>
+        <button class="btn" onclick="baixarBackup()">💾 Salvar arquivo</button>
+      </div>
+    </div>
+
+    <div class="modal-sec">
+      <h3>📥 Importar dados de outro dispositivo</h3>
+      <p>Cole abaixo o texto exportado do outro aparelho:</p>
+      <textarea id="import-data" placeholder="Cole aqui o código exportado..."></textarea>
+      <button class="btn primary" onclick="importar()" style="margin-top: 8px;">📥 Importar dados</button>
+    </div>
+
+    <div class="modal-foot">
+      <button class="btn" onclick="fecharModal('modal-sync')">Fechar</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast" class="toast"></div>
+
+<script>
+// ============================================================
+// DADOS
+// ============================================================
+var GRUPOS = {
+  A: [["México","MEX"],["África do Sul","RSA"],["Coréia do Sul","KOR"],["Rep. Tcheca","CZE"]],
+  B: [["Canadá","CAN"],["Bósnia","BIH"],["Catar","QAT"],["Suíça","SUI"]],
+  C: [["Brasil","BRA"],["Marrocos","MAR"],["Haiti","HAI"],["Escócia","SCO"]],
+  D: [["Estados Unidos","USA"],["Paraguai","PAR"],["Austrália","AUS"],["Turquia","TUR"]],
+  E: [["Alemanha","GER"],["Curaçao","CUW"],["Costa do Marfim","CIV"],["Equador","ECU"]],
+  F: [["Holanda","NED"],["Japão","JPN"],["Suécia","SWE"],["Tunísia","TUN"]],
+  G: [["Bélgica","BEL"],["Egito","EGY"],["Irã","IRN"],["Nova Zelândia","NZL"]],
+  H: [["Espanha","ESP"],["Cabo Verde","CPV"],["Arábia Saudita","KSA"],["Uruguai","URU"]],
+  I: [["França","FRA"],["Senegal","SEN"],["Iraque","IRQ"],["Noruega","NOR"]],
+  J: [["Argentina","ARG"],["Argélia","ALG"],["Áustria","AUT"],["Jordânia","JOR"]],
+  K: [["Portugal","POR"],["Congo","COD"],["Uzbequistão","UZB"],["Colômbia","COL"]],
+  L: [["Inglaterra","ENG"],["Croácia","CRO"],["Gana","GHA"],["Panamá","PAN"]]
+};
+var TOTAL = 48*20 + 20 + 14;
+var STORAGE_PREFIX = "album_copa2026_v1_";
+var usuario = "Convidado";
+var dados = {};
+var abertos = {};
+
+// ============================================================
+// USUÁRIO E STORAGE
+// ============================================================
+function storageKey() { return STORAGE_PREFIX + usuario; }
+
+function carregar() {
+  try {
+    usuario = localStorage.getItem("album_user_atual") || "Convidado";
+    var raw = localStorage.getItem(storageKey());
+    dados = raw ? JSON.parse(raw) : {};
+  } catch(e) { dados = {}; }
+  document.getElementById("user-name").textContent = usuario;
+}
+
+function salvar() {
+  try { localStorage.setItem(storageKey(), JSON.stringify(dados)); } catch(e) {}
+}
+
+function listarUsuarios() {
+  var lista = [];
+  try {
+    for (var i = 0; i < localStorage.length; i++) {
+      var k = localStorage.key(i);
+      if (k && k.indexOf(STORAGE_PREFIX) === 0) {
+        lista.push(k.substring(STORAGE_PREFIX.length));
+      }
+    }
+  } catch(e) {}
+  return lista;
+}
+
+function trocarUsuario(novo) {
+  if (!novo || !novo.trim()) return;
+  usuario = novo.trim();
+  try { localStorage.setItem("album_user_atual", usuario); } catch(e) {}
+  carregar();
+  switchTab("dashboard");
+  toast("Olá, " + usuario + "! 👋");
+}
+
+// ============================================================
+// FUNÇÕES AUXILIARES
+// ============================================================
+function getQ(k) { return dados[k] || 0; }
+function setQ(k, q) { if (q <= 0) delete dados[k]; else dados[k] = q; salvar(); }
+function esc(s) { return String(s).replace(/[&<>"']/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]; }); }
+
+function toast(msg) {
+  var t = document.getElementById("toast");
+  t.textContent = msg;
+  t.classList.add("show");
+  clearTimeout(t._t);
+  t._t = setTimeout(function(){ t.classList.remove("show"); }, 1800);
+}
+
+function statsGeral() {
+  var t = 0, r = 0;
+  for (var k in dados) { var q = dados[k]; if (q >= 1) t++; if (q > 1) r += q - 1; }
+  return { t: t, f: TOTAL - t, r: r, total: TOTAL };
+}
+
+function statsGrupo(g) {
+  var t = 0, r = 0, total = 0;
+  if (g === "FWC") {
+    total = 20;
+    for (var i = 0; i < 20; i++) { var q = getQ("FWC-FWC-" + i); if (q >= 1) t++; if (q > 1) r += q - 1; }
+  } else if (g === "CC") {
+    total = 14;
+    for (var i = 1; i <= 14; i++) { var q = getQ("CC-CC-" + i); if (q >= 1) t++; if (q > 1) r += q - 1; }
+  } else {
+    total = GRUPOS[g].length * 20;
+    for (var idx = 0; idx < GRUPOS[g].length; idx++) {
+      var sel = GRUPOS[g][idx];
+      for (var i = 1; i <= 20; i++) {
+        var q = getQ(g + "-" + sel[1] + "-" + i);
+        if (q >= 1) t++;
+        if (q > 1) r += q - 1;
+      }
+    }
+  }
+  return { t: t, f: total - t, r: r, total: total };
+}
+
+function statsSel(g, cod, max, start) {
+  var t = 0;
+  for (var i = 0; i < max; i++) {
+    var n = start === 0 ? i : i + 1;
+    if (getQ(g + "-" + cod + "-" + n) >= 1) t++;
+  }
+  return t;
+}
+
+// ============================================================
+// DASHBOARD
+// ============================================================
+function renderDashboard() {
+  var s = statsGeral();
+  var pct = ((s.t / s.total) * 100).toFixed(1);
+  var h = '<div class="kpis">' +
+    '<div class="kpi"><div class="kpi-lbl">📦 Total</div><div class="kpi-val">' + s.total + '</div></div>' +
+    '<div class="kpi tenho"><div class="kpi-lbl">✓ Coladas</div><div class="kpi-val">' + s.t + '</div></div>' +
+    '<div class="kpi falta"><div class="kpi-lbl">○ Faltam</div><div class="kpi-val">' + s.f + '</div></div>' +
+    '<div class="kpi rep"><div class="kpi-lbl">⇄ Repetidas</div><div class="kpi-val">' + s.r + '</div></div>' +
+    '</div>' +
+    '<div class="prog">' +
+      '<div class="prog-top"><span class="lbl">Progresso geral · ' + esc(usuario) + '</span><span class="pct">' + pct + '%</span></div>' +
+      '<div class="prog-bg"><div class="prog-fl" style="width:' + pct + '%"></div></div>' +
+      '<div class="prog-bot"><span>' + s.t + ' de ' + s.total + '</span><span>' + s.f + ' p/ completar</span></div>' +
+    '</div>' +
+    '<div class="sec-ttl">📈 Progresso por grupo</div>';
+
+  var todos = Object.keys(GRUPOS).concat(["FWC", "CC"]);
+  for (var i = 0; i < todos.length; i++) {
+    var g = todos[i];
+    var st = statsGrupo(g);
+    var p = ((st.t / st.total) * 100).toFixed(0);
+    var nome, sub;
+    if (g === "FWC") { nome = "Especial · FIFA World Cup History"; sub = "20 figurinhas"; }
+    else if (g === "CC") { nome = "Especial · Coca-Cola"; sub = "14 figurinhas"; }
+    else { nome = "Grupo " + g; sub = GRUPOS[g].map(function(x){return x[0];}).join(" · "); }
+    h += '<div class="gp">' +
+      '<div class="gp-top"><div class="gp-name">' + nome + '<small>' + sub + '</small></div><span class="gp-pct">' + p + '%</span></div>' +
+      '<div class="gp-bg"><div class="gp-fl" style="width:' + p + '%"></div></div>' +
+      '<div class="gp-stats"><span>✓ <strong>' + st.t + '</strong>/' + st.total + '</span><span>○ faltam <strong>' + st.f + '</strong></span><span>⇄ <strong>' + st.r + '</strong></span></div>' +
+    '</div>';
+  }
+  document.getElementById("content").innerHTML = h;
+}
+
+// ============================================================
+// CONTROLE
+// ============================================================
+function renderControle() {
+  var h = '<div class="acts">' +
+    '<button class="btn" onclick="expandirTodos()">⌄ Expandir</button>' +
+    '<button class="btn" onclick="recolherTodos()">⌃ Recolher</button>' +
+    '<button class="btn danger" onclick="resetar()">🗑 Limpar tudo</button>' +
+  '</div>' +
+  '<div class="leg">' +
+    '<div class="leg-item"><div class="leg-box" style="background:#fff"></div>Não tenho</div>' +
+    '<div class="leg-item"><div class="leg-box" style="background:linear-gradient(135deg,#185FA5,#0F4C5C);border-color:#0F4C5C"></div>Tenho</div>' +
+    '<div class="leg-item"><div class="leg-box" style="background:linear-gradient(135deg,#DBEAFE,#BFDBFE);border-color:#378ADD"></div>Repetida</div>' +
+    '<span class="hint">Toque: +1 · Segurar / botão direito: −1</span>' +
+  '</div>';
+
+  var todos = Object.keys(GRUPOS).concat(["FWC", "CC"]);
+  for (var i = 0; i < todos.length; i++) {
+    var g = todos[i];
+    var st = statsGrupo(g);
+    var esp = g === "FWC" || g === "CC";
+    var ttl = g === "FWC" ? "FIFA World Cup History" : g === "CC" ? "Coca-Cola" : "Grupo " + g;
+    var ab = abertos[g] ? "open" : "";
+    h += '<div class="card ' + ab + '" data-grupo="' + g + '">' +
+      '<div class="head ' + (esp ? "esp" : "") + '" data-toggle="' + g + '">' +
+        '<div class="head-ttl"><span class="head-bdg">' + (esp ? "ESP" : g) + '</span>' + ttl + '</div>' +
+        '<div class="head-st"><span>✓ ' + st.t + '/' + st.total + '</span><span>⇄ ' + st.r + '</span><span class="chev">⌄</span></div>' +
+      '</div>' +
+      '<div class="body">';
+    if (g === "FWC") h += linhaSel("FIFA World Cup History", "FWC", "FWC", 20, 0, statsSel("FWC", "FWC", 20, 0), false);
+    else if (g === "CC") h += linhaSel("Figurinhas Coca-Cola", "CC", "CC", 14, 1, statsSel("CC", "CC", 14, 1), true);
+    else {
+      for (var j = 0; j < GRUPOS[g].length; j++) {
+        var s = GRUPOS[g][j];
+        h += linhaSel(s[0], s[1], g, 20, 1, statsSel(g, s[1], 20, 1), false);
+      }
+    }
+    h += '</div></div>';
+  }
+  document.getElementById("content").innerHTML = h;
+  bindControle();
+}
+
+function linhaSel(nome, cod, g, max, start, cont, isCC) {
+  var nums = "";
+  for (var i = 0; i < max; i++) {
+    var n = start === 0 ? i : i + 1;
+    var q = getQ(g + "-" + cod + "-" + n);
+    var cls = q === 0 ? "" : (q === 1 ? "tem" : "rep");
+    var lbl;
+    if (g === "FWC") lbl = (n < 10 ? "0" : "") + n;
+    else if (g === "CC") lbl = "CC" + n;
+    else lbl = n;
+    nums += '<div class="num ' + cls + '" data-key="' + g + "-" + cod + "-" + n + '" data-qtd="' + q + '">' + lbl + '</div>';
+  }
+  return '<div class="row">' +
+    '<div class="row-head">' +
+      '<div class="row-left"><span class="cod">' + cod + '</span><span class="name">' + esc(nome) + '</span></div>' +
+      '<span class="cnt"><strong>' + cont + '</strong>/' + max + ' coladas</span>' +
+    '</div>' +
+    '<div class="nums ' + (isCC ? "cc" : "") + '">' + nums + '</div>' +
+  '</div>';
+}
+
+function bindControle() {
+  var headers = document.querySelectorAll("[data-toggle]");
+  for (var i = 0; i < headers.length; i++) {
+    headers[i].addEventListener("click", function(e) {
+      var g = e.currentTarget.dataset.toggle;
+      abertos[g] = !abertos[g];
+      e.currentTarget.parentElement.classList.toggle("open");
+    });
+  }
+  var nums = document.querySelectorAll(".num");
+  for (var i = 0; i < nums.length; i++) {
+    var el = nums[i];
+    el.addEventListener("click", function(e) {
+      e.stopPropagation();
+      if (this._lpDone) { this._lpDone = false; return; }
+      var k = this.dataset.key;
+      setQ(k, getQ(k) + 1);
+      updateNum(this, getQ(k));
+    });
+    el.addEventListener("contextmenu", function(e) {
+      e.preventDefault();
+      e.stopPropagation();
+      var k = this.dataset.key, q = getQ(k);
+      if (q > 0) { setQ(k, q - 1); updateNum(this, q - 1); }
+    });
+    el.addEventListener("touchstart", function(e) {
+      var self = this;
+      self._lpDone = false;
+      self._lp = setTimeout(function() {
+        self._lpDone = true;
+        var k = self.dataset.key, q = getQ(k);
+        if (q > 0) {
+          setQ(k, q - 1);
+          updateNum(self, q - 1);
+          if (navigator.vibrate) navigator.vibrate(30);
+        }
+      }, 500);
+    }, { passive: true });
+    el.addEventListener("touchend", function() { if (this._lp) clearTimeout(this._lp); });
+    el.addEventListener("touchmove", function() { if (this._lp) clearTimeout(this._lp); });
+  }
+}
+
+function updateNum(el, q) {
+  el.classList.remove("tem", "rep");
+  if (q === 1) el.classList.add("tem");
+  else if (q > 1) el.classList.add("rep");
+  el.dataset.qtd = q;
+  var row = el.closest(".row");
+  var coladas = 0;
+  row.querySelectorAll(".num").forEach(function(n) { if (parseInt(n.dataset.qtd) >= 1) coladas++; });
+  row.querySelector(".cnt strong").textContent = coladas;
+  var card = el.closest(".card");
+  var g = card.dataset.grupo;
+  var st = statsGrupo(g);
+  var sp = card.querySelector(".head-st").children;
+  sp[0].textContent = "✓ " + st.t + "/" + st.total;
+  sp[1].textContent = "⇄ " + st.r;
+}
+
+function expandirTodos() {
+  var todos = Object.keys(GRUPOS).concat(["FWC", "CC"]);
+  for (var i = 0; i < todos.length; i++) abertos[todos[i]] = true;
+  document.querySelectorAll(".card").forEach(function(c) { c.classList.add("open"); });
+}
+function recolherTodos() {
+  abertos = {};
+  document.querySelectorAll(".card").forEach(function(c) { c.classList.remove("open"); });
+}
+function resetar() {
+  if (confirm("Apagar TODO o progresso de " + usuario + "?")) {
+    dados = {};
+    salvar();
+    renderControle();
+    toast("Coleção zerada");
+  }
+}
+
+// ============================================================
+// TROCAS
+// ============================================================
+function renderTrocas() {
+  var trocas = [];
+  for (var k in dados) {
+    var q = dados[k];
+    if (q > 1) {
+      var parts = k.split("-");
+      var grupo = parts[0], cod = parts[1], num = parts[2];
+      var nomeSel, lbl;
+      if (grupo === "FWC") { nomeSel = "FIFA World Cup History"; lbl = "FWC " + (num.length < 2 ? "0" : "") + num; }
+      else if (grupo === "CC") { nomeSel = "Coca-Cola"; lbl = "CC" + num; }
+      else {
+        var sel = GRUPOS[grupo].find(function(x){return x[1] === cod;});
+        nomeSel = sel ? sel[0] : cod;
+        lbl = "Nº " + num;
+      }
+      trocas.push({ grupo: grupo, nomeSel: nomeSel, cod: cod, lbl: lbl, qtd: q - 1 });
+    }
+  }
+  trocas.sort(function(a, b) { return a.grupo !== b.grupo ? a.grupo.localeCompare(b.grupo) : a.nomeSel.localeCompare(b.nomeSel); });
+  var total = trocas.reduce(function(s, t) { return s + t.qtd; }, 0);
+  var h = '<div class="kpis" style="grid-template-columns:repeat(2,1fr)">' +
+    '<div class="kpi rep"><div class="kpi-lbl">⇄ Total p/ troca</div><div class="kpi-val">' + total + '</div></div>' +
+    '<div class="kpi"><div class="kpi-lbl">≡ Diferentes</div><div class="kpi-val">' + trocas.length + '</div></div>' +
+  '</div>';
+  if (trocas.length === 0) {
+    h += '<div class="empty"><div class="big">⇄</div><strong style="color:#0F4C5C">Nenhuma repetida ainda</strong><br><span style="font-size:11px">Marque uma figurinha mais de uma vez para vê-la aqui.</span></div>';
+  } else {
+    h += '<div class="sec-ttl">📋 Suas repetidas para troca</div>';
+    for (var i = 0; i < trocas.length; i++) {
+      var t = trocas[i];
+      var gLbl = (t.grupo === "FWC" || t.grupo === "CC") ? "Especial" : "Grupo " + t.grupo;
+      h += '<div class="tr"><div class="tr-l"><span class="tr-c">' + t.cod + '</span><div class="tr-i"><strong>' + esc(t.nomeSel) + '</strong><small>' + gLbl + ' · ' + t.lbl + '</small></div></div><span class="tr-q">' + t.qtd + '× rep.</span></div>';
+    }
+  }
+  document.getElementById("content").innerHTML = h;
+}
+
+// ============================================================
+// IMPRIMIR
+// ============================================================
+function renderImprimir() {
+  var s = statsGeral();
+  var h = '<div style="background:linear-gradient(135deg,#0F4C5C,#185FA5);border-radius:12px;padding:18px 20px;margin-bottom:14px;color:#fff">' +
+    '<h2 style="margin:0 0 4px;font-size:17px;font-weight:700">🖨️ Modo Impressão</h2>' +
+    '<p style="margin:0;font-size:12px;opacity:0.9">Gere uma versão para imprimir e levar para qualquer lugar</p>' +
+  '</div>' +
+  '<div class="sec-ttl">Escolha o que imprimir</div>' +
+  '<div class="print-opt" onclick="imprimir(\'completo\')">' +
+    '<div class="print-ic">📋</div>' +
+    '<div class="print-tx"><strong>Planilha completa em branco</strong><small>Tudo · 1 página A4 · marque com caneta</small></div>' +
+  '</div>' +
+  '<div class="print-opt" onclick="imprimir(\'progresso\')">' +
+    '<div class="print-ic">📊</div>' +
+    '<div class="print-tx"><strong>Planilha com progresso atual</strong><small>Mostra o que você já tem</small></div>' +
+  '</div>' +
+  '<div class="print-opt" onclick="imprimir(\'faltam\')">' +
+    '<div class="print-ic">📝</div>' +
+    '<div class="print-tx"><strong>Lista do que falta</strong><small>Leve para a banca · ' + s.f + ' figurinhas</small></div>' +
+  '</div>' +
+  '<div class="print-opt" onclick="imprimir(\'repetidas\')">' +
+    '<div class="print-ic am">🔄</div>' +
+    '<div class="print-tx"><strong>Lista de repetidas para troca</strong><small>' + (s.r > 0 ? s.r + " figurinhas para trocar" : "Nenhuma repetida ainda") + '</small></div>' +
+  '</div>' +
+  '<div style="background:#F8FAFC;border:1px solid #E5E7EB;border-radius:9px;padding:11px 13px;font-size:11px;color:#475569;margin-top:14px">' +
+    '<strong style="color:#0F4C5C">💡 Como funciona:</strong> abre uma nova aba pronta para imprimir. Use o botão <strong>"🖨️ Imprimir"</strong> ou pressione <strong>Ctrl+P</strong> (Cmd+P no Mac).' +
+  '</div>';
+  document.getElementById("content").innerHTML = h;
+}
+
+function imprimir(tipo) {
+  var html = gerarHTMLImpressao(tipo);
+  var w = window.open("", "_blank");
+  if (!w) { toast("Permita pop-ups para imprimir"); return; }
+  w.document.open();
+  w.document.write(html);
+  w.document.close();
+}
+
+function gerarHTMLImpressao(tipo) {
+  var hoje = new Date().toLocaleDateString("pt-BR");
+  var s = statsGeral();
+  var titulo, conteudo;
+  if (tipo === "completo") { titulo = "Planilha de Controle — Em Branco"; conteudo = gerarTabela(false); }
+  else if (tipo === "progresso") { titulo = "Planilha de Controle — Progresso Atual"; conteudo = gerarTabela(true); }
+  else if (tipo === "faltam") { titulo = "Figurinhas que Faltam"; conteudo = gerarListaFaltam(); }
+  else if (tipo === "repetidas") { titulo = "Figurinhas Repetidas"; conteudo = gerarListaRep(); }
+
+  var css = "@page{size:A4;margin:1cm}*{box-sizing:border-box;margin:0;padding:0}" +
+    "body{font-family:-apple-system,Roboto,sans-serif;color:#0B3F4A;padding:14px;background:#fff;font-size:11px;line-height:1.3}" +
+    ".pa{background:#0F4C5C;color:#fff;padding:12px 16px;border-radius:9px;margin-bottom:12px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px}" +
+    ".pa .i{font-size:13px}.pa .i strong{display:block;font-size:15px}" +
+    ".pa button{background:#F4C430;color:#0B3F4A;border:none;padding:9px 17px;border-radius:7px;font-weight:700;cursor:pointer;font-size:13px}" +
+    ".pa button.x{background:#fff;color:#0F4C5C;margin-left:5px}" +
+    ".hd{text-align:center;margin-bottom:12px;padding-bottom:9px;border-bottom:2px solid #0F4C5C}" +
+    ".hd h1{font-size:17px;color:#0F4C5C;font-weight:700;margin-bottom:2px}" +
+    ".hd .s{font-size:11px;color:#6B7280}" +
+    ".hd .m{display:flex;justify-content:space-between;margin-top:7px;font-size:10px;color:#6B7280;flex-wrap:wrap;gap:5px}" +
+    ".hd .m strong{color:#0F4C5C}" +
+    "table{width:100%;border-collapse:collapse}.tf{font-size:9px}" +
+    ".tf th{background:#0F4C5C;color:#fff;padding:5px 3px;font-weight:700;border:0.5px solid #0B3F4A;font-size:9px}" +
+    ".tf td{border:0.5px solid #E5E7EB;padding:3px;text-align:center}" +
+    ".tf td.g{background:#0F4C5C;color:#fff;font-weight:700;vertical-align:middle;font-size:10px;padding:4px 6px}" +
+    ".tf td.g.e{background:#185FA5}" +
+    ".tf td.n{text-align:left;padding-left:7px;font-weight:600;background:#F8FAFC;color:#0F4C5C;min-width:85px;font-size:10px}" +
+    ".tf td.c{background:#E6F1FB;font-weight:700;color:#0F4C5C;font-size:9px}" +
+    ".tf td.x{width:3%;height:21px;font-size:9px;color:#94A3B8}" +
+    ".tf td.x.t{background:#185FA5;color:#fff;font-weight:700}" +
+    ".tf td.x.r{background:#DBEAFE;color:#0B3F4A;font-weight:700}" +
+    ".sb{display:flex;gap:7px;margin-bottom:12px}" +
+    ".sc{flex:1;background:#F8FAFC;border:1px solid #E5E7EB;border-radius:7px;padding:7px 9px;text-align:center}" +
+    ".sc .l{font-size:9px;color:#6B7280;text-transform:uppercase;font-weight:700}" +
+    ".sc .v{font-size:17px;font-weight:700;color:#0F4C5C;margin-top:2px}" +
+    ".sc.z{background:#E6F1FB}.sc.z .v{color:#185FA5}" +
+    ".li{display:grid;grid-template-columns:repeat(3,1fr);gap:5px}" +
+    ".li-i{background:#F8FAFC;border:1px solid #E5E7EB;border-radius:5px;padding:5px 7px;font-size:10px;display:flex;align-items:center;gap:5px}" +
+    ".li-i .cp{background:#0F4C5C;color:#fff;font-size:9px;padding:2px 5px;border-radius:3px;font-weight:700}" +
+    ".li-i .n{flex:1;min-width:0}" +
+    ".li-i .n strong{display:block;color:#0F4C5C;font-size:10px;font-weight:600}" +
+    ".li-i .n small{color:#6B7280;font-size:9px}" +
+    ".li-i .q{background:#F4C430;color:#0B3F4A;padding:2px 5px;border-radius:3px;font-weight:700;font-size:9px}" +
+    ".li-i.f .cp{background:#6B7280}" +
+    ".ft{margin-top:12px;padding-top:7px;border-top:1px solid #E5E7EB;text-align:center;font-size:9px;color:#94A3B8}" +
+    ".em{text-align:center;padding:28px;color:#6B7280;font-size:12px}" +
+    "@media print{body{padding:0}.pa{display:none}.hd{margin-bottom:9px}}";
+
+  return '<!DOCTYPE html><html><head><meta charset="utf-8"><title>' + titulo + ' - Copa 2026</title><style>' + css + '</style></head><body>' +
+    '<div class="pa"><div class="i"><strong>' + titulo + '</strong>Copa 2026 · Panini · ' + esc(usuario) + '</div>' +
+    '<div><button onclick="window.print()">🖨️ Imprimir</button><button class="x" onclick="window.close()">✕ Fechar</button></div></div>' +
+    '<div class="hd"><h1>🏆 ÁLBUM COPA DO MUNDO 2026</h1>' +
+    '<div class="s">' + titulo + '</div>' +
+    '<div class="m"><span>Coleção: <strong>' + esc(usuario) + '</strong></span>' +
+    '<span>Data: <strong>' + hoje + '</strong></span>' +
+    '<span>Progresso: <strong>' + s.t + '/' + s.total + ' (' + ((s.t / s.total) * 100).toFixed(1) + '%)</strong></span></div></div>' +
+    conteudo +
+    '<div class="ft">Álbum FIFA World Cup 2026 · Panini · Controle pessoal</div></body></html>';
+}
+
+function gerarTabela(comProgresso) {
+  var h = '<table class="tf"><thead><tr><th style="width:5%">Grupo</th><th style="width:13%">Seleção</th><th style="width:5%">Cód</th>';
+  for (var i = 1; i <= 20; i++) h += '<th>' + i + '</th>';
+  h += '</tr></thead><tbody>';
+  for (var grupo in GRUPOS) {
+    var sels = GRUPOS[grupo];
+    for (var idx = 0; idx < sels.length; idx++) {
+      var s = sels[idx];
+      h += '<tr>';
+      if (idx === 0) h += '<td class="g" rowspan="' + sels.length + '">GRUPO ' + grupo + '</td>';
+      h += '<td class="n">' + esc(s[0]) + '</td><td class="c">' + s[1] + '</td>';
+      for (var i = 1; i <= 20; i++) {
+        var q = comProgresso ? getQ(grupo + "-" + s[1] + "-" + i) : 0;
+        var cls = q === 0 ? "" : (q === 1 ? "t" : "r");
+        var txt = q === 0 ? "" : (q === 1 ? "✓" : q);
+        h += '<td class="x ' + cls + '">' + txt + '</td>';
+      }
+      h += '</tr>';
+    }
+  }
+  h += '<tr><td class="g e">ESP</td><td class="n">FIFA World Cup History</td><td class="c">FWC</td>';
+  for (var i = 0; i < 20; i++) {
+    var q = comProgresso ? getQ("FWC-FWC-" + i) : 0;
+    var cls = q === 0 ? "" : (q === 1 ? "t" : "r");
+    var txt = q === 0 ? (i < 10 ? "0" : "") + i : (q === 1 ? "✓" : q);
+    h += '<td class="x ' + cls + '">' + txt + '</td>';
+  }
+  h += '</tr>';
+  h += '<tr><td class="g e">ESP</td><td class="n">Coca-Cola</td><td class="c">CC</td>';
+  for (var i = 1; i <= 14; i++) {
+    var q = comProgresso ? getQ("CC-CC-" + i) : 0;
+    var cls = q === 0 ? "" : (q === 1 ? "t" : "r");
+    var txt = q === 0 ? "CC" + i : (q === 1 ? "✓" : q);
+    h += '<td class="x ' + cls + '">' + txt + '</td>';
+  }
+  for (var i = 15; i <= 20; i++) h += '<td style="background:#F1F5F9"></td>';
+  h += '</tr></tbody></table>';
+  if (!comProgresso) {
+    h += '<div style="margin-top:11px;padding:7px 11px;background:#F8FAFC;border-left:3px solid #0F4C5C;font-size:10px;color:#475569;border-radius:3px">' +
+      '<strong style="color:#0F4C5C">Como usar:</strong> marque com X ou pinte cada quadradinho conforme for colando as figurinhas.</div>';
+  }
+  return h;
+}
+
+function gerarListaFaltam() {
+  var f = [];
+  for (var grupo in GRUPOS) {
+    for (var idx = 0; idx < GRUPOS[grupo].length; idx++) {
+      var s = GRUPOS[grupo][idx];
+      for (var i = 1; i <= 20; i++) {
+        if (getQ(grupo + "-" + s[1] + "-" + i) < 1) f.push({ grupo: grupo, nome: s[0], cod: s[1], lbl: "Nº " + i });
+      }
+    }
+  }
+  for (var i = 0; i < 20; i++) if (getQ("FWC-FWC-" + i) < 1) f.push({ grupo: "ESP", nome: "FIFA World Cup History", cod: "FWC", lbl: (i < 10 ? "0" : "") + i });
+  for (var i = 1; i <= 14; i++) if (getQ("CC-CC-" + i) < 1) f.push({ grupo: "ESP", nome: "Coca-Cola", cod: "CC", lbl: "CC" + i });
+  if (f.length === 0) return '<div class="em">🎉 Parabéns! Coleção completa!</div>';
+  var s = statsGeral();
+  var h = '<div class="sb">' +
+    '<div class="sc"><div class="l">Total álbum</div><div class="v">' + s.total + '</div></div>' +
+    '<div class="sc z"><div class="l">Você tem</div><div class="v">' + s.t + '</div></div>' +
+    '<div class="sc"><div class="l">Faltam</div><div class="v" style="color:#B91C1C">' + f.length + '</div></div>' +
+  '</div><div class="li">';
+  for (var i = 0; i < f.length; i++) {
+    var item = f[i];
+    var gl = item.grupo === "ESP" ? "Especial" : "Grupo " + item.grupo;
+    h += '<div class="li-i f"><span class="cp">' + item.cod + '</span><div class="n"><strong>' + esc(item.nome) + '</strong><small>' + gl + ' · ' + item.lbl + '</small></div></div>';
+  }
+  h += '</div>';
+  return h;
+}
+
+function gerarListaRep() {
+  var trocas = [];
+  for (var k in dados) {
+    var q = dados[k];
+    if (q > 1) {
+      var parts = k.split("-");
+      var grupo = parts[0], cod = parts[1], num = parts[2];
+      var nomeSel, lbl;
+      if (grupo === "FWC") { nomeSel = "FIFA World Cup History"; lbl = (num.length < 2 ? "0" : "") + num; }
+      else if (grupo === "CC") { nomeSel = "Coca-Cola"; lbl = "CC" + num; }
+      else {
+        var sel = GRUPOS[grupo].find(function(x){return x[1] === cod;});
+        nomeSel = sel ? sel[0] : cod;
+        lbl = "Nº " + num;
+      }
+      trocas.push({ grupo: grupo, nomeSel: nomeSel, cod: cod, lbl: lbl, qtd: q - 1 });
+    }
+  }
+  trocas.sort(function(a, b) { return a.grupo !== b.grupo ? a.grupo.localeCompare(b.grupo) : a.nomeSel.localeCompare(b.nomeSel); });
+  if (trocas.length === 0) return '<div class="em">Nenhuma repetida ainda. Volte aqui quando começar a juntar para trocar!</div>';
+  var total = trocas.reduce(function(s, t) { return s + t.qtd; }, 0);
+  var h = '<div class="sb">' +
+    '<div class="sc z"><div class="l">Total p/ troca</div><div class="v">' + total + '</div></div>' +
+    '<div class="sc"><div class="l">Diferentes</div><div class="v">' + trocas.length + '</div></div>' +
+  '</div><div class="li">';
+  for (var i = 0; i < trocas.length; i++) {
+    var t = trocas[i];
+    var gl = (t.grupo === "FWC" || t.grupo === "CC") ? "Especial" : "Grupo " + t.grupo;
+    h += '<div class="li-i"><span class="cp">' + t.cod + '</span><div class="n"><strong>' + esc(t.nomeSel) + '</strong><small>' + gl + ' · ' + t.lbl + '</small></div><span class="q">' + t.qtd + '×</span></div>';
+  }
+  h += '</div>';
+  h += '<div style="margin-top:11px;padding:7px 11px;background:#FEF3C7;border-left:3px solid #F4C430;font-size:10px;color:#78350F;border-radius:3px"><strong>💡 Dica:</strong> leve esta lista nos encontros de troca.</div>';
+  return h;
+}
+
+// ============================================================
+// SINCRONIZAÇÃO (EXPORT/IMPORT)
+// ============================================================
+function abrirSync() {
+  var pacote = {
+    v: 1,
+    usuario: usuario,
+    data: new Date().toISOString(),
+    dados: dados
+  };
+  document.getElementById("export-data").value = btoa(unescape(encodeURIComponent(JSON.stringify(pacote))));
+  document.getElementById("import-data").value = "";
+  document.getElementById("modal-sync").classList.add("show");
+}
+
+function copiarExport() {
+  var ta = document.getElementById("export-data");
+  ta.select();
+  ta.setSelectionRange(0, 99999);
+  try {
+    if (navigator.clipboard && window.isSecureContext) {
+      navigator.clipboard.writeText(ta.value).then(function(){ toast("✓ Copiado! Cole no outro dispositivo"); });
+    } else {
+      document.execCommand("copy");
+      toast("✓ Copiado! Cole no outro dispositivo");
+    }
+  } catch(e) { toast("Selecione e copie manualmente"); }
+}
+
+function baixarBackup() {
+  var pacote = {
+    v: 1,
+    usuario: usuario,
+    data: new Date().toISOString(),
+    dados: dados
+  };
+  var blob = new Blob([JSON.stringify(pacote, null, 2)], { type: "application/json" });
+  var url = URL.createObjectURL(blob);
+  var a = document.createElement("a");
+  a.href = url;
+  a.download = "album-copa-2026-" + usuario + "-" + new Date().toISOString().split("T")[0] + ".json";
+  a.click();
+  setTimeout(function(){ URL.revokeObjectURL(url); }, 1000);
+  toast("Backup baixado!");
+}
+
+function importar() {
+  var txt = document.getElementById("import-data").value.trim();
+  if (!txt) { toast("Cole o código primeiro"); return; }
+  try {
+    var json;
+    // Tenta decodificar base64 primeiro, depois JSON puro
+    try {
+      json = JSON.parse(decodeURIComponent(escape(atob(txt))));
+    } catch(e) {
+      json = JSON.parse(txt);
+    }
+    if (!json || !json.dados) throw new Error("formato inválido");
+    if (!confirm("Importar " + Object.keys(json.dados).length + " figurinhas de \"" + (json.usuario || "outro dispositivo") + "\"?\n\nIsso vai substituir o progresso atual de " + usuario + ".")) return;
+    dados = json.dados;
+    salvar();
+    fecharModal("modal-sync");
+    switchTab("dashboard");
+    toast("✓ Dados importados com sucesso!");
+  } catch(e) {
+    toast("❌ Código inválido. Verifique e tente novamente.");
+  }
+}
+
+// ============================================================
+// MODAL DE USUÁRIO
+// ============================================================
+function abrirUsuario() {
+  document.getElementById("user-input").value = usuario === "Convidado" ? "" : usuario;
+  var quick = document.getElementById("user-quick");
+  quick.innerHTML = "";
+  var lista = listarUsuarios();
+  if (lista.length > 0) {
+    quick.innerHTML = '<div style="grid-column:1/-1;font-size:11px;color:#6B7280;margin-bottom:4px;font-weight:600">Usuários neste dispositivo:</div>';
+    for (var i = 0; i < lista.length; i++) {
+      var btn = document.createElement("button");
+      btn.className = "btn";
+      btn.textContent = lista[i];
+      btn.style.cssText = "padding:6px 10px;font-size:12px";
+      btn.onclick = (function(nome) { return function(){ document.getElementById("user-input").value = nome; }; })(lista[i]);
+      quick.appendChild(btn);
+    }
+  }
+  document.getElementById("modal-user").classList.add("show");
+  setTimeout(function(){ document.getElementById("user-input").focus(); }, 100);
+}
+
+function salvarUsuario() {
+  var novo = document.getElementById("user-input").value.trim();
+  if (!novo) { toast("Digite um nome"); return; }
+  fecharModal("modal-user");
+  trocarUsuario(novo);
+}
+
+function fecharModal(id) {
+  document.getElementById(id).classList.remove("show");
+}
+
+// ============================================================
+// NAVEGAÇÃO
+// ============================================================
+function switchTab(tab) {
+  var tabs = document.querySelectorAll(".tab");
+  for (var i = 0; i < tabs.length; i++) tabs[i].classList.toggle("active", tabs[i].dataset.tab === tab);
+  if (tab === "dashboard") renderDashboard();
+  else if (tab === "controle") renderControle();
+  else if (tab === "trocas") renderTrocas();
+  else if (tab === "imprimir") renderImprimir();
+}
+
+document.querySelectorAll(".tab").forEach(function(t) {
+  t.addEventListener("click", function() { switchTab(t.dataset.tab); });
+});
+
+document.getElementById("user-btn").addEventListener("click", abrirUsuario);
+
+document.querySelectorAll(".modal-bg").forEach(function(m) {
+  m.addEventListener("click", function(e) { if (e.target === m) m.classList.remove("show"); });
+});
+
+document.getElementById("user-input").addEventListener("keypress", function(e) {
+  if (e.key === "Enter") salvarUsuario();
+});
+
+// INIT
+carregar();
+renderDashboard();
+</script>
+
+</body>
+</html>
