@@ -1061,7 +1061,7 @@ function carregarAmigosParaTroca() {
 
             let deleComFalta = [];
             for (let chave in amigoData) {
-              if (amigoData[chave] >= 1 && (!dados[chave] || dados[chave] === 0)) {
+              if (amigoData[chave] > 1 && (!dados[chave] || dados[chave] === 0)) {
                 deleComFalta.push(chave);
               }
             }
