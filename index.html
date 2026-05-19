@@ -1537,6 +1537,7 @@ function renderListaChats() {
 }
 
 function abrirConversaById(chatId, amigoUid, amigoApelido) {
+  if (chatsListUnsubscribe) { chatsListUnsubscribe(); chatsListUnsubscribe = null; }
   chatAtivo = { chatId, amigoUid, amigoApelido };
   renderConversa();
 }
