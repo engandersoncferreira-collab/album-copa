@@ -204,6 +204,54 @@ body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-
   .nums, .nums.cc { grid-template-columns: repeat(7, 1fr); }
   .num { font-size: 11px; min-height: 32px; }
 }
+
+/* BADGE CHAT */
+.chat-badge { background: #EF4444; color: #fff; border-radius: 10px; font-size: 9px; font-weight: 700; padding: 1px 5px; margin-left: 3px; display: none; vertical-align: middle; }
+
+/* LISTA DE CONVERSAS */
+.chat-conv-item { display: flex; align-items: center; gap: 12px; padding: 12px 4px; border-bottom: 1px solid #F1F5F9; cursor: pointer; border-radius: 8px; }
+.chat-conv-item:hover { background: #F8FAFC; padding-left: 8px; }
+.chat-avatar { width: 40px; height: 40px; border-radius: 50%; background: linear-gradient(135deg, #0F4C5C, #185FA5); color: #fff; display: flex; align-items: center; justify-content: center; font-size: 16px; font-weight: 700; flex-shrink: 0; }
+.chat-conv-info { flex: 1; min-width: 0; }
+.chat-conv-name { font-size: 13px; font-weight: 600; color: #0F4C5C; }
+.chat-conv-prev { font-size: 11px; color: #6B7280; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-top: 2px; }
+.chat-conv-time { font-size: 10px; color: #94A3B8; flex-shrink: 0; }
+.chat-conv-unread { background: #EF4444; color: #fff; border-radius: 10px; font-size: 10px; font-weight: 700; padding: 2px 6px; flex-shrink: 0; }
+
+/* TELA DE CONVERSA */
+.chat-header { display: flex; align-items: center; gap: 10px; padding: 10px 0 12px; border-bottom: 1px solid #E5E7EB; margin-bottom: 0; }
+.chat-header-name { flex: 1; font-size: 15px; font-weight: 700; color: #0F4C5C; }
+.chat-mensagens { min-height: 280px; max-height: 52vh; overflow-y: auto; padding: 12px 0; display: flex; flex-direction: column; gap: 6px; }
+.chat-bubble-wrap { display: flex; }
+.chat-bubble-wrap.minha { justify-content: flex-end; }
+.chat-bubble-wrap.dele { justify-content: flex-start; }
+.chat-bubble { max-width: 78%; padding: 9px 13px; border-radius: 14px; font-size: 13px; line-height: 1.4; word-break: break-word; }
+.chat-bubble.minha { background: linear-gradient(135deg, #0F4C5C, #185FA5); color: #fff; border-bottom-right-radius: 4px; }
+.chat-bubble.dele { background: #F1F5F9; color: #1F2937; border-bottom-left-radius: 4px; }
+.chat-meta { font-size: 10px; margin-top: 4px; opacity: 0.75; text-align: right; }
+.chat-bubble.dele .chat-meta { text-align: left; }
+.chat-input-area { display: flex; gap: 8px; padding: 12px 0 4px; border-top: 1px solid #E5E7EB; margin-top: 6px; }
+.chat-input { flex: 1; padding: 10px 13px; border: 1px solid #E5E7EB; border-radius: 22px; font-size: 13px; font-family: inherit; outline: none; }
+.chat-input:focus { border-color: #185FA5; box-shadow: 0 0 0 3px rgba(24,95,165,0.1); }
+.chat-input:disabled { background: #F1F5F9; color: #94A3B8; }
+
+/* ADMIN */
+.admin-user-card { background: #fff; border: 1px solid #E5E7EB; border-radius: 10px; padding: 13px 14px; margin-bottom: 8px; display: flex; align-items: flex-start; gap: 12px; }
+.admin-user-info { flex: 1; min-width: 0; }
+.admin-user-name { font-size: 14px; font-weight: 700; color: #0F4C5C; }
+.admin-user-detail { font-size: 11px; color: #6B7280; margin-top: 3px; }
+.admin-user-actions { display: flex; flex-direction: column; gap: 4px; flex-shrink: 0; }
+.admin-status-badge { font-size: 11px; padding: 3px 8px; border-radius: 6px; font-weight: 600; display: inline-block; margin-top: 4px; }
+.admin-status-badge.ativo { background: #D1FAE5; color: #065F46; }
+.admin-status-badge.banido { background: #FEE2E2; color: #991B1B; }
+.admin-msg-card { background: #fff; border: 1px solid #E5E7EB; border-radius: 10px; padding: 13px 14px; margin-bottom: 8px; }
+.admin-msg-card.nao-lido { border-color: #185FA5; background: #EFF6FF; }
+.admin-msg-header { font-size: 12px; color: #0F4C5C; margin-bottom: 8px; }
+.admin-msg-texto { font-size: 13px; color: #1F2937; background: #F8FAFC; border-radius: 8px; padding: 10px 12px; }
+
+/* BLOQUEADOS NO PERFIL */
+.blocked-item { display: flex; align-items: center; justify-content: space-between; padding: 8px 0; border-top: 1px solid #F1F5F9; font-size: 12px; color: #1F2937; }
+.blocked-item:first-child { border-top: none; }
 </style>
 </head>
 <body>
@@ -297,7 +345,9 @@ body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-
   <button class="tab active" data-tab="dashboard">📊 Dashboard</button>
   <button class="tab" data-tab="controle">📋 Controle</button>
   <button class="tab" data-tab="trocas">🔄 Trocas</button>
+  <button class="tab" data-tab="chat">💬 Chat<span class="chat-badge" id="chat-badge"></span></button>
   <button class="tab" data-tab="imprimir">🖨️ Imprimir</button>
+  <button class="tab" data-tab="admin" id="tab-admin" style="display:none">🛡️ Admin</button>
 </div>
 
 <div id="content"></div>
@@ -313,13 +363,34 @@ body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-
       <p><strong>Cidade:</strong> <span id="perfil-cidade">-</span></p>
       <p><strong>Membro desde:</strong> <span id="perfil-data">-</span></p>
     </div>
+    <div class="modal-sec">
+      <h3>🚫 Usuários bloqueados</h3>
+      <div id="perfil-bloqueados"><p style="font-size:12px;color:#6B7280">Nenhum usuário bloqueado</p></div>
+    </div>
     <div class="modal-foot">
+      <button class="btn" onclick="abrirContatoDev()" style="margin-right:auto">📩 Falar com Dev</button>
       <button class="btn danger" onclick="fnMudarSenha()">🔐 Mudar senha</button>
       <button class="btn" onclick="fecharModal('modal-perfil')">Fechar</button>
     </div>
   </div>
 </div>
 
+</div>
+
+<!-- Modal Falar com o Desenvolvedor -->
+<div class="modal-bg" id="modal-contato-dev">
+  <div class="modal">
+    <h2>📩 Falar com o Desenvolvedor</h2>
+    <p>Envie uma dúvida, sugestão ou relate um problema.</p>
+    <div class="modal-sec">
+      <h3>Sua mensagem</h3>
+      <textarea id="contato-dev-texto" style="width:100%;min-height:120px;padding:10px;border:1px solid #E5E7EB;border-radius:8px;font-family:inherit;font-size:13px;resize:vertical;outline:none" placeholder="Digite aqui..."></textarea>
+    </div>
+    <div class="modal-foot">
+      <button class="btn" onclick="fecharModal('modal-contato-dev')">Cancelar</button>
+      <button class="btn primary" onclick="enviarMensagemDev()">📤 Enviar</button>
+    </div>
+  </div>
 </div>
 
 <div id="toast" class="toast"></div>
@@ -384,6 +455,11 @@ var dados = {};
 var abertos = {};
 var syncStatus = 'conectando';
 var unsubscribeFn = null;
+var bloqueados = [];
+var chatAtivo = null;
+var chatConvUnsubscribe = null;
+var chatsListUnsubscribe = null;
+var badgeUnsubscribe = null;
 
 // ============================================================
 // AUTENTICAÇÃO
@@ -395,8 +471,15 @@ auth.onAuthStateChanged((user) => {
     esconderAuth();
     mostraApp();
     inicializarSincronizacao();
+    carregarBloqueados();
+    iniciarBadgeChat();
   } else {
     currentUser = null;
+    bloqueados = [];
+    chatAtivo = null;
+    if (chatsListUnsubscribe) { chatsListUnsubscribe(); chatsListUnsubscribe = null; }
+    if (chatConvUnsubscribe) { chatConvUnsubscribe(); chatConvUnsubscribe = null; }
+    if (badgeUnsubscribe) { badgeUnsubscribe(); badgeUnsubscribe = null; }
     mostrarAuth();
     esconderApp();
   }
@@ -471,7 +554,9 @@ function fnCadastrar() {
         email: email,
         cidade: cidade,
         createdAt: new Date(),
-        lastLogin: new Date()
+        lastLogin: new Date(),
+        status: 'ativo',
+        role: 'user'
       }).then(() => cred.user);
     })
     .then(user => {
@@ -521,6 +606,9 @@ function fnMudarSenha() {
 function fnSair() {
   if (confirm('Tem certeza que quer sair?')) {
     if (unsubscribeFn) unsubscribeFn();
+    if (chatsListUnsubscribe) { chatsListUnsubscribe(); chatsListUnsubscribe = null; }
+    if (chatConvUnsubscribe) { chatConvUnsubscribe(); chatConvUnsubscribe = null; }
+    if (badgeUnsubscribe) { badgeUnsubscribe(); badgeUnsubscribe = null; }
     auth.signOut();
   }
 }
@@ -530,10 +618,21 @@ function fnSair() {
 // ============================================================
 function carregarPerfil() {
   if (!currentUser) return;
-  
+
   db.collection('users').doc(currentUser.uid).onSnapshot(doc => {
     if (doc.exists) {
       userData = doc.data();
+
+      if (userData.status === 'banido') {
+        auth.signOut().then(() => {
+          showAuthMessage('❌ Sua conta foi suspensa. Entre em contato com o desenvolvedor.', 'error');
+        });
+        return;
+      }
+
+      const tabAdmin = document.getElementById('tab-admin');
+      if (tabAdmin) tabAdmin.style.display = userData.role === 'admin' ? '' : 'none';
+
       document.getElementById('user-name').textContent = userData.apelido || 'Usuário';
       document.getElementById('user-cidade').textContent = userData.cidade || 'Cidade';
       document.getElementById('perfil-apelido').textContent = userData.apelido;
@@ -946,26 +1045,27 @@ function carregarAmigosParaTroca() {
       }
       
       let amigosComTroca = 0;
-      
+
       amigos.forEach(amigo => {
+        if (bloqueados.includes(amigo.uid)) return;
         db.collection('colecoes').doc(amigo.uid).get().then(doc => {
           if (doc.exists) {
             const amigoData = doc.data().figurinhas || {};
-            
+
             let minhasCom = [];
             for (let chave in dados) {
               if (dados[chave] > 1 && (!amigoData[chave] || amigoData[chave] === 0)) {
                 minhasCom.push(chave);
               }
             }
-            
+
             let deleComFalta = [];
             for (let chave in amigoData) {
               if (amigoData[chave] >= 1 && (!dados[chave] || dados[chave] === 0)) {
                 deleComFalta.push(chave);
               }
             }
-            
+
             if (minhasCom.length > 0 && deleComFalta.length > 0) {
               amigosComTroca++;
               let card = '<div class="friend-card">' +
@@ -979,6 +1079,9 @@ function carregarAmigosParaTroca() {
                 '<div class="friend-matches">' +
                   '<div class="match-item"><span class="match-label">✓ Você tem para ele:</span> <span class="match-count">' + minhasCom.length + '</span></div>' +
                   '<div class="match-item"><span class="match-label">○ Ele tem para você:</span> <span class="match-count">' + deleComFalta.length + '</span></div>' +
+                '</div>' +
+                '<div style="margin-top:10px;text-align:right">' +
+                  '<button class="btn primary" onclick="abrirChatComAmigo(\'' + amigo.uid + '\',\'' + esc(amigo.apelido) + '\')" style="font-size:12px;padding:7px 13px">💬 Chat</button>' +
                 '</div>' +
               '</div>';
               
@@ -1218,7 +1321,7 @@ function atualizarUI() {
       break;
     }
   }
-  switchTab(tabAtiva);
+  if (tabAtiva !== 'chat' && tabAtiva !== 'admin') switchTab(tabAtiva);
 }
 
 // ============================================================
@@ -1227,10 +1330,16 @@ function atualizarUI() {
 function switchTab(tab) {
   const tabs = document.querySelectorAll(".tab");
   for (let i = 0; i < tabs.length; i++) tabs[i].classList.toggle("active", tabs[i].dataset.tab === tab);
+  if (tab !== 'chat') {
+    if (chatsListUnsubscribe) { chatsListUnsubscribe(); chatsListUnsubscribe = null; }
+    if (chatConvUnsubscribe) { chatConvUnsubscribe(); chatConvUnsubscribe = null; }
+  }
   if (tab === "dashboard") renderDashboard();
   else if (tab === "controle") renderControle();
   else if (tab === "trocas") renderTrocas();
   else if (tab === "imprimir") renderImprimir();
+  else if (tab === "chat") renderChat();
+  else if (tab === "admin") renderAdmin();
 }
 
 document.querySelectorAll(".tab").forEach(t => {
@@ -1239,6 +1348,7 @@ document.querySelectorAll(".tab").forEach(t => {
 
 document.getElementById("user-btn").addEventListener("click", () => {
   document.getElementById('modal-perfil').classList.add('show');
+  renderListaBloqueados();
 });
 
 document.querySelectorAll(".modal-bg").forEach(m => {
@@ -1275,6 +1385,408 @@ document.getElementById('signup-password').addEventListener('keypress', e => {
 document.getElementById('reset-email').addEventListener('keypress', e => {
   if (e.key === 'Enter') fnEnviarReset();
 });
+
+// ============================================================
+// BLOQUEIO DE USUÁRIOS
+// ============================================================
+function carregarBloqueados() {
+  if (!currentUser) return;
+  db.collection('bloqueios').doc(currentUser.uid).onSnapshot(doc => {
+    bloqueados = doc.exists ? (doc.data().lista || []) : [];
+  }, () => { bloqueados = []; });
+}
+
+function bloquearUsuario(uid, apelido) {
+  if (!confirm('Bloquear ' + apelido + '?\nVocê não verá mais este usuário em Trocas e o chat ficará desabilitado.')) return;
+  db.collection('bloqueios').doc(currentUser.uid).set(
+    { lista: firebase.firestore.FieldValue.arrayUnion(uid) }, { merge: true }
+  ).then(() => {
+    toast('🚫 ' + apelido + ' bloqueado');
+    voltarChat();
+  }).catch(() => toast('Erro ao bloquear'));
+}
+
+function desbloquearUsuario(uid, apelido) {
+  if (!confirm('Desbloquear ' + apelido + '?')) return;
+  db.collection('bloqueios').doc(currentUser.uid).update(
+    { lista: firebase.firestore.FieldValue.arrayRemove(uid) }
+  ).then(() => {
+    toast('✅ ' + apelido + ' desbloqueado');
+    renderListaBloqueados();
+  }).catch(() => toast('Erro ao desbloquear'));
+}
+
+function renderListaBloqueados() {
+  const container = document.getElementById('perfil-bloqueados');
+  if (!container) return;
+  if (bloqueados.length === 0) {
+    container.innerHTML = '<p style="font-size:12px;color:#6B7280">Nenhum usuário bloqueado</p>';
+    return;
+  }
+  container.innerHTML = '<p style="font-size:12px;color:#6B7280">Carregando...</p>';
+  const promises = bloqueados.map(uid =>
+    db.collection('users').doc(uid).get().then(doc => ({
+      uid, apelido: doc.exists ? doc.data().apelido : 'Usuário'
+    }))
+  );
+  Promise.all(promises).then(users => {
+    let h = '';
+    users.forEach(u => {
+      h += '<div class="blocked-item"><span>' + esc(u.apelido) + '</span>' +
+        '<button class="btn" onclick="desbloquearUsuario(\'' + u.uid + '\',\'' + esc(u.apelido) + '\')" style="font-size:11px;padding:4px 9px">↩ Desbloquear</button></div>';
+    });
+    container.innerHTML = h;
+  });
+}
+
+// ============================================================
+// BADGE DE NÃO LIDAS
+// ============================================================
+function iniciarBadgeChat() {
+  if (badgeUnsubscribe) badgeUnsubscribe();
+  if (!currentUser) return;
+  badgeUnsubscribe = db.collection('chats')
+    .where('participantes', 'array-contains', currentUser.uid)
+    .onSnapshot(snap => {
+      let total = 0;
+      snap.forEach(doc => {
+        const d = doc.data();
+        if (d.naoLidas && d.naoLidas[currentUser.uid]) total += d.naoLidas[currentUser.uid];
+      });
+      const badge = document.getElementById('chat-badge');
+      if (badge) {
+        badge.textContent = total > 0 ? total : '';
+        badge.style.display = total > 0 ? 'inline-flex' : 'none';
+      }
+    }, () => {});
+}
+
+// ============================================================
+// CHAT
+// ============================================================
+function getChatId(uid1, uid2) {
+  return [uid1, uid2].sort().join('_');
+}
+
+function abrirChatComAmigo(amigoUid, amigoApelido) {
+  chatAtivo = { chatId: getChatId(currentUser.uid, amigoUid), amigoUid, amigoApelido };
+  switchTab('chat');
+}
+
+function renderChat() {
+  if (chatAtivo) { renderConversa(); return; }
+  renderListaChats();
+}
+
+function renderListaChats() {
+  document.getElementById('content').innerHTML =
+    '<div class="sec-ttl">💬 Chat com amigos</div>' +
+    '<div class="empty"><div class="big">💬</div><p>Carregando conversas...</p></div>';
+
+  if (chatsListUnsubscribe) chatsListUnsubscribe();
+
+  chatsListUnsubscribe = db.collection('chats')
+    .where('participantes', 'array-contains', currentUser.uid)
+    .onSnapshot(snap => {
+      const chats = [];
+      snap.forEach(doc => chats.push({ id: doc.id, ...doc.data() }));
+      chats.sort((a, b) => {
+        const ta = a.ultimaMensagemEm ? a.ultimaMensagemEm.seconds : 0;
+        const tb = b.ultimaMensagemEm ? b.ultimaMensagemEm.seconds : 0;
+        return tb - ta;
+      });
+
+      if (chats.length === 0) {
+        document.getElementById('content').innerHTML =
+          '<div class="sec-ttl">💬 Chat com amigos</div>' +
+          '<div class="empty"><div class="big">💬</div><p>Nenhuma conversa ainda.<br><small>Vá em <strong>🔄 Trocas</strong> e clique em <strong>💬 Chat</strong> em um amigo para começar!</small></p></div>';
+        return;
+      }
+
+      const promises = chats.map(chat => {
+        const amigoUid = chat.participantes.find(u => u !== currentUser.uid);
+        return db.collection('users').doc(amigoUid).get().then(doc => ({
+          chat, amigoUid,
+          apelido: doc.exists ? doc.data().apelido : 'Usuário'
+        }));
+      });
+
+      Promise.all(promises).then(itens => {
+        let h = '<div class="sec-ttl">💬 Conversas</div>';
+        itens.forEach(({ chat, amigoUid, apelido }) => {
+          const naoLidas = chat.naoLidas && chat.naoLidas[currentUser.uid] ? chat.naoLidas[currentUser.uid] : 0;
+          const prev = chat.ultimaMensagem ? esc(chat.ultimaMensagem).substring(0, 45) : 'Sem mensagens';
+          const tempo = chat.ultimaMensagemEm ? formatarTempo(chat.ultimaMensagemEm.toDate()) : '';
+          const chatId = chat.id;
+          h += '<div class="chat-conv-item" onclick="abrirConversaById(\'' + chatId + '\',\'' + amigoUid + '\',\'' + esc(apelido) + '\')">' +
+            '<div class="chat-avatar">' + esc(apelido)[0].toUpperCase() + '</div>' +
+            '<div class="chat-conv-info">' +
+              '<div class="chat-conv-name">' + esc(apelido) + '</div>' +
+              '<div class="chat-conv-prev">' + prev + '</div>' +
+            '</div>' +
+            (naoLidas > 0 ? '<span class="chat-conv-unread">' + naoLidas + '</span>' : '<span class="chat-conv-time">' + tempo + '</span>') +
+          '</div>';
+        });
+        document.getElementById('content').innerHTML = h;
+      });
+    }, () => {
+      document.getElementById('content').innerHTML =
+        '<div class="sec-ttl">💬 Chat com amigos</div>' +
+        '<div class="empty"><p>Vá em <strong>🔄 Trocas</strong> e clique em <strong>💬 Chat</strong> em um amigo para iniciar uma conversa!</p></div>';
+    });
+}
+
+function abrirConversaById(chatId, amigoUid, amigoApelido) {
+  chatAtivo = { chatId, amigoUid, amigoApelido };
+  renderConversa();
+}
+
+function renderConversa() {
+  if (!chatAtivo) { renderListaChats(); return; }
+  const { chatId, amigoUid, amigoApelido } = chatAtivo;
+  const bloqueado = bloqueados.includes(amigoUid);
+
+  document.getElementById('content').innerHTML =
+    '<div class="chat-header">' +
+      '<button class="btn" onclick="voltarChat()" style="padding:6px 10px">← Voltar</button>' +
+      '<div class="chat-header-name">💬 ' + esc(amigoApelido) + '</div>' +
+      (!bloqueado ? '<button class="btn danger" onclick="bloquearUsuario(\'' + amigoUid + '\',\'' + esc(amigoApelido) + '\')" style="padding:5px 9px;font-size:11px" title="Bloquear">🚫</button>' : '') +
+    '</div>' +
+    '<div class="chat-mensagens" id="chat-msgs"><div style="text-align:center;color:#94A3B8;font-size:12px;padding:20px">Carregando...</div></div>' +
+    '<div class="chat-input-area">' +
+      '<input type="text" id="chat-input" class="chat-input" placeholder="' + (bloqueado ? 'Você bloqueou este usuário' : 'Mensagem...') + '" maxlength="500"' + (bloqueado ? ' disabled' : '') + ' onkeypress="if(event.key===\'Enter\')enviarMensagem()">' +
+      '<button class="btn primary" onclick="enviarMensagem()" style="padding:8px 14px"' + (bloqueado ? ' disabled' : '') + '>Enviar</button>' +
+    '</div>';
+
+  if (chatConvUnsubscribe) chatConvUnsubscribe();
+
+  chatConvUnsubscribe = db.collection('chats').doc(chatId).collection('mensagens')
+    .orderBy('enviadaEm', 'asc')
+    .onSnapshot(snap => {
+      const msgsDiv = document.getElementById('chat-msgs');
+      if (!msgsDiv) return;
+      let h = '';
+      snap.forEach(doc => {
+        const msg = doc.data();
+        const minha = msg.remetente === currentUser.uid;
+        const hora = msg.enviadaEm ? formatarHora(msg.enviadaEm.toDate()) : '';
+        const lida = msg.lida;
+        h += '<div class="chat-bubble-wrap ' + (minha ? 'minha' : 'dele') + '">' +
+          '<div class="chat-bubble ' + (minha ? 'minha' : 'dele') + '">' +
+            esc(msg.texto) +
+            '<div class="chat-meta">' + hora + (minha ? (lida ? ' ✓✓' : ' ✓') : '') + '</div>' +
+          '</div></div>';
+        if (!minha && !msg.lida) {
+          db.collection('chats').doc(chatId).collection('mensagens').doc(doc.id)
+            .update({ lida: true, lidaEm: new Date() }).catch(() => {});
+        }
+      });
+      if (!h) h = '<div style="text-align:center;color:#94A3B8;font-size:12px;padding:20px">Início da conversa</div>';
+      msgsDiv.innerHTML = h;
+      msgsDiv.scrollTop = msgsDiv.scrollHeight;
+    });
+
+  // Zerar badge ao abrir conversa
+  db.collection('chats').doc(chatId).get().then(doc => {
+    if (!doc.exists) {
+      db.collection('chats').doc(chatId).set({
+        participantes: [currentUser.uid, amigoUid].sort(),
+        criadoEm: new Date(),
+        ultimaMensagem: '',
+        ultimaMensagemEm: new Date(),
+        naoLidas: {}
+      });
+    } else {
+      const upd = {};
+      upd['naoLidas.' + currentUser.uid] = 0;
+      db.collection('chats').doc(chatId).update(upd).catch(() => {});
+    }
+  });
+}
+
+function voltarChat() {
+  if (chatConvUnsubscribe) { chatConvUnsubscribe(); chatConvUnsubscribe = null; }
+  chatAtivo = null;
+  renderListaChats();
+}
+
+function enviarMensagem() {
+  const input = document.getElementById('chat-input');
+  if (!input) return;
+  const texto = input.value.trim();
+  if (!texto || !chatAtivo) return;
+  const { chatId, amigoUid } = chatAtivo;
+  if (bloqueados.includes(amigoUid)) return;
+
+  const msg = {
+    remetente: currentUser.uid,
+    texto: texto,
+    enviadaEm: firebase.firestore.FieldValue.serverTimestamp(),
+    lida: false,
+    lidaEm: null
+  };
+  input.value = '';
+
+  db.collection('chats').doc(chatId).collection('mensagens').add(msg).then(() => {
+    const upd = {
+      ultimaMensagem: texto.substring(0, 100),
+      ultimaMensagemEm: firebase.firestore.FieldValue.serverTimestamp()
+    };
+    upd['naoLidas.' + amigoUid] = firebase.firestore.FieldValue.increment(1);
+    return db.collection('chats').doc(chatId).update(upd);
+  }).catch(() => toast('❌ Erro ao enviar mensagem'));
+}
+
+function formatarTempo(date) {
+  const diff = new Date() - date;
+  if (diff < 60000) return 'agora';
+  if (diff < 3600000) return Math.floor(diff / 60000) + 'm';
+  if (diff < 86400000) return formatarHora(date);
+  return date.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' });
+}
+
+function formatarHora(date) {
+  return date.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+}
+
+// ============================================================
+// PAINEL ADMIN
+// ============================================================
+function renderAdmin() {
+  if (!userData || userData.role !== 'admin') {
+    document.getElementById('content').innerHTML = '<div class="empty"><p>Acesso negado</p></div>';
+    return;
+  }
+  document.getElementById('content').innerHTML =
+    '<div class="sec-ttl">🛡️ Painel Admin</div>' +
+    '<div class="acts" style="margin-bottom:12px">' +
+      '<button class="btn primary" onclick="adminVerUsuarios()">👥 Usuários</button>' +
+      '<button class="btn" onclick="adminVerMensagens()">📩 Mensagens Dev</button>' +
+    '</div>' +
+    '<div id="admin-content"><div class="empty"><p>Carregando...</p></div></div>';
+  adminVerUsuarios();
+}
+
+function adminVerUsuarios() {
+  const cont = document.getElementById('admin-content');
+  if (!cont) return;
+  cont.innerHTML = '<div class="empty"><p>Carregando...</p></div>';
+  db.collection('users').get().then(snap => {
+    const users = [];
+    snap.forEach(doc => users.push({ uid: doc.id, ...doc.data() }));
+    users.sort((a, b) => {
+      const ta = a.createdAt ? a.createdAt.seconds : 0;
+      const tb = b.createdAt ? b.createdAt.seconds : 0;
+      return tb - ta;
+    });
+    if (users.length === 0) { cont.innerHTML = '<div class="empty"><p>Nenhum usuário</p></div>'; return; }
+    let h = '';
+    users.forEach(u => {
+      const banido = u.status === 'banido';
+      const data = u.createdAt ? new Date(u.createdAt.toDate()).toLocaleDateString('pt-BR') : '-';
+      const euMesmo = u.uid === currentUser.uid;
+      h += '<div class="admin-user-card">' +
+        '<div class="admin-user-info">' +
+          '<div class="admin-user-name">' + esc(u.apelido || '?') + (euMesmo ? ' <span style="font-size:10px;color:#6B7280">(você)</span>' : '') + '</div>' +
+          '<div class="admin-user-detail">' + esc(u.email || '') + ' · ' + esc(u.cidade || '') + ' · desde ' + data + '</div>' +
+          '<span class="admin-status-badge ' + (banido ? 'banido' : 'ativo') + '">' + (banido ? '🚫 Banido' : '✅ Ativo') + '</span>' +
+        '</div>' +
+        (!euMesmo ?
+          '<div class="admin-user-actions">' +
+            (banido
+              ? '<button class="btn" onclick="adminReativar(\'' + u.uid + '\',\'' + esc(u.apelido) + '\')" style="font-size:11px">✅ Reativar</button>'
+              : '<button class="btn danger" onclick="adminBanir(\'' + u.uid + '\',\'' + esc(u.apelido) + '\')" style="font-size:11px">🚫 Banir</button>'
+            ) +
+            '<button class="btn" onclick="adminIniciarChat(\'' + u.uid + '\',\'' + esc(u.apelido) + '\')" style="font-size:11px">💬 Chat</button>' +
+          '</div>'
+        : '') +
+      '</div>';
+    });
+    cont.innerHTML = h;
+  }).catch(() => { cont.innerHTML = '<div class="empty"><p>Erro ao carregar usuários</p></div>'; });
+}
+
+function adminVerMensagens() {
+  const cont = document.getElementById('admin-content');
+  if (!cont) return;
+  cont.innerHTML = '<div class="empty"><p>Carregando...</p></div>';
+  db.collection('contato_dev').get().then(snap => {
+    const msgs = [];
+    snap.forEach(doc => msgs.push({ id: doc.id, ...doc.data() }));
+    msgs.sort((a, b) => {
+      const ta = a.enviadaEm ? a.enviadaEm.seconds : 0;
+      const tb = b.enviadaEm ? b.enviadaEm.seconds : 0;
+      return tb - ta;
+    });
+    if (msgs.length === 0) { cont.innerHTML = '<div class="empty"><p>Nenhuma mensagem ainda</p></div>'; return; }
+    let h = '';
+    msgs.forEach(m => {
+      const data = m.enviadaEm ? new Date(m.enviadaEm.toDate()).toLocaleString('pt-BR') : '-';
+      h += '<div class="admin-msg-card' + (m.lido ? '' : ' nao-lido') + '" id="admsg-' + m.id + '">' +
+        '<div class="admin-msg-header">' +
+          '<strong>' + esc(m.apelido || '?') + '</strong> · <span style="color:#6B7280">' + esc(m.email || '') + '</span>' +
+          ' <span style="font-size:10px;color:#94A3B8;margin-left:6px">' + data + '</span>' +
+        '</div>' +
+        '<div class="admin-msg-texto">' + esc(m.texto) + '</div>' +
+        '<div style="display:flex;gap:6px;margin-top:8px">' +
+          (!m.lido ? '<button class="btn primary" onclick="adminMarcarLido(\'' + m.id + '\')" style="font-size:11px">✓ Marcar lido</button>' : '<span style="font-size:11px;color:#6B7280">✓ Lido</span>') +
+          (m.uid ? '<button class="btn" onclick="adminIniciarChat(\'' + m.uid + '\',\'' + esc(m.apelido) + '\')" style="font-size:11px">💬 Responder</button>' : '') +
+        '</div>' +
+      '</div>';
+    });
+    cont.innerHTML = h;
+  }).catch(() => { cont.innerHTML = '<div class="empty"><p>Sem permissão ou erro ao carregar mensagens</p></div>'; });
+}
+
+function adminBanir(uid, apelido) {
+  if (!confirm('Banir ' + apelido + '?\nO usuário perderá o acesso imediatamente.')) return;
+  db.collection('users').doc(uid).update({ status: 'banido' })
+    .then(() => { toast('🚫 ' + apelido + ' banido'); adminVerUsuarios(); })
+    .catch(() => toast('Erro ao banir'));
+}
+
+function adminReativar(uid, apelido) {
+  db.collection('users').doc(uid).update({ status: 'ativo' })
+    .then(() => { toast('✅ ' + apelido + ' reativado'); adminVerUsuarios(); })
+    .catch(() => toast('Erro ao reativar'));
+}
+
+function adminMarcarLido(docId) {
+  db.collection('contato_dev').doc(docId).update({ lido: true }).then(() => {
+    const el = document.getElementById('admsg-' + docId);
+    if (el) { el.classList.remove('nao-lido'); adminVerMensagens(); }
+  }).catch(() => toast('Erro'));
+}
+
+function adminIniciarChat(uid, apelido) {
+  chatAtivo = { chatId: getChatId(currentUser.uid, uid), amigoUid: uid, amigoApelido: apelido };
+  switchTab('chat');
+}
+
+// ============================================================
+// FALAR COM O DESENVOLVEDOR
+// ============================================================
+function abrirContatoDev() {
+  fecharModal('modal-perfil');
+  document.getElementById('modal-contato-dev').classList.add('show');
+}
+
+function enviarMensagemDev() {
+  const texto = document.getElementById('contato-dev-texto').value.trim();
+  if (!texto) { toast('⚠️ Digite uma mensagem'); return; }
+  db.collection('contato_dev').add({
+    uid: currentUser.uid,
+    apelido: userData.apelido || '',
+    email: userData.email || currentUser.email || '',
+    texto: texto,
+    enviadaEm: firebase.firestore.FieldValue.serverTimestamp(),
+    lido: false
+  }).then(() => {
+    toast('✅ Mensagem enviada ao desenvolvedor!');
+    document.getElementById('contato-dev-texto').value = '';
+    fecharModal('modal-contato-dev');
+  }).catch(() => toast('❌ Erro ao enviar mensagem'));
+}
 </script>
 
 </body>
