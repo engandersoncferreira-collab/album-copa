@@ -129,7 +129,9 @@ body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-
 .row:first-child { border-top: none; }
 .row-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 9px; gap: 8px; flex-wrap: wrap; }
 .row-left { display: flex; align-items: center; gap: 10px; flex: 1; }
-.cod { font-size: 11px; font-weight: 700; color: #fff; background: #0F4C5C; padding: 4px 10px; border-radius: 6px; min-width: 44px; text-align: center; }
+.cod { font-size: 11px; font-weight: 700; color: #fff; background: #0F4C5C; padding: 4px 10px; border-radius: 6px; min-width: 44px; text-align: center; display: inline-flex; align-items: center; gap: 6px; justify-content: center; }
+.flag { width: 18px; height: 13px; border-radius: 2px; object-fit: cover; display: block; box-shadow: 0 0 0 1px rgba(255,255,255,0.35); background: #e5e7eb; }
+.tr-c .flag, .cnt .flag { box-shadow: 0 0 0 1px rgba(15,76,92,0.18); }
 .name { font-size: 13px; font-weight: 600; color: #0F4C5C; }
 .cnt { font-size: 11px; color: #6B7280; font-weight: 600; background: #F1F5F9; padding: 4px 10px; border-radius: 10px; }
 .cnt strong { color: #185FA5; }
@@ -147,7 +149,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-
 
 .tr { background: #fff; border: 1px solid #E5E7EB; border-radius: 10px; padding: 11px 14px; margin-bottom: 7px; display: flex; justify-content: space-between; align-items: center; gap: 10px; }
 .tr-l { display: flex; align-items: center; gap: 10px; flex: 1; min-width: 0; }
-.tr-c { background: #E6F1FB; color: #0F4C5C; padding: 5px 10px; border-radius: 6px; font-size: 11px; font-weight: 700; min-width: 50px; text-align: center; }
+.tr-c { background: #E6F1FB; color: #0F4C5C; padding: 5px 10px; border-radius: 6px; font-size: 11px; font-weight: 700; min-width: 50px; text-align: center; display: inline-flex; align-items: center; gap: 6px; justify-content: center; }
 .tr-i { font-size: 13px; min-width: 0; }
 .tr-i strong { color: #0F4C5C; display: block; }
 .tr-i small { color: #6B7280; font-size: 11px; }
@@ -440,6 +442,27 @@ var GRUPOS = {
   K: [["Portugal","POR"],["Congo","COD"],["Uzbequistão","UZB"],["Colômbia","COL"]],
   L: [["Inglaterra","ENG"],["Croácia","CRO"],["Gana","GHA"],["Panamá","PAN"]]
 };
+
+var FLAGS = {
+  MEX:"mx", RSA:"za", KOR:"kr", CZE:"cz",
+  CAN:"ca", BIH:"ba", QAT:"qa", SUI:"ch",
+  BRA:"br", MAR:"ma", HAI:"ht", SCO:"gb-sct",
+  USA:"us", PAR:"py", AUS:"au", TUR:"tr",
+  GER:"de", CUW:"cw", CIV:"ci", ECU:"ec",
+  NED:"nl", JPN:"jp", SWE:"se", TUN:"tn",
+  BEL:"be", EGY:"eg", IRN:"ir", NZL:"nz",
+  ESP:"es", CPV:"cv", KSA:"sa", URU:"uy",
+  FRA:"fr", SEN:"sn", IRQ:"iq", NOR:"no",
+  ARG:"ar", ALG:"dz", AUT:"at", JOR:"jo",
+  POR:"pt", COD:"cd", UZB:"uz", COL:"co",
+  ENG:"gb-eng", CRO:"hr", GHA:"gh", PAN:"pa"
+};
+
+function flagImg(cod, cls) {
+  var iso = FLAGS[cod];
+  if (!iso) return "";
+  return '<img class="flag ' + (cls || '') + '" src="https://flagcdn.com/w40/' + iso + '.png" alt="" loading="lazy">';
+}
 
 const TOTAL = 48*20 + 20 + 14;
 const CIDADES_BR = [
@@ -875,7 +898,7 @@ function linhaSel(nome, cod, g, max, start, cont, isCC) {
   }
   return '<div class="row">' +
     '<div class="row-head">' +
-      '<div class="row-left"><span class="cod">' + cod + '</span><span class="name">' + esc(nome) + '</span></div>' +
+      '<div class="row-left"><span class="cod">' + flagImg(cod) + cod + '</span><span class="name">' + esc(nome) + '</span></div>' +
       '<span class="cnt"><strong>' + cont + '</strong>/' + max + ' coladas</span>' +
     '</div>' +
     '<div class="nums ' + (isCC ? "cc" : "") + '">' + nums + '</div>' +
@@ -1007,7 +1030,7 @@ function renderTrocas() {
     for (let i = 0; i < trocas.length; i++) {
       const t = trocas[i];
       const gLbl = (t.grupo === "FWC" || t.grupo === "CC") ? "Especial" : "Grupo " + t.grupo;
-      h += '<div class="tr"><div class="tr-l"><span class="tr-c">' + t.cod + '</span><div class="tr-i"><strong>' + esc(t.nomeSel) + '</strong><small>' + gLbl + ' · ' + t.lbl + '</small></div></div><span class="tr-q">' + t.qtd + '× rep.</span></div>';
+      h += '<div class="tr"><div class="tr-l"><span class="tr-c">' + flagImg(t.cod) + t.cod + '</span><div class="tr-i"><strong>' + esc(t.nomeSel) + '</strong><small>' + gLbl + ' · ' + t.lbl + '</small></div></div><span class="tr-q">' + t.qtd + '× rep.</span></div>';
     }
   }
   
@@ -1180,7 +1203,9 @@ function gerarHTMLImpressao(tipo) {
     ".sc.z{background:#E6F1FB}.sc.z .v{color:#185FA5}" +
     ".li{display:grid;grid-template-columns:repeat(3,1fr);gap:5px}" +
     ".li-i{background:#F8FAFC;border:1px solid #E5E7EB;border-radius:5px;padding:5px 7px;font-size:10px;display:flex;align-items:center;gap:5px}" +
-    ".li-i .cp{background:#0F4C5C;color:#fff;font-size:9px;padding:2px 5px;border-radius:3px;font-weight:700}" +
+    ".li-i .cp{background:#0F4C5C;color:#fff;font-size:9px;padding:2px 5px;border-radius:3px;font-weight:700;display:inline-flex;align-items:center;gap:4px}" +
+    ".flag{width:14px;height:10px;object-fit:cover;border-radius:1px;display:inline-block;vertical-align:middle;box-shadow:0 0 0 0.5px rgba(0,0,0,0.15)}" +
+    ".tf td.c .flag{margin-right:3px;width:13px;height:9px}" +
     ".li-i .n{flex:1;min-width:0}" +
     ".li-i .n strong{display:block;color:#0F4C5C;font-size:10px;font-weight:600}" +
     ".li-i .n small{color:#6B7280;font-size:9px}" +
@@ -1188,7 +1213,35 @@ function gerarHTMLImpressao(tipo) {
     ".li-i.f .cp{background:#6B7280}" +
     ".ft{margin-top:12px;padding-top:7px;border-top:1px solid #E5E7EB;text-align:center;font-size:9px;color:#94A3B8}" +
     ".em{text-align:center;padding:28px;color:#6B7280;font-size:12px}" +
-    "@media print{body{padding:0}.pa{display:none}.hd{margin-bottom:9px}}";
+    "@media print{" +
+      "*,*::before,*::after{-webkit-print-color-adjust:exact !important;print-color-adjust:exact !important;color-adjust:exact !important}" +
+      "body{padding:0;color:#000;font-weight:500}" +
+      ".pa{display:none}" +
+      ".hd{margin-bottom:9px;border-bottom:2px solid #000}" +
+      ".hd h1,.hd .m strong{color:#000 !important}" +
+      ".hd .s,.hd .m{color:#1F2937 !important}" +
+      ".tf th{background:#000 !important;color:#fff !important;border:1px solid #000 !important}" +
+      ".tf td{border:1px solid #000 !important;color:#000 !important}" +
+      ".tf td.g{background:#000 !important;color:#fff !important}" +
+      ".tf td.g.e{background:#374151 !important;color:#fff !important}" +
+      ".tf td.n{background:#fff !important;color:#000 !important;font-weight:700}" +
+      ".tf td.c{background:#fff !important;color:#000 !important;font-weight:700}" +
+      ".tf td.x{color:#000 !important;font-weight:600}" +
+      ".tf td.x.t{background:#000 !important;color:#fff !important}" +
+      ".tf td.x.r{background:#fff !important;color:#000 !important;outline:2px solid #000;outline-offset:-2px;font-weight:800}" +
+      ".sb .sc{background:#fff !important;border:1px solid #000 !important}" +
+      ".sb .sc .l{color:#000 !important}" +
+      ".sb .sc .v{color:#000 !important}" +
+      ".li-i{background:#fff !important;border:1px solid #000 !important}" +
+      ".li-i .cp{background:#000 !important;color:#fff !important}" +
+      ".li-i.f .cp{background:#4B5563 !important;color:#fff !important}" +
+      ".li-i .n strong{color:#000 !important}" +
+      ".li-i .n small{color:#1F2937 !important}" +
+      ".li-i .q{background:#fff !important;color:#000 !important;border:1px solid #000 !important}" +
+      ".ft{color:#374151 !important;border-top:1px solid #000 !important}" +
+      ".em{color:#000 !important}" +
+      ".flag{box-shadow:0 0 0 0.5px #000 !important}" +
+    "}";
 
   return '<!DOCTYPE html><html><head><meta charset="utf-8"><title>' + titulo + ' - Copa 2026</title><style>' + css + '</style></head><body>' +
     '<div class="pa"><div class="i"><strong>' + titulo + '</strong>Copa 2026 · Panini · ' + esc(userData.apelido || 'Você') + '</div>' +
@@ -1212,7 +1265,7 @@ function gerarTabela(comProgresso) {
       const s = sels[idx];
       h += '<tr>';
       if (idx === 0) h += '<td class="g" rowspan="' + sels.length + '">GRUPO ' + grupo + '</td>';
-      h += '<td class="n">' + esc(s[0]) + '</td><td class="c">' + s[1] + '</td>';
+      h += '<td class="n">' + esc(s[0]) + '</td><td class="c">' + flagImg(s[1]) + s[1] + '</td>';
       for (let i = 1; i <= 20; i++) {
         const q = comProgresso ? getQ(grupo + "-" + s[1] + "-" + i) : 0;
         const cls = q === 0 ? "" : (q === 1 ? "t" : "r");
@@ -1268,7 +1321,7 @@ function gerarListaFaltam() {
   for (let i = 0; i < f.length; i++) {
     const item = f[i];
     const gl = item.grupo === "ESP" ? "Especial" : "Grupo " + item.grupo;
-    h += '<div class="li-i f"><span class="cp">' + item.cod + '</span><div class="n"><strong>' + esc(item.nome) + '</strong><small>' + gl + ' · ' + item.lbl + '</small></div></div>';
+    h += '<div class="li-i f"><span class="cp">' + flagImg(item.cod) + item.cod + '</span><div class="n"><strong>' + esc(item.nome) + '</strong><small>' + gl + ' · ' + item.lbl + '</small></div></div>';
   }
   h += '</div>';
   return h;
@@ -1302,7 +1355,7 @@ function gerarListaRep() {
   for (let i = 0; i < trocas.length; i++) {
     const t = trocas[i];
     const gl = (t.grupo === "FWC" || t.grupo === "CC") ? "Especial" : "Grupo " + t.grupo;
-    h += '<div class="li-i"><span class="cp">' + t.cod + '</span><div class="n"><strong>' + esc(t.nomeSel) + '</strong><small>' + gl + ' · ' + t.lbl + '</small></div><span class="q">' + t.qtd + '×</span></div>';
+    h += '<div class="li-i"><span class="cp">' + flagImg(t.cod) + t.cod + '</span><div class="n"><strong>' + esc(t.nomeSel) + '</strong><small>' + gl + ' · ' + t.lbl + '</small></div><span class="q">' + t.qtd + '×</span></div>';
   }
   h += '</div>';
   h += '<div style="margin-top:11px;padding:7px 11px;background:#FEF3C7;border-left:3px solid #F4C430;font-size:10px;color:#78350F;border-radius:3px"><strong>💡 Dica:</strong> leve esta lista nos encontros de troca.</div>';
