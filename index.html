@@ -117,9 +117,11 @@ body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-
 .card.open { border-color: #B5D4F4; box-shadow: 0 2px 8px rgba(15,76,92,0.06); }
 .head { background: linear-gradient(135deg, #0F4C5C 0%, #185FA5 100%); color: #fff; padding: 12px 16px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; user-select: none; gap: 10px; }
 .head.esp { background: linear-gradient(135deg, #185FA5 0%, #378ADD 100%); }
-.head-ttl { font-size: 13px; font-weight: 700; color: #fff; display: flex; align-items: center; gap: 8px; flex: 1; }
-.head-bdg { background: rgba(255,255,255,0.22); padding: 2px 8px; border-radius: 7px; font-size: 10px; font-weight: 700; }
-.head-st { font-size: 11px; color: #DBEAFE; display: flex; gap: 10px; align-items: center; }
+.head-ttl { font-size: 13px; font-weight: 700; color: #fff; display: flex; align-items: center; gap: 8px; flex: 1; min-width: 0; }
+.head-ttl-text { flex: 1; min-width: 0; }
+.head-sub { display: block; font-size: 10px; font-weight: 400; color: #DBEAFE; opacity: 0.92; margin-top: 3px; line-height: 1.35; letter-spacing: 0.1px; }
+.head-bdg { background: rgba(255,255,255,0.22); padding: 2px 8px; border-radius: 7px; font-size: 10px; font-weight: 700; flex-shrink: 0; }
+.head-st { font-size: 11px; color: #DBEAFE; display: flex; gap: 10px; align-items: center; flex-shrink: 0; }
 .chev { transition: transform 0.2s; }
 .card.open .chev { transform: rotate(180deg); }
 .body { display: none; }
@@ -476,6 +478,7 @@ var currentUser = null;
 var userData = {};
 var dados = {};
 var abertos = {};
+var modoAZ = false;
 var syncStatus = 'conectando';
 var unsubscribeFn = null;
 var bloqueados = [];
@@ -846,8 +849,9 @@ function renderDashboard() {
 // ============================================================
 function renderControle() {
   let h = '<div class="acts">' +
-    '<button class="btn" onclick="expandirTodos()">⌄ Expandir</button>' +
-    '<button class="btn" onclick="recolherTodos()">⌃ Recolher</button>' +
+    '<button class="btn" onclick="expandirTodos()"' + (modoAZ ? ' disabled style="opacity:0.5;cursor:not-allowed"' : '') + '>⌄ Expandir</button>' +
+    '<button class="btn" onclick="recolherTodos()"' + (modoAZ ? ' disabled style="opacity:0.5;cursor:not-allowed"' : '') + '>⌃ Recolher</button>' +
+    '<button class="btn ' + (modoAZ ? 'primary' : '') + '" onclick="toggleAZ()">🔤 ' + (modoAZ ? 'Por grupo' : 'A-Z') + '</button>' +
     '<button class="btn danger" onclick="resetar()">🗑 Limpar tudo</button>' +
   '</div>' +
   '<div class="leg">' +
@@ -857,31 +861,80 @@ function renderControle() {
     '<span class="hint">Toque: +1 · Segurar / botão direito: −1</span>' +
   '</div>';
 
-  const todos = Object.keys(GRUPOS).concat(["FWC", "CC"]);
-  for (let i = 0; i < todos.length; i++) {
-    const g = todos[i];
-    const st = statsGrupo(g);
-    const esp = g === "FWC" || g === "CC";
-    const ttl = g === "FWC" ? "FIFA World Cup History" : g === "CC" ? "Coca-Cola" : "Grupo " + g;
-    const ab = abertos[g] ? "open" : "";
-    h += '<div class="card ' + ab + '" data-grupo="' + g + '">' +
-      '<div class="head ' + (esp ? "esp" : "") + '" data-toggle="' + g + '">' +
-        '<div class="head-ttl"><span class="head-bdg">' + (esp ? "ESP" : g) + '</span>' + ttl + '</div>' +
-        '<div class="head-st"><span>✓ ' + st.t + '/' + st.total + '</span><span>⇄ ' + st.r + '</span><span class="chev">⌄</span></div>' +
-      '</div>' +
-      '<div class="body">';
-    if (g === "FWC") h += linhaSel("FIFA World Cup History", "FWC", "FWC", 20, 0, statsSel("FWC", "FWC", 20, 0), false);
-    else if (g === "CC") h += linhaSel("Figurinhas Coca-Cola", "CC", "CC", 14, 1, statsSel("CC", "CC", 14, 1), true);
-    else {
+  if (modoAZ) {
+    let lista = [];
+    for (let g in GRUPOS) {
       for (let j = 0; j < GRUPOS[g].length; j++) {
         const s = GRUPOS[g][j];
-        h += linhaSel(s[0], s[1], g, 20, 1, statsSel(g, s[1], 20, 1), false);
+        lista.push({ nome: s[0], cod: s[1], g: g, max: 20, start: 1, isCC: false });
       }
     }
+    lista.push({ nome: "FIFA World Cup History", cod: "FWC", g: "FWC", max: 20, start: 0, isCC: false });
+    lista.push({ nome: "Coca-Cola", cod: "CC", g: "CC", max: 14, start: 1, isCC: true });
+    lista.sort((a, b) => a.nome.localeCompare(b.nome, 'pt-BR'));
+
+    let totT = 0, totMax = 0, totR = 0;
+    for (let i = 0; i < lista.length; i++) {
+      const it = lista[i];
+      totMax += it.max;
+      for (let n = 0; n < it.max; n++) {
+        const num = it.start === 0 ? n : n + 1;
+        const q = getQ(it.g + "-" + it.cod + "-" + num);
+        if (q >= 1) totT++;
+        if (q > 1) totR += q - 1;
+      }
+    }
+
+    h += '<div class="card open" data-grupo="AZ">' +
+      '<div class="head" style="cursor:default"><div class="head-ttl"><span class="head-bdg">A-Z</span>' +
+        '<div class="head-ttl-text">Todas as seleções em ordem alfabética' +
+          '<small class="head-sub">' + lista.length + ' seleções · role para encontrar a desejada</small>' +
+        '</div></div>' +
+        '<div class="head-st"><span>✓ ' + totT + '/' + totMax + '</span><span>⇄ ' + totR + '</span></div>' +
+      '</div>' +
+      '<div class="body" style="display:block">';
+    for (let i = 0; i < lista.length; i++) {
+      const it = lista[i];
+      h += linhaSel(it.nome, it.cod, it.g, it.max, it.start, statsSel(it.g, it.cod, it.max, it.start), it.isCC);
+    }
     h += '</div></div>';
+  } else {
+    const todos = Object.keys(GRUPOS).concat(["FWC", "CC"]);
+    for (let i = 0; i < todos.length; i++) {
+      const g = todos[i];
+      const st = statsGrupo(g);
+      const esp = g === "FWC" || g === "CC";
+      const ttl = g === "FWC" ? "FIFA World Cup History" : g === "CC" ? "Coca-Cola" : "Grupo " + g;
+      const sub = esp ? "" : GRUPOS[g].map(x => x[0]).join(" · ");
+      const ab = abertos[g] ? "open" : "";
+      h += '<div class="card ' + ab + '" data-grupo="' + g + '">' +
+        '<div class="head ' + (esp ? "esp" : "") + '" data-toggle="' + g + '">' +
+          '<div class="head-ttl"><span class="head-bdg">' + (esp ? "ESP" : g) + '</span>' +
+            '<div class="head-ttl-text">' + ttl +
+              (sub ? '<small class="head-sub">' + sub + '</small>' : '') +
+            '</div>' +
+          '</div>' +
+          '<div class="head-st"><span>✓ ' + st.t + '/' + st.total + '</span><span>⇄ ' + st.r + '</span><span class="chev">⌄</span></div>' +
+        '</div>' +
+        '<div class="body">';
+      if (g === "FWC") h += linhaSel("FIFA World Cup History", "FWC", "FWC", 20, 0, statsSel("FWC", "FWC", 20, 0), false);
+      else if (g === "CC") h += linhaSel("Figurinhas Coca-Cola", "CC", "CC", 14, 1, statsSel("CC", "CC", 14, 1), true);
+      else {
+        for (let j = 0; j < GRUPOS[g].length; j++) {
+          const s = GRUPOS[g][j];
+          h += linhaSel(s[0], s[1], g, 20, 1, statsSel(g, s[1], 20, 1), false);
+        }
+      }
+      h += '</div></div>';
+    }
   }
   document.getElementById("content").innerHTML = h;
   bindControle();
+}
+
+function toggleAZ() {
+  modoAZ = !modoAZ;
+  renderControle();
 }
 
 function linhaSel(nome, cod, g, max, start, cont, isCC) {
@@ -965,7 +1018,18 @@ function updateNum(el, q) {
   row.querySelector(".cnt strong").textContent = coladas;
   const card = el.closest(".card");
   const g = card.dataset.grupo;
-  const st = statsGrupo(g);
+  let st;
+  if (g === "AZ") {
+    let t = 0, r = 0, total = 48 * 20 + 20 + 14;
+    for (let k in dados) {
+      const qq = dados[k];
+      if (qq >= 1) t++;
+      if (qq > 1) r += qq - 1;
+    }
+    st = { t, f: total - t, r, total };
+  } else {
+    st = statsGrupo(g);
+  }
   const sp = card.querySelector(".head-st").children;
   sp[0].textContent = "✓ " + st.t + "/" + st.total;
   sp[1].textContent = "⇄ " + st.r;
