@@ -256,6 +256,22 @@ body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-
 /* BLOQUEADOS NO PERFIL */
 .blocked-item { display: flex; align-items: center; justify-content: space-between; padding: 8px 0; border-top: 1px solid #F1F5F9; font-size: 12px; color: #1F2937; }
 .blocked-item:first-child { border-top: none; }
+
+/* PESQUISA NA ABA CONTROLE */
+.pesq-bar { background: #fff; border: 1.5px solid #185FA5; border-radius: 10px; padding: 8px 12px; margin-bottom: 10px; display: flex; gap: 8px; align-items: center; box-shadow: 0 2px 8px rgba(24,95,165,0.10); }
+.pesq-icon { font-size: 16px; flex-shrink: 0; }
+.pesq-input { flex: 1; border: none; outline: none; font-size: 14px; color: #0F4C5C; background: transparent; font-family: inherit; min-width: 0; }
+.pesq-input::placeholder { color: #94A3B8; }
+.pesq-clear { background: none; border: none; font-size: 17px; cursor: pointer; color: #94A3B8; padding: 0 2px; line-height: 1; flex-shrink: 0; }
+.pesq-clear:hover { color: #B91C1C; }
+
+/* AJUSTE RÁPIDO DE REPETIDAS */
+.tr-adj { display: flex; align-items: center; gap: 6px; flex-shrink: 0; }
+.tr-adj .adj-btn { width: 30px; height: 30px; border-radius: 50%; border: none; font-size: 18px; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; line-height: 1; padding: 0; transition: opacity 0.15s; }
+.tr-adj .adj-btn:active { opacity: 0.7; }
+.tr-adj .adj-m { background: #FEE2E2; color: #B91C1C; }
+.tr-adj .adj-p { background: #D1FAE5; color: #065F46; }
+.tr-adj .adj-cnt { background: linear-gradient(135deg, #F4C430, #E0B52A); color: #0B3F4A; padding: 5px 10px; border-radius: 11px; font-size: 13px; font-weight: 700; min-width: 36px; text-align: center; }
 </style>
 </head>
 <body>
@@ -486,6 +502,7 @@ var chatAtivo = null;
 var chatConvUnsubscribe = null;
 var chatsListUnsubscribe = null;
 var badgeUnsubscribe = null;
+var termoPesquisa = '';
 
 // ============================================================
 // AUTENTICAÇÃO
@@ -727,6 +744,15 @@ function atualizarFigurinha(chave, qtd) {
     });
 }
 
+function ajustarRep(chave, delta) {
+  const novaQtd = Math.max(0, (dados[chave] || 0) + delta);
+  if (novaQtd === (dados[chave] || 0)) return;
+  dados[chave] = novaQtd;
+  if (novaQtd === 0) delete dados[chave];
+  atualizarFigurinha(chave, novaQtd);
+  renderTrocas();
+}
+
 function salvarNoLocalStorage() {
   try {
     localStorage.setItem('album_backup_' + currentUser.uid, JSON.stringify(dados));
@@ -852,7 +878,16 @@ function renderControle() {
     '<button class="btn" onclick="expandirTodos()"' + (modoAZ ? ' disabled style="opacity:0.5;cursor:not-allowed"' : '') + '>⌄ Expandir</button>' +
     '<button class="btn" onclick="recolherTodos()"' + (modoAZ ? ' disabled style="opacity:0.5;cursor:not-allowed"' : '') + '>⌃ Recolher</button>' +
     '<button class="btn ' + (modoAZ ? 'primary' : '') + '" onclick="toggleAZ()">🔤 ' + (modoAZ ? 'Por grupo' : 'A-Z') + '</button>' +
+    '<button class="btn ' + (termoPesquisa ? 'primary' : '') + '" onclick="togglePesquisa()">🔍 Pesquisa</button>' +
     '<button class="btn danger" onclick="resetar()">🗑 Limpar tudo</button>' +
+  '</div>' +
+  '<div id="pesq-box"' + (termoPesquisa ? '' : ' style="display:none"') + '>' +
+    '<div class="pesq-bar">' +
+      '<span class="pesq-icon">🔍</span>' +
+      '<input id="pesq-input" class="pesq-input" type="text" value="' + esc(termoPesquisa) + '" placeholder="Sigla (BRA) ou nome da seleção..." oninput="pesquisar(this.value)" autocomplete="off" autocorrect="off" spellcheck="false">' +
+      '<button class="pesq-clear" onclick="fecharPesquisa()" title="Fechar pesquisa">✕</button>' +
+    '</div>' +
+    '<div id="pesq-resultados"></div>' +
   '</div>' +
   '<div class="leg">' +
     '<div class="leg-item"><div class="leg-box" style="background:#fff"></div>Não tenho</div>' +
@@ -929,6 +964,70 @@ function renderControle() {
     }
   }
   document.getElementById("content").innerHTML = h;
+  bindControle();
+  if (termoPesquisa) pesquisar(termoPesquisa);
+}
+
+function togglePesquisa() {
+  const box = document.getElementById('pesq-box');
+  if (!box) return;
+  if (box.style.display === 'none') {
+    box.style.display = 'block';
+    setTimeout(function() {
+      const inp = document.getElementById('pesq-input');
+      if (inp) inp.focus();
+    }, 60);
+  } else {
+    fecharPesquisa();
+  }
+}
+
+function fecharPesquisa() {
+  termoPesquisa = '';
+  const box = document.getElementById('pesq-box');
+  if (box) box.style.display = 'none';
+  const r = document.getElementById('pesq-resultados');
+  if (r) r.innerHTML = '';
+  const btn = document.querySelector('.btn[onclick="togglePesquisa()"]');
+  if (btn) btn.classList.remove('primary');
+}
+
+function pesquisar(termo) {
+  termoPesquisa = termo.trim();
+  const container = document.getElementById('pesq-resultados');
+  if (!container) return;
+
+  if (!termoPesquisa) { container.innerHTML = ''; return; }
+
+  const t = termoPesquisa.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '');
+
+  const lista = [];
+  for (let g in GRUPOS) {
+    for (let j = 0; j < GRUPOS[g].length; j++) {
+      const s = GRUPOS[g][j];
+      lista.push({ nome: s[0], cod: s[1], g: g, max: 20, start: 1, isCC: false });
+    }
+  }
+  lista.push({ nome: "FIFA World Cup History", cod: "FWC", g: "FWC", max: 20, start: 0, isCC: false });
+  lista.push({ nome: "Coca-Cola", cod: "CC", g: "CC", max: 14, start: 1, isCC: true });
+
+  const res = lista.filter(function(it) {
+    const nome = it.nome.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '');
+    return nome.includes(t) || it.cod.toLowerCase().includes(t);
+  });
+
+  if (res.length === 0) {
+    container.innerHTML = '<div class="empty" style="padding:16px;margin-bottom:8px">Nenhuma seleção encontrada para <strong>"' + esc(termoPesquisa) + '"</strong></div>';
+    return;
+  }
+
+  let h = '<div class="card open" data-grupo="PESQUISA"><div class="body" style="display:block">';
+  for (let i = 0; i < res.length; i++) {
+    const it = res[i];
+    h += linhaSel(it.nome, it.cod, it.g, it.max, it.start, statsSel(it.g, it.cod, it.max, it.start), it.isCC);
+  }
+  h += '</div></div>';
+  container.innerHTML = h;
   bindControle();
 }
 
@@ -1017,6 +1116,8 @@ function updateNum(el, q) {
   row.querySelectorAll(".num").forEach(n => { if (parseInt(n.dataset.qtd) >= 1) coladas++; });
   row.querySelector(".cnt strong").textContent = coladas;
   const card = el.closest(".card");
+  const headSt = card ? card.querySelector(".head-st") : null;
+  if (!headSt) return;
   const g = card.dataset.grupo;
   let st;
   if (g === "AZ") {
@@ -1030,7 +1131,7 @@ function updateNum(el, q) {
   } else {
     st = statsGrupo(g);
   }
-  const sp = card.querySelector(".head-st").children;
+  const sp = headSt.children;
   sp[0].textContent = "✓ " + st.t + "/" + st.total;
   sp[1].textContent = "⇄ " + st.r;
 }
@@ -1094,7 +1195,7 @@ function renderTrocas() {
     for (let i = 0; i < trocas.length; i++) {
       const t = trocas[i];
       const gLbl = (t.grupo === "FWC" || t.grupo === "CC") ? "Especial" : "Grupo " + t.grupo;
-      h += '<div class="tr"><div class="tr-l"><span class="tr-c">' + flagImg(t.cod) + t.cod + '</span><div class="tr-i"><strong>' + esc(t.nomeSel) + '</strong><small>' + gLbl + ' · ' + t.lbl + '</small></div></div><span class="tr-q">' + t.qtd + '× rep.</span></div>';
+      h += '<div class="tr"><div class="tr-l"><span class="tr-c">' + flagImg(t.cod) + t.cod + '</span><div class="tr-i"><strong>' + esc(t.nomeSel) + '</strong><small>' + gLbl + ' · ' + t.lbl + '</small></div></div><div class="tr-adj"><button class="adj-btn adj-m" onclick="ajustarRep(\'' + t.chave + '\',-1)">−</button><span class="adj-cnt">' + t.qtd + '×</span><button class="adj-btn adj-p" onclick="ajustarRep(\'' + t.chave + '\',1)">+</button></div></div>';
     }
   }
   
@@ -1209,7 +1310,7 @@ function renderImprimir() {
   '</div>' +
   '<div class="print-opt" onclick="imprimir(\'faltam\')">' +
     '<div class="print-ic">📝</div>' +
-    '<div class="print-tx"><strong>Lista do que falta</strong><small>Leve para a banca · ' + s.f + ' figurinhas</small></div>' +
+    '<div class="print-tx"><strong>Lista compacta de faltantes</strong><small>Agrupado por seleção · ' + s.f + ' figurinhas · cabe em 1 folha A4</small></div>' +
   '</div>' +
   '<div class="print-opt" onclick="imprimir(\'repetidas\')">' +
     '<div class="print-ic am">🔄</div>' +
@@ -1277,6 +1378,17 @@ function gerarHTMLImpressao(tipo) {
     ".li-i.f .cp{background:#6B7280}" +
     ".ft{margin-top:12px;padding-top:7px;border-top:1px solid #E5E7EB;text-align:center;font-size:9px;color:#94A3B8}" +
     ".em{text-align:center;padding:28px;color:#6B7280;font-size:12px}" +
+    ".cmp-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:5px}" +
+    ".cmp-grp{background:#F8FAFC;border:1px solid #E5E7EB;border-radius:5px;padding:5px 7px}" +
+    ".cmp-grp-ok{opacity:0.45}" +
+    ".cmp-grp-esp{grid-column:span 3}" +
+    ".cmp-gh{font-size:8px;font-weight:700;color:#fff;background:#0F4C5C;padding:2px 6px;border-radius:3px;margin-bottom:4px;display:inline-block;letter-spacing:0.3px}" +
+    ".cmp-gh-esp{background:#185FA5}" +
+    ".cmp-sel{display:flex;align-items:baseline;gap:4px;margin-bottom:2px;line-height:1.3}" +
+    ".cmp-cod{font-weight:700;color:#0F4C5C;font-size:8px;min-width:32px;display:inline-flex;align-items:center;gap:3px;flex-shrink:0}" +
+    ".cmp-cod .flag{width:12px;height:8px}" +
+    ".cmp-nums{color:#1F2937;font-size:8.5px;word-break:break-word}" +
+    ".cmp-completo{font-size:8px;color:#10B981;font-weight:600}" +
     "@media print{" +
       "*,*::before,*::after{-webkit-print-color-adjust:exact !important;print-color-adjust:exact !important;color-adjust:exact !important}" +
       "body{padding:0;color:#000;font-weight:500}" +
@@ -1305,6 +1417,12 @@ function gerarHTMLImpressao(tipo) {
       ".ft{color:#374151 !important;border-top:1px solid #000 !important}" +
       ".em{color:#000 !important}" +
       ".flag{box-shadow:0 0 0 0.5px #000 !important}" +
+      ".cmp-grp{background:#fff !important;border:1px solid #000 !important}" +
+      ".cmp-gh{background:#000 !important;color:#fff !important}" +
+      ".cmp-gh-esp{background:#374151 !important}" +
+      ".cmp-cod{color:#000 !important}" +
+      ".cmp-nums{color:#000 !important}" +
+      ".cmp-completo{color:#374151 !important}" +
     "}";
 
   return '<!DOCTYPE html><html><head><meta charset="utf-8"><title>' + titulo + ' - Copa 2026</title><style>' + css + '</style></head><body>' +
@@ -1364,29 +1482,48 @@ function gerarTabela(comProgresso) {
 }
 
 function gerarListaFaltam() {
-  let f = [];
-  for (let grupo in GRUPOS) {
-    for (let idx = 0; idx < GRUPOS[grupo].length; idx++) {
-      const s = GRUPOS[grupo][idx];
-      for (let i = 1; i <= 20; i++) {
-        if (getQ(grupo + "-" + s[1] + "-" + i) < 1) f.push({ grupo, nome: s[0], cod: s[1], lbl: "Nº " + i });
-      }
-    }
-  }
-  for (let i = 0; i < 20; i++) if (getQ("FWC-FWC-" + i) < 1) f.push({ grupo: "ESP", nome: "FIFA World Cup History", cod: "FWC", lbl: (i < 10 ? "0" : "") + i });
-  for (let i = 1; i <= 14; i++) if (getQ("CC-CC-" + i) < 1) f.push({ grupo: "ESP", nome: "Coca-Cola", cod: "CC", lbl: "CC" + i });
-  if (f.length === 0) return '<div class="em">🎉 Parabéns! Coleção completa!</div>';
   const s = statsGeral();
+  if (s.f === 0) return '<div class="em">🎉 Parabéns! Coleção completa!</div>';
+
   let h = '<div class="sb">' +
     '<div class="sc"><div class="l">Total álbum</div><div class="v">' + s.total + '</div></div>' +
     '<div class="sc z"><div class="l">Você tem</div><div class="v">' + s.t + '</div></div>' +
-    '<div class="sc"><div class="l">Faltam</div><div class="v" style="color:#B91C1C">' + f.length + '</div></div>' +
-  '</div><div class="li">';
-  for (let i = 0; i < f.length; i++) {
-    const item = f[i];
-    const gl = item.grupo === "ESP" ? "Especial" : "Grupo " + item.grupo;
-    h += '<div class="li-i f"><span class="cp">' + flagImg(item.cod) + item.cod + '</span><div class="n"><strong>' + esc(item.nome) + '</strong><small>' + gl + ' · ' + item.lbl + '</small></div></div>';
+    '<div class="sc"><div class="l">Faltam</div><div class="v" style="color:#B91C1C">' + s.f + '</div></div>' +
+  '</div>';
+
+  h += '<div class="cmp-grid">';
+
+  for (let grupo in GRUPOS) {
+    const sels = GRUPOS[grupo];
+    let linhas = '';
+    for (let idx = 0; idx < sels.length; idx++) {
+      const sel = sels[idx];
+      const nums = [];
+      for (let i = 1; i <= 20; i++) {
+        if (getQ(grupo + "-" + sel[1] + "-" + i) < 1) nums.push((i < 10 ? "0" : "") + i);
+      }
+      if (nums.length > 0) {
+        linhas += '<div class="cmp-sel"><span class="cmp-cod">' + flagImg(sel[1]) + sel[1] + '</span><span class="cmp-nums">' + nums.join(' · ') + '</span></div>';
+      }
+    }
+    if (linhas) {
+      h += '<div class="cmp-grp"><div class="cmp-gh">GRUPO ' + grupo + '</div>' + linhas + '</div>';
+    } else {
+      h += '<div class="cmp-grp cmp-grp-ok"><div class="cmp-gh">GRUPO ' + grupo + '</div><div class="cmp-completo">✓ Completo</div></div>';
+    }
   }
+
+  const fwcNums = [], ccNums = [];
+  for (let i = 0; i < 20; i++) if (getQ("FWC-FWC-" + i) < 1) fwcNums.push((i < 10 ? "0" : "") + i);
+  for (let i = 1; i <= 14; i++) if (getQ("CC-CC-" + i) < 1) ccNums.push("CC" + i);
+
+  if (fwcNums.length > 0 || ccNums.length > 0) {
+    h += '<div class="cmp-grp cmp-grp-esp"><div class="cmp-gh cmp-gh-esp">ESPECIAIS</div>';
+    if (fwcNums.length > 0) h += '<div class="cmp-sel"><span class="cmp-cod">FWC</span><span class="cmp-nums">' + fwcNums.join(' · ') + '</span></div>';
+    if (ccNums.length > 0) h += '<div class="cmp-sel"><span class="cmp-cod">CC</span><span class="cmp-nums">' + ccNums.join(' · ') + '</span></div>';
+    h += '</div>';
+  }
+
   h += '</div>';
   return h;
 }
