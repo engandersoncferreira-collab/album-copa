@@ -1955,7 +1955,7 @@ function salvarApostaInput(el) {
   var val=parseInt(el.value);
   if(isNaN(val)||val<0){el.value='';return;}
   if(val>20)val=el.value=20;
-  var card=el.closest('.jogo-card,.bjogo');
+  var card=el.closest('.jogo-row,.bjogo');
   if(!card) return;
   var outro=card.querySelector('[data-lado="'+(lado==='c'?'v':'c')+'"]');
   var outroVal=outro?parseInt(outro.value):0;
