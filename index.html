@@ -266,32 +266,36 @@ body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-
 .pesq-clear:hover { color: #B91C1C; }
 
 /* BOLÃO */
-.bolao-menu { display: flex; gap: 5px; margin-bottom: 14px; background: #F1F5F9; padding: 4px; border-radius: 10px; overflow-x: auto; }
+.bolao-menu { display: flex; gap: 4px; margin-bottom: 10px; background: #F1F5F9; padding: 3px; border-radius: 9px; overflow-x: auto; }
 .bolao-menu::-webkit-scrollbar { display: none; }
-.bolao-mbtn { flex: 1; min-width: 80px; padding: 8px 10px; font-size: 12px; font-weight: 600; cursor: pointer; border: none; background: transparent; color: #64748B; border-radius: 7px; white-space: nowrap; }
+.bolao-mbtn { flex: 1; min-width: 70px; padding: 6px 8px; font-size: 11px; font-weight: 600; cursor: pointer; border: none; background: transparent; color: #64748B; border-radius: 6px; white-space: nowrap; }
 .bolao-mbtn.active { background: #fff; color: #0F4C5C; box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
-.jogo-card { background: #fff; border: 1px solid #E5E7EB; border-radius: 11px; padding: 11px 13px; margin-bottom: 7px; }
-.jogo-card.bloq { background: #F8FAFC; }
-.jogo-card.ok3 { border-color: #10B981; background: #F0FDF4; }
-.jogo-card.ok1 { border-color: #F59E0B; background: #FFFBEB; }
-.jogo-card.errou { background: #F8FAFC; }
-.jogo-hdr { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; font-size: 10px; color: #6B7280; }
-.jogo-times { display: flex; align-items: center; gap: 8px; justify-content: center; flex-wrap: wrap; }
-.jogo-time { display: flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 600; color: #0F4C5C; }
-.jogo-cod { background: #E6F1FB; color: #0F4C5C; padding: 3px 8px; border-radius: 6px; font-size: 11px; font-weight: 700; display: inline-flex; align-items: center; gap: 5px; }
-.jogo-vs { font-size: 11px; color: #94A3B8; font-weight: 700; }
-.jogo-inp-row { display: flex; align-items: center; gap: 6px; justify-content: center; margin-top: 8px; }
-.jogo-inp { width: 44px; height: 44px; text-align: center; font-size: 20px; font-weight: 700; border: 2px solid #E5E7EB; border-radius: 9px; color: #0F4C5C; font-family: inherit; background: #F8FAFC; outline: none; padding: 0; }
+.jogo-row { display:flex; align-items:center; gap:7px; padding:6px 10px; border-bottom:1px solid #F1F5F9; background:#fff; min-height:34px; }
+.jogo-row:last-child { border-bottom:none; }
+.jogo-row.ok3 { background:#F0FDF4; }
+.jogo-row.ok1 { background:#FFFBEB; }
+.jogo-row.errou { background:#FAFAFA; }
+.jogo-row.bloq { background:#F8FAFC; }
+.jr-dt { font-size:9px; color:#94A3B8; min-width:34px; line-height:1.2; }
+.jr-tm { display:flex; align-items:center; gap:5px; flex:1; min-width:0; }
+.jr-x { font-size:10px; color:#94A3B8; font-weight:700; }
+.jr-placar { font-size:13px; font-weight:700; color:#0F4C5C; white-space:nowrap; }
+.jr-ap { font-size:9px; color:#94A3B8; white-space:nowrap; }
+.jr-inp { display:flex; align-items:center; gap:3px; }
+.grp-games { border:1px solid #E5E7EB; border-radius:8px; overflow:hidden; margin-bottom:6px; }
+.grp-rdda { font-size:9px; color:#6B7280; font-weight:700; text-transform:uppercase; letter-spacing:.4px; padding:4px 10px; background:#F8FAFC; border-bottom:1px solid #F1F5F9; }
+.jogo-cod { background:#E6F1FB; color:#0F4C5C; padding:2px 6px; border-radius:5px; font-size:10px; font-weight:700; display:inline-flex; align-items:center; gap:3px; white-space:nowrap; }
+.jogo-inp { width:34px; height:34px; text-align:center; font-size:16px; font-weight:700; border:2px solid #E5E7EB; border-radius:7px; color:#0F4C5C; font-family:inherit; background:#F8FAFC; outline:none; padding:0; }
 .jogo-inp:focus { border-color: #185FA5; background: #fff; }
 .jogo-inp::-webkit-inner-spin-button, .jogo-inp::-webkit-outer-spin-button { opacity: 0.4; }
-.jogo-sep { font-size: 20px; font-weight: 700; color: #94A3B8; }
+.jogo-sep { font-size:14px; font-weight:700; color:#94A3B8; }
 .pts-b { font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 8px; white-space: nowrap; }
 .pts-3 { background: #D1FAE5; color: #065F46; }
 .pts-1 { background: #FEF3C7; color: #78350F; }
 .pts-0 { background: #F1F5F9; color: #6B7280; }
-.jogo-placar { font-size: 24px; font-weight: 700; color: #0F4C5C; text-align: center; letter-spacing: 4px; margin-top: 8px; }
-.jogo-minha { font-size: 11px; color: #6B7280; text-align: center; margin-top: 3px; }
 .novo-b { background: #EF4444; color: #fff; font-size: 9px; font-weight: 700; padding: 1px 5px; border-radius: 6px; margin-left: 3px; vertical-align: middle; }
+.bolao-pts { background: linear-gradient(135deg,#F4C430,#E0B52A); color: #0B3F4A; font-size: 9px; font-weight: 700; padding: 1px 6px; border-radius: 8px; white-space: nowrap; display: inline-block; vertical-align: middle; }
+.bolao-pts.top3 { background: linear-gradient(135deg,#0F4C5C,#185FA5); color: #fff; }
 .rank-item { display: flex; align-items: center; gap: 12px; padding: 10px 13px; background: #fff; border: 1px solid #E5E7EB; border-radius: 10px; margin-bottom: 7px; }
 .rank-pos { font-size: 15px; font-weight: 700; color: #0F4C5C; min-width: 28px; }
 .rank-pos.top { color: #F59E0B; }
@@ -308,11 +312,11 @@ body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-
 .esp-sub { font-size: 11px; color: #6B7280; margin-bottom: 10px; }
 .esp-sel { width: 100%; padding: 10px 12px; border: 1px solid #E5E7EB; border-radius: 8px; font-size: 14px; font-family: inherit; color: #0F4C5C; background: #F8FAFC; outline: none; }
 .esp-sel:focus { border-color: #185FA5; background: #fff; }
-.grp-blk { margin-bottom: 14px; }
-.grp-blk-hd { background: linear-gradient(135deg,#0F4C5C,#185FA5); color: #fff; padding: 9px 13px; border-radius: 9px; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; user-select: none; }
-.grp-blk-hd .gbl { font-size: 13px; font-weight: 700; }
-.grp-blk-hd .gbs { font-size: 11px; opacity: 0.85; }
-.grp-blk-body { display: none; }
+.grp-blk { margin-bottom: 6px; }
+.grp-blk-hd { background: linear-gradient(135deg,#0F4C5C,#185FA5); color: #fff; padding: 6px 11px; border-radius: 8px; margin-bottom: 0; display: flex; justify-content: space-between; align-items: center; cursor: pointer; user-select: none; }
+.grp-blk-hd .gbl { font-size: 12px; font-weight: 700; }
+.grp-blk-hd .gbs { font-size: 10px; opacity: 0.85; }
+.grp-blk-body { display: none; padding-top: 4px; }
 .grp-blk.open .grp-blk-body { display: block; }
 
 /* AJUSTE RÁPIDO DE REPETIDAS */
@@ -405,7 +409,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-
   <div class="user-bar">
     <button class="user-pill" id="user-btn">
       <span class="status-indicator sincronizado" id="status-indicator"></span>
-      👤 <span id="user-name">Usuário</span> · <span id="user-cidade">Cidade</span>
+      👤 <span id="user-name">Usuário</span><span id="user-bolao-hdr"></span> · <span id="user-cidade">Cidade</span>
     </button>
     <button class="user-pill" onclick="fnSair()">🚪 Sair</button>
   </div>
@@ -433,6 +437,10 @@ body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-
       <p><strong>E-mail:</strong> <span id="perfil-email">-</span></p>
       <p><strong>Cidade:</strong> <span id="perfil-cidade">-</span></p>
       <p><strong>Membro desde:</strong> <span id="perfil-data">-</span></p>
+    </div>
+    <div class="modal-sec">
+      <h3>⚽ Bolão Copa 2026</h3>
+      <div id="perfil-bolao-info" style="font-size:13px;color:#94A3B8">Carregando...</div>
     </div>
     <div class="modal-sec">
       <h3>🚫 Usuários bloqueados</h3>
@@ -777,6 +785,23 @@ function carregarPerfil() {
       document.getElementById('perfil-email').textContent = userData.email;
       document.getElementById('perfil-cidade').textContent = userData.cidade;
       document.getElementById('perfil-data').textContent = userData.createdAt ? new Date(userData.createdAt.toDate()).toLocaleDateString('pt-BR') : '-';
+      // Bolão pts
+      db.collection('bolao_apostas').doc(currentUser.uid).get().then(function(bSnap){
+        var pts = bSnap.exists ? (bSnap.data().pontosTotal || 0) : 0;
+        var rank = userData.rankBoalao || 0;
+        var hdr = document.getElementById('user-bolao-hdr');
+        if (hdr) hdr.innerHTML = pts > 0 ? ' <span class="bolao-pts'+(rank<=3&&rank>0?' top3':'')+'">'+(rank?'#'+rank+' · ':'')+pts+'pts ⚽</span>' : '';
+        var info = document.getElementById('perfil-bolao-info');
+        if (info) {
+          if (pts === 0) { info.innerHTML = '<span style="color:#94A3B8">Sem apostas ainda. Acesse a aba ⚽ Bolão!</span>'; }
+          else {
+            info.innerHTML = '<div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap">'
+              + '<div><div style="font-size:28px;font-weight:700;color:#0F4C5C;line-height:1">'+pts+'</div><div style="font-size:10px;color:#6B7280">pontos</div></div>'
+              + (rank ? '<span class="bolao-pts'+(rank<=3?' top3':'')+'" style="font-size:13px;padding:4px 12px">🏆 #'+rank+' no ranking</span>' : '')
+              + '</div>';
+          }
+        }
+      });
     }
   });
 }
@@ -1354,7 +1379,7 @@ function carregarAmigosParaTroca() {
               let card = '<div class="friend-card">' +
                 '<div class="friend-header">' +
                   '<div>' +
-                    '<div class="friend-name">' + esc(amigo.apelido) + '</div>' +
+                    '<div class="friend-name">' + esc(amigo.apelido) + (amigo.pontosBoalao ? ' <span class="bolao-pts'+(amigo.rankBoalao<=3&&amigo.rankBoalao>0?' top3':'')+'">'+(amigo.rankBoalao?'#'+amigo.rankBoalao+' · ':'')+amigo.pontosBoalao+'pts ⚽</span>' : '') + '</div>' +
                     '<div class="friend-city">📍 ' + esc(amigo.cidade) + '</div>' +
                   '</div>' +
                   '<span class="friend-status">' + minhasCom.length + ' + ' + deleComFalta.length + '</span>' +
@@ -1720,29 +1745,29 @@ function htmlJogoCard(j) {
   var enc=res!==null&&res!==undefined;
   var minha=bolaoApostas[j.id]||null;
   var pts=enc&&minha?calcPtsJogo(minha.c,minha.v,res.c,res.v):null;
-  var dfmt=new Date(j.data+'T12:00:00').toLocaleDateString('pt-BR',{day:'numeric',month:'short'});
-  var cls='jogo-card'+(enc&&pts===3?' ok3':enc&&pts===1?' ok1':enc?' errou':bloq?' bloq':'');
+  var dfmt=new Date(j.data+'T12:00:00').toLocaleDateString('pt-BR',{day:'2-digit',month:'2-digit'});
+  var cls='jogo-row'+(enc&&pts===3?' ok3':enc&&pts===1?' ok1':enc?' errou':bloq?' bloq':'');
   var h='<div class="'+cls+'">';
-  h+='<div class="jogo-hdr"><span>'+dfmt+'</span>';
-  if (enc&&pts!==null) h+='<span class="pts-b '+(pts===3?'pts-3':pts===1?'pts-1':'pts-0')+'">'+(pts===3?'⚽ Exato! +3pts':pts===1?'✓ Resultado +1pt':'✗ 0 pts')+'</span>';
-  else if (bloq) h+='<span style="color:#94A3B8;font-size:11px">🔒 Bloqueado</span>';
-  else h+='<span style="font-size:10px;color:#10B981">● Aberto</span>';
-  h+='</div>';
-  h+='<div class="jogo-times"><div class="jogo-time"><span class="jogo-cod">'+flagImg(j.casa)+j.casa+'</span>'+esc(nomeSel(j.casa))+'</div>';
-  h+='<span class="jogo-vs">×</span>';
-  h+='<div class="jogo-time">'+esc(nomeSel(j.vis))+'<span class="jogo-cod">'+flagImg(j.vis)+j.vis+'</span></div></div>';
+  h+='<span class="jr-dt">'+dfmt+'</span>';
+  h+='<span class="jr-tm">';
+  h+='<span class="jogo-cod">'+flagImg(j.casa)+j.casa+'</span>';
+  h+='<span class="jr-x">×</span>';
+  h+='<span class="jogo-cod">'+flagImg(j.vis)+j.vis+'</span>';
+  h+='</span>';
   if (enc) {
-    h+='<div class="jogo-placar">'+res.c+' × '+res.v+'</div>';
-    h+='<div class="jogo-minha">'+(minha?'Sua aposta: '+minha.c+' × '+minha.v:'<span style="color:#EF4444">Não apostou (0×0 padrão)</span>')+'</div>';
+    h+='<span class="jr-placar">'+res.c+' × '+res.v+'</span>';
+    if (minha) h+='<span class="jr-ap">↳'+minha.c+':'+minha.v+'</span>';
+    if (pts!==null) h+='<span class="pts-b '+(pts===3?'pts-3':pts===1?'pts-1':'pts-0')+'">'+(pts===3?'+3':pts===1?'+1':'0')+'</span>';
   } else if (bloq) {
-    h+='<div class="jogo-placar" style="color:#94A3B8;font-size:18px">'+(minha?minha.c+' × '+minha.v:'0 × 0')+'</div>';
-    h+='<div class="jogo-minha">'+(minha?'Sua aposta (bloqueada)':'<span style="color:#EF4444">Padrão 0×0 — não apostou</span>')+'</div>';
+    h+='<span class="jr-placar" style="color:#94A3B8">'+(minha?minha.c+':'+minha.v:'—')+'</span>';
+    h+='<span style="font-size:11px">🔒</span>';
   } else {
-    h+='<div class="jogo-inp-row">';
+    h+='<span class="jr-inp">';
     h+='<input class="jogo-inp" type="number" min="0" max="20" value="'+(minha?minha.c:'')+'" placeholder="—" data-jid="'+j.id+'" data-lado="c">';
     h+='<span class="jogo-sep">×</span>';
     h+='<input class="jogo-inp" type="number" min="0" max="20" value="'+(minha?minha.v:'')+'" placeholder="—" data-jid="'+j.id+'" data-lado="v">';
-    h+='</div><div style="font-size:10px;color:#94A3B8;text-align:center;margin-top:3px">Salva ao sair do campo</div>';
+    h+='</span>';
+    h+='<span style="font-size:9px;color:#10B981">●</span>';
   }
   h+='</div>';
   return h;
@@ -1757,27 +1782,28 @@ function renderBolaoGrupos() {
     var r=bolaoResultados[j.id];
     if(r!==undefined&&r!==null){enc++;var a=bolaoApostas[j.id]||{c:0,v:0};var p=calcPtsJogo(a.c,a.v,r.c,r.v);if(p)pts+=p;}
   });
-  var h='<div style="background:linear-gradient(135deg,#0F4C5C,#185FA5);border-radius:12px;padding:13px 16px;margin-bottom:12px;color:#fff">';
-  h+='<div style="font-size:14px;font-weight:700;margin-bottom:2px">⚽ Fase de Grupos · Copa 2026</div>';
-  h+='<div style="font-size:11px;opacity:0.85">72 jogos · Grupos A–L · Lock 12h antes · Padrão 0×0 sem aposta</div></div>';
-  h+='<div class="kpis" style="grid-template-columns:repeat(3,1fr);margin-bottom:12px">';
-  h+='<div class="kpi"><div class="kpi-lbl">Apostas</div><div class="kpi-val">'+tot+'<span style="font-size:13px;color:#6B7280">/72</span></div></div>';
-  h+='<div class="kpi tenho"><div class="kpi-lbl">Encerrados</div><div class="kpi-val">'+enc+'</div></div>';
-  h+='<div class="kpi rep"><div class="kpi-lbl">Seus pts</div><div class="kpi-val">'+pts+'</div></div></div>';
+  var h='<div style="background:linear-gradient(135deg,#0F4C5C,#185FA5);border-radius:10px;padding:8px 12px;margin-bottom:8px;color:#fff;display:flex;justify-content:space-between;align-items:center">';
+  h+='<div><div style="font-size:13px;font-weight:700">⚽ Fase de Grupos · Copa 2026</div>';
+  h+='<div style="font-size:10px;opacity:0.8">72 jogos · Lock 12h antes · Padrão 0×0</div></div>';
+  h+='<div style="display:flex;gap:10px;text-align:center">';
+  h+='<div><div style="font-size:10px;opacity:0.8">Apostas</div><div style="font-size:16px;font-weight:700">'+tot+'<span style="font-size:10px;opacity:0.7">/72</span></div></div>';
+  h+='<div><div style="font-size:10px;opacity:0.8">Pts</div><div style="font-size:16px;font-weight:700">'+pts+'</div></div>';
+  h+='</div></div>';
   gs.forEach(function(g){
     var jogosG=BOLAO_JOGOS.filter(function(j){return j.grupo===g;});
     var times=GRUPOS[g].map(function(t){return t[1];}).join(' · ');
     var aberto=bolaoGrpAberto[g]!==false;
-    h+='<div class="grp-blk'+(aberto?' open':'')" id="grpblk-'+g+'">';
+    h+='<div class="grp-blk'+(aberto?' open':'') + '" id="grpblk-'+g+'">';
     h+='<div class="grp-blk-hd" onclick="toggleGrpBlk(\''+g+'\')">';
     h+='<div><div class="gbl">GRUPO '+g+'</div><div class="gbs">'+times+'</div></div>';
-    h+='<span style="font-size:18px;">'+(aberto?'⌃':'⌄')+'</span></div>';
+    h+='<span style="font-size:14px">'+(aberto?'⌃':'⌄')+'</span></div>';
     h+='<div class="grp-blk-body">';
     [1,2,3].forEach(function(r){
       var rjogos=jogosG.filter(function(j){return j.rodada===r;});
-      h+='<div style="font-size:10px;color:#6B7280;font-weight:700;text-transform:uppercase;letter-spacing:.3px;margin:8px 0 4px">'+
-        (r===3?'Rodada '+r+' · Simultâneos':'Rodada '+r)+'</div>';
+      h+='<div class="grp-games">';
+      h+='<div class="grp-rdda">Rodada '+r+(r===3?' · Simultâneos':'')+'</div>';
       rjogos.forEach(function(j){h+=htmlJogoCard(j);});
+      h+='</div>';
     });
     h+='</div></div>';
   });
@@ -1893,18 +1919,24 @@ function renderBolaoRanking() {
     var uids=entries.map(function(e){return e.uid;});
     var promises=uids.map(function(uid){return db.collection('users').doc(uid).get();});
     Promise.all(promises).then(function(usnaps){
-      var h='<div class="sec-ttl" style="margin-top:0">🏆 Ranking Global · Bolão Copa 2026</div>';
+      var h='<div style="background:linear-gradient(135deg,#0F4C5C,#185FA5);border-radius:10px;padding:10px 14px;margin-bottom:10px;color:#fff">'
+        +'<div style="font-size:14px;font-weight:700">🏆 Ranking · Bolão Copa 2026</div>'
+        +'<div style="font-size:10px;opacity:0.8">'+entries.length+' participantes · acerto exato = 3pts · resultado = 1pt · campeão = 10pts · vice = 5pts</div>'
+        +'</div>';
       var medals=['🥇','🥈','🥉'];
       entries.forEach(function(e,i){
         var us=usnaps[i];
         var nome=us.exists?(us.data().apelido||'?'):'?';
         var cidade=us.exists?(us.data().cidade||''):'';
         var euMesmo=e.uid===currentUser.uid;
-        h+='<div class="rank-item" style="'+(euMesmo?'border-color:#185FA5;background:#E6F1FB':'')+'">';
-        h+='<div class="rank-pos'+(i<3?' top':'')+'">'+(i<3?medals[i]:(i+1)+'º')+'</div>';
+        var podio=i<3;
+        h+='<div class="rank-item" style="'+(euMesmo?'border-color:#185FA5;background:#E6F1FB':podio?'border-color:#F4C430':'')+(podio?';background:'+(i===0?'#FFFDE7':i===1?'#FAFAFA':'#FFF8F0'):'')+';">';
+        h+='<div class="rank-pos'+(podio?' top':'')+'" style="font-size:'+(podio?'20':'14')+'px">'+(podio?medals[i]:(i+1)+'º')+'</div>';
         h+='<div class="rank-info"><div class="rank-nome">'+esc(nome)+(euMesmo?' <span style="font-size:10px;color:#6B7280">(você)</span>':'')+'</div>';
         h+='<div class="rank-det">📍 '+esc(cidade)+'</div></div>';
-        h+='<div class="rank-pts">'+e.pts+'<span style="font-size:11px;color:#6B7280;font-weight:400"> pts</span></div></div>';
+        h+='<div style="text-align:right"><div class="rank-pts">'+e.pts+'<span style="font-size:10px;color:#6B7280;font-weight:400"> pts</span></div>'
+          +(podio?'<div style="font-size:9px;color:#F59E0B;font-weight:700">TOP '+(i+1)+'</div>':'')
+          +'</div></div>';
       });
       cont.innerHTML=h;
     });
@@ -2004,6 +2036,7 @@ function adminBolaoRecalc() {
   toast('🔄 Recalculando...');
   db.collection('bolao_apostas').get().then(function(snap){
     var batch=db.batch();
+    var entries=[];
     snap.forEach(function(doc){
       var d=doc.data(), apostas=d.jogos||{}, especiais=d.especiais||{};
       var pts=0;
@@ -2016,9 +2049,18 @@ function adminBolaoRecalc() {
       if(bolaoResultados['ESPECIAL_campeao']&&especiais.campeao===bolaoResultados['ESPECIAL_campeao']) pts+=10;
       if(bolaoResultados['ESPECIAL_vice']&&especiais.vice===bolaoResultados['ESPECIAL_vice']) pts+=5;
       batch.set(doc.ref,{pontosTotal:pts},{merge:true});
+      entries.push({uid:doc.id,pts:pts});
     });
-    return batch.commit();
-  }).then(function(){toast('✅ Pontos recalculados!');}).catch(function(){toast('Erro ao recalcular');});
+    return batch.commit().then(function(){return entries;});
+  }).then(function(entries){
+    entries.sort(function(a,b){return b.pts-a.pts;});
+    var batch2=db.batch();
+    entries.forEach(function(e,i){
+      batch2.set(db.collection('users').doc(e.uid),{pontosBoalao:e.pts,rankBoalao:i+1},{merge:true});
+    });
+    return batch2.commit();
+  }).then(function(){toast('✅ Pontos recalculados e ranking atualizado!');})
+  .catch(function(){toast('Erro ao recalcular');});
 }
 
 // ============================================================
@@ -2220,21 +2262,24 @@ function renderListaChats() {
         const amigoUid = chat.participantes.find(u => u !== currentUser.uid);
         return db.collection('users').doc(amigoUid).get().then(doc => ({
           chat, amigoUid,
-          apelido: doc.exists ? doc.data().apelido : 'Usuário'
+          apelido: doc.exists ? doc.data().apelido : 'Usuário',
+          pontosBoalao: doc.exists ? (doc.data().pontosBoalao || 0) : 0,
+          rankBoalao: doc.exists ? (doc.data().rankBoalao || 0) : 0
         }));
       });
 
       Promise.all(promises).then(itens => {
         let h = '<div class="sec-ttl">💬 Conversas</div>';
-        itens.forEach(({ chat, amigoUid, apelido }) => {
+        itens.forEach(({ chat, amigoUid, apelido, pontosBoalao, rankBoalao }) => {
           const naoLidas = chat.naoLidas && chat.naoLidas[currentUser.uid] ? chat.naoLidas[currentUser.uid] : 0;
           const prev = chat.ultimaMensagem ? esc(chat.ultimaMensagem).substring(0, 45) : 'Sem mensagens';
           const tempo = chat.ultimaMensagemEm ? formatarTempo(chat.ultimaMensagemEm.toDate()) : '';
           const chatId = chat.id;
+          const ptsBadge = pontosBoalao ? ' <span class="bolao-pts'+(rankBoalao<=3&&rankBoalao>0?' top3':'')+'">'+(rankBoalao?'#'+rankBoalao+' · ':'')+pontosBoalao+'pts ⚽</span>' : '';
           h += '<div class="chat-conv-item" onclick="abrirConversaById(\'' + chatId + '\',\'' + amigoUid + '\',\'' + esc(apelido) + '\')">' +
             '<div class="chat-avatar">' + esc(apelido)[0].toUpperCase() + '</div>' +
             '<div class="chat-conv-info">' +
-              '<div class="chat-conv-name">' + esc(apelido) + '</div>' +
+              '<div class="chat-conv-name">' + esc(apelido) + ptsBadge + '</div>' +
               '<div class="chat-conv-prev">' + prev + '</div>' +
             '</div>' +
             (naoLidas > 0 ? '<span class="chat-conv-unread">' + naoLidas + '</span>' : '<span class="chat-conv-time">' + tempo + '</span>') +
