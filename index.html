@@ -304,7 +304,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-
 .rank-det { font-size: 11px; color: #6B7280; margin-top: 1px; }
 .rank-pts { font-size: 20px; font-weight: 700; color: #0F4C5C; }
 .bfase-ttl { font-size: 12px; font-weight: 700; color: #fff; background: linear-gradient(135deg,#0F4C5C,#185FA5); padding: 6px 12px; border-radius: 7px; margin: 14px 0 8px; }
-.bjogo { background: #fff; border: 1px solid #E5E7EB; border-radius: 10px; padding: 9px 13px; margin-bottom: 6px; display: flex; align-items: center; gap: 8px; }
+.bjogo { background: #fff; border: 1px solid #E5E7EB; border-radius: 10px; padding: 9px 13px; margin-bottom: 6px; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
 .bslot { background: #F8FAFC; border: 1px dashed #D1D5DB; border-radius: 6px; padding: 3px 7px; font-size: 11px; color: #94A3B8; white-space: nowrap; }
 .bslot.def { background: #E6F1FB; border: 1px solid #185FA5; color: #0F4C5C; font-weight: 700; }
 .esp-card { background: #fff; border: 1px solid #E5E7EB; border-radius: 11px; padding: 16px; margin-bottom: 12px; }
@@ -326,6 +326,109 @@ body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-
 .tr-adj .adj-m { background: #FEE2E2; color: #B91C1C; }
 .tr-adj .adj-p { background: #D1FAE5; color: #065F46; }
 .tr-adj .adj-cnt { background: linear-gradient(135deg, #F4C430, #E0B52A); color: #0B3F4A; padding: 5px 10px; border-radius: 11px; font-size: 13px; font-weight: 700; min-width: 36px; text-align: center; }
+
+/* PÊNALTIS (eliminatórias) */
+.pen-btn { display: inline-flex; align-items: center; gap: 5px; background: #fff; border: 1.5px solid #E5E7EB; color: #475569; border-radius: 8px; padding: 5px 11px; font-size: 12px; font-weight: 700; font-family: inherit; cursor: pointer; transition: all 0.15s ease; }
+.pen-btn:hover { border-color: #F4C430; background: #FFFBEB; }
+.pen-btn.on { background: linear-gradient(135deg, #F4C430, #E0B52A); border-color: #E0B52A; color: #0B3F4A; box-shadow: 0 2px 6px rgba(244,196,48,0.35); }
+.pen-btn .flag { width: 17px; height: 12px; }
+
+/* ============ POLIMENTO VISUAL & FLUIDEZ ============ */
+#content { animation: contentIn 0.28s cubic-bezier(0.16,1,0.3,1); }
+@keyframes contentIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+
+.tab, .btn, .bolao-mbtn, .user-pill, .print-opt, .num, .pen-btn, .adj-btn, .auth-btn { transition: background 0.18s ease, color 0.18s ease, border-color 0.18s ease, box-shadow 0.18s ease, transform 0.12s ease; }
+.btn:active, .bolao-mbtn:active, .user-pill:active, .auth-btn:active, .pts-b:active { transform: scale(0.96); }
+.tab { position: relative; }
+.tab.active { transform: translateY(-1px); }
+.btn:hover { box-shadow: 0 2px 8px rgba(15,76,92,0.10); }
+.btn.primary:hover { box-shadow: 0 3px 10px rgba(15,76,92,0.30); }
+.card { transition: box-shadow 0.2s ease, border-color 0.2s ease; }
+.card:hover { box-shadow: 0 2px 10px rgba(15,76,92,0.07); }
+.head .chev, .grp-blk-hd span { transition: transform 0.22s ease; }
+.print-opt:hover { transform: translateX(2px); box-shadow: 0 3px 12px rgba(24,95,165,0.12); }
+.print-opt:active { transform: scale(0.99); }
+.rank-item { transition: transform 0.15s ease, box-shadow 0.15s ease; }
+.rank-item:hover { transform: translateX(2px); }
+.kpi { transition: transform 0.15s ease, box-shadow 0.15s ease; }
+.kpi:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(15,76,92,0.08); }
+.jogo-inp { transition: border-color 0.15s ease, background 0.15s ease, box-shadow 0.15s ease; }
+.jogo-inp:focus { box-shadow: 0 0 0 3px rgba(24,95,165,0.12); }
+.modal { animation: modalIn 0.25s cubic-bezier(0.16,1,0.3,1); }
+@keyframes modalIn { from { opacity: 0; transform: translateY(12px) scale(0.98); } to { opacity: 1; transform: none; } }
+.toast { transition: opacity 0.2s ease, transform 0.25s cubic-bezier(0.16,1,0.3,1); }
+.toast.show { transform: translateX(-50%) translateY(0); }
+.toast:not(.show) { transform: translateX(-50%) translateY(8px); }
+
+/* ============ REFRESH VISUAL v2 (mais expressivo) ============ */
+html, body { background: radial-gradient(1100px 460px at 50% -180px, #E7F0FA 0%, #F5F7FA 58%); }
+
+/* Hero com bola estilizada ao fundo */
+.hero::after { content: "⚽"; position: absolute; bottom: -22px; right: 18px; font-size: 96px; opacity: 0.08; transform: rotate(-12deg); pointer-events: none; }
+.hero h1 { letter-spacing: -0.3px; }
+.user-pill { backdrop-filter: blur(4px); }
+
+/* Abas como navegação fluida */
+.tabs { background: #E8F0F8; box-shadow: inset 0 1px 3px rgba(15,76,92,0.05); }
+.tab.active { background: linear-gradient(135deg, #0F4C5C, #185FA5); color: #fff; box-shadow: 0 4px 12px rgba(15,76,92,0.28); }
+.tab:not(.active):hover { color: #0F4C5C; background: rgba(255,255,255,0.65); }
+
+/* KPIs com barra de destaque no topo */
+.kpi { position: relative; overflow: hidden; }
+.kpi::before { content: ""; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, #0F4C5C, #185FA5); }
+.kpi.tenho::before { background: linear-gradient(90deg, #185FA5, #378ADD); }
+.kpi.rep::before { background: linear-gradient(90deg, #1E40AF, #3B82F6); }
+.kpi.falta::before { background: linear-gradient(90deg, #94A3B8, #CBD5E1); }
+
+/* Títulos de seção com marcador colorido */
+.sec-ttl { display: inline-flex; align-items: center; gap: 8px; }
+.sec-ttl::before { content: ""; width: 4px; height: 15px; border-radius: 3px; background: linear-gradient(#0F4C5C, #185FA5); flex-shrink: 0; }
+
+/* Barra de progresso com brilho deslizante */
+.prog-fl { position: relative; overflow: hidden; }
+.prog-fl::after { content: ""; position: absolute; inset: 0; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.55), transparent); transform: translateX(-100%); animation: shimmer 2.6s ease-in-out infinite; }
+@keyframes shimmer { 0% { transform: translateX(-100%); } 60%, 100% { transform: translateX(220%); } }
+
+/* ===== BOLÃO ===== */
+.bolao-menu { background: #E8F0F8; }
+.bolao-mbtn.active { background: linear-gradient(135deg, #0F4C5C, #185FA5); color: #fff; box-shadow: 0 3px 9px rgba(15,76,92,0.25); }
+.grp-cnt { font-size: 10px; font-weight: 700; background: rgba(255,255,255,0.22); color: #fff; padding: 2px 8px; border-radius: 10px; white-space: nowrap; }
+.grp-cnt.full { background: #10B981; color: #fff; }
+.grp-chev { transition: transform 0.2s ease; }
+
+/* Banner participar do bolão */
+.bolao-join { display: flex; align-items: center; gap: 12px; padding: 12px 14px; border-radius: 13px; margin-bottom: 12px; background: linear-gradient(135deg, #FFF7E6, #FFE9B0); border: 1px solid #F4C430; box-shadow: 0 3px 12px rgba(244,196,48,0.18); animation: contentIn 0.35s ease; }
+.bolao-join.in { background: linear-gradient(135deg, #ECFDF5, #D1FAE5); border-color: #10B981; box-shadow: none; }
+.bolao-join .bj-ic { font-size: 26px; flex-shrink: 0; }
+.bolao-join .bj-tx { flex: 1; min-width: 0; }
+.bolao-join .bj-tx strong { display: block; font-size: 13px; color: #0F4C5C; }
+.bolao-join .bj-tx small { font-size: 11px; color: #6B7280; }
+.bolao-join .bj-btn { background: linear-gradient(135deg, #0F4C5C, #185FA5); color: #fff; border: none; border-radius: 10px; padding: 10px 18px; font-size: 13px; font-weight: 700; cursor: pointer; box-shadow: 0 3px 10px rgba(15,76,92,0.3); white-space: nowrap; transition: transform 0.12s ease; }
+.bolao-join .bj-btn:active { transform: scale(0.95); }
+
+/* Cabeçalho de fase do chaveamento + cards de jogo */
+.bfase-ttl { display: flex; align-items: center; gap: 8px; box-shadow: 0 2px 8px rgba(15,76,92,0.2); }
+.bjogo { box-shadow: 0 1px 3px rgba(15,76,92,0.05); transition: box-shadow 0.2s ease, transform 0.12s ease; }
+.bjogo:hover { box-shadow: 0 3px 12px rgba(15,76,92,0.1); }
+.bslot { transition: all 0.15s ease; }
+.bslot.def { box-shadow: 0 1px 4px rgba(15,76,92,0.15); }
+
+/* Ranking */
+.rank-hd { background: linear-gradient(135deg, #0F4C5C, #185FA5); border-radius: 12px; padding: 12px 16px; margin-bottom: 10px; color: #fff; position: relative; overflow: hidden; }
+.rank-hd::after { content: "🏆"; position: absolute; right: 12px; top: 50%; transform: translateY(-50%) rotate(8deg); font-size: 58px; opacity: 0.13; }
+.rank-hd-ttl { font-size: 15px; font-weight: 700; position: relative; }
+.rank-hd-sub { font-size: 10px; opacity: 0.85; margin-top: 2px; position: relative; }
+.rank-item.podio { border-width: 1.5px; }
+.rank-item.p1 { background: linear-gradient(135deg, #FFFBEB, #FEF3C7); border-color: #F4C430; }
+.rank-item.p2 { background: linear-gradient(135deg, #F8FAFC, #ECF1F6); border-color: #CBD5E1; }
+.rank-item.p3 { background: linear-gradient(135deg, #FFF7ED, #FFE6CC); border-color: #FDBA74; }
+.rank-item.eu { border-color: #185FA5; background: #E6F1FB; }
+.rank-pos.top { font-size: 22px; }
+.rank-eu { font-size: 9px; background: #185FA5; color: #fff; padding: 1px 6px; border-radius: 6px; font-weight: 700; vertical-align: middle; margin-left: 4px; }
+.rank-pts-wrap { text-align: right; }
+.rank-pts-u { font-size: 10px; color: #6B7280; font-weight: 400; margin-left: 2px; }
+
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; } }
 </style>
 </head>
 <body>
@@ -541,6 +644,13 @@ function flagImg(cod, cls) {
   return '<img class="flag ' + (cls || '') + '" src="https://flagcdn.com/w40/' + iso + '.png" alt="" loading="lazy">';
 }
 
+// Bandeira vetorial (SVG) para impressão/PDF — mantém nitidez em qualquer zoom
+function flagImgP(cod, cls) {
+  var iso = FLAGS[cod];
+  if (!iso) return "";
+  return '<img class="flag ' + (cls || '') + '" src="https://flagcdn.com/' + iso + '.svg" alt="">';
+}
+
 const TOTAL = 48*20 + 20 + 14;
 
 // BOLÃO - Fase de Grupos (72 jogos gerados de GRUPOS)
@@ -606,6 +716,7 @@ var bolaoResultados = {};
 var bolaoEspeciais = {};
 var bolaoChaveEq = {};
 var bolaoGrpAberto = {};
+var bolaoParticipa = false;
 
 // ============================================================
 // AUTENTICAÇÃO
@@ -871,6 +982,21 @@ function ajustarRep(chave, delta) {
   if (novaQtd === 0) delete dados[chave];
   atualizarFigurinha(chave, novaQtd);
   renderTrocas();
+}
+
+function zerarRepetidas() {
+  if (!currentUser) return;
+  var chaves=[];
+  for (var k in dados) if (dados[k]>1) chaves.push(k);
+  if (!chaves.length) { toast('Nenhuma repetida para zerar'); return; }
+  if (!confirm('Zerar TODAS as repetidas?\n\nCada figurinha repetida volta para 1 (você mantém a que está colada). Use após trocar na rua para relançar as repetidas do zero.')) return;
+  setStatusSync('salvando');
+  var updates={};
+  chaves.forEach(function(k){ dados[k]=1; updates['figurinhas.'+k]=1; });
+  updates['ultimaAtualizacao']=new Date();
+  db.collection('colecoes').doc(currentUser.uid).update(updates)
+    .then(function(){ setStatusSync('sincronizado'); toast('✅ Repetidas zeradas'); renderTrocas(); })
+    .catch(function(){ setStatusSync('offline'); salvarNoLocalStorage(); toast('Salvo offline'); renderTrocas(); });
 }
 
 function salvarNoLocalStorage() {
@@ -1318,7 +1444,8 @@ function renderTrocas() {
   if (trocas.length === 0) {
     h += '<div class="empty"><div class="big">⇄</div><strong style="color:#0F4C5C">Nenhuma repetida ainda</strong><br><span style="font-size:11px">Marque uma figurinha mais de uma vez para vê-la aqui.</span></div>';
   } else {
-    h += '<div class="sec-ttl">📋 Suas repetidas para troca</div>';
+    h += '<div class="row-head" style="margin:18px 0 10px"><div class="sec-ttl" style="margin:0">📋 Suas repetidas para troca</div>' +
+      '<button class="btn danger" onclick="zerarRepetidas()" style="font-size:11px;padding:6px 11px">🗑 Zerar repetidas</button></div>';
     for (let i = 0; i < trocas.length; i++) {
       const t = trocas[i];
       const gLbl = (t.grupo === "FWC" || t.grupo === "CC") ? "Especial" : "Grupo " + t.grupo;
@@ -1505,17 +1632,18 @@ function gerarHTMLImpressao(tipo) {
     ".li-i.f .cp{background:#6B7280}" +
     ".ft{margin-top:12px;padding-top:7px;border-top:1px solid #E5E7EB;text-align:center;font-size:10px;color:#94A3B8}" +
     ".em{text-align:center;padding:28px;color:#6B7280;font-size:12px}" +
-    ".cmp-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:5px}" +
-    ".cmp-grp{background:#F8FAFC;border:1px solid #E5E7EB;border-radius:5px;padding:5px 7px}" +
+    ".cmp-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:8px}" +
+    ".cmp-grp{background:#F8FAFC;border:1px solid #E5E7EB;border-radius:6px;padding:8px 10px}" +
     ".cmp-grp-ok{opacity:0.45}" +
-    ".cmp-grp-esp{grid-column:span 3}" +
-    ".cmp-gh{font-size:8px;font-weight:700;color:#fff;background:#0F4C5C;padding:2px 6px;border-radius:3px;margin-bottom:4px;display:inline-block;letter-spacing:0.3px}" +
+    ".cmp-grp-esp{grid-column:1/-1}" +
+    ".cmp-gh{font-size:11px;font-weight:700;color:#fff;background:#0F4C5C;padding:3px 9px;border-radius:4px;margin-bottom:6px;display:inline-block;letter-spacing:0.3px}" +
     ".cmp-gh-esp{background:#185FA5}" +
-    ".cmp-sel{display:flex;align-items:baseline;gap:4px;margin-bottom:2px;line-height:1.3}" +
-    ".cmp-cod{font-weight:700;color:#0F4C5C;font-size:8px;min-width:32px;display:inline-flex;align-items:center;gap:3px;flex-shrink:0}" +
-    ".cmp-cod .flag{width:12px;height:8px}" +
-    ".cmp-nums{color:#1F2937;font-size:8.5px;word-break:break-word}" +
-    ".cmp-completo{font-size:8px;color:#10B981;font-weight:600}" +
+    ".cmp-sel{display:flex;align-items:baseline;gap:6px;margin-bottom:4px;line-height:1.5}" +
+    ".cmp-cod{font-weight:700;color:#0F4C5C;font-size:11px;min-width:42px;display:inline-flex;align-items:center;gap:4px;flex-shrink:0}" +
+    ".cmp-cod .flag{width:17px;height:12px}" +
+    ".cmp-nums{color:#1F2937;font-size:12px;word-break:break-word}" +
+    ".cmp-rep{font-size:8.5px;color:#B45309;font-weight:700;vertical-align:super;margin-left:1px}" +
+    ".cmp-completo{font-size:11px;color:#10B981;font-weight:600}" +
     "@media print{" +
       "*,*::before,*::after{-webkit-print-color-adjust:exact !important;print-color-adjust:exact !important;color-adjust:exact !important}" +
       "body{padding:0;color:#000;font-weight:500}" +
@@ -1549,6 +1677,7 @@ function gerarHTMLImpressao(tipo) {
       ".cmp-gh-esp{background:#374151 !important}" +
       ".cmp-cod{color:#000 !important}" +
       ".cmp-nums{color:#000 !important}" +
+      ".cmp-rep{color:#000 !important}" +
       ".cmp-completo{color:#374151 !important}" +
     "}";
 
@@ -1574,7 +1703,7 @@ function gerarTabela(comProgresso) {
       const s = sels[idx];
       h += '<tr>';
       if (idx === 0) h += '<td class="g" rowspan="' + sels.length + '">GRUPO ' + grupo + '</td>';
-      h += '<td class="n">' + esc(s[0]) + '</td><td class="c">' + flagImg(s[1]) + s[1] + '</td>';
+      h += '<td class="n">' + esc(s[0]) + '</td><td class="c">' + flagImgP(s[1]) + s[1] + '</td>';
       for (let i = 1; i <= 20; i++) {
         const q = comProgresso ? getQ(grupo + "-" + s[1] + "-" + i) : 0;
         const cls = q === 0 ? "" : (q === 1 ? "t" : "r");
@@ -1630,7 +1759,7 @@ function gerarListaFaltam() {
         if (getQ(grupo + "-" + sel[1] + "-" + i) < 1) nums.push((i < 10 ? "0" : "") + i);
       }
       if (nums.length > 0) {
-        linhas += '<div class="cmp-sel"><span class="cmp-cod">' + flagImg(sel[1]) + sel[1] + '</span><span class="cmp-nums">' + nums.join(' · ') + '</span></div>';
+        linhas += '<div class="cmp-sel"><span class="cmp-cod">' + flagImgP(sel[1]) + sel[1] + '</span><span class="cmp-nums">' + nums.join(' · ') + '</span></div>';
       }
     }
     if (linhas) {
@@ -1656,37 +1785,51 @@ function gerarListaFaltam() {
 }
 
 function gerarListaRep() {
-  let trocas = [];
-  for (let k in dados) {
-    const q = dados[k];
-    if (q > 1) {
-      const parts = k.split("-");
-      const grupo = parts[0], cod = parts[1], num = parts[2];
-      let nomeSel, lbl;
-      if (grupo === "FWC") { nomeSel = "FIFA World Cup History"; lbl = (num.length < 2 ? "0" : "") + num; }
-      else if (grupo === "CC") { nomeSel = "Coca-Cola"; lbl = "CC" + num; }
-      else {
-        const sel = GRUPOS[grupo].find(x => x[1] === cod);
-        nomeSel = sel ? sel[0] : cod;
-        lbl = "Nº " + num;
-      }
-      trocas.push({ grupo, nomeSel, cod, lbl, qtd: q - 1 });
-    }
-  }
-  trocas.sort((a, b) => a.grupo !== b.grupo ? a.grupo.localeCompare(b.grupo) : a.nomeSel.localeCompare(b.nomeSel));
-  if (trocas.length === 0) return '<div class="em">Nenhuma repetida ainda. Volte aqui quando começar a juntar para trocar!</div>';
-  const total = trocas.reduce((s, t) => s + t.qtd, 0);
+  const s = statsGeral();
+  if (s.r === 0) return '<div class="em">Nenhuma repetida ainda. Volte aqui quando começar a juntar para trocar!</div>';
+
+  // conta seleções diferentes com alguma repetida
+  let diferentes = 0;
+  for (let k in dados) if (dados[k] > 1) diferentes++;
+
+  function numLbl(label, sobra) { return label + (sobra > 1 ? '<sup class="cmp-rep">×' + sobra + '</sup>' : ''); }
+
   let h = '<div class="sb">' +
-    '<div class="sc z"><div class="l">Total p/ troca</div><div class="v">' + total + '</div></div>' +
-    '<div class="sc"><div class="l">Diferentes</div><div class="v">' + trocas.length + '</div></div>' +
-  '</div><div class="li">';
-  for (let i = 0; i < trocas.length; i++) {
-    const t = trocas[i];
-    const gl = (t.grupo === "FWC" || t.grupo === "CC") ? "Especial" : "Grupo " + t.grupo;
-    h += '<div class="li-i"><span class="cp">' + flagImg(t.cod) + t.cod + '</span><div class="n"><strong>' + esc(t.nomeSel) + '</strong><small>' + gl + ' · ' + t.lbl + '</small></div><span class="q">' + t.qtd + '×</span></div>';
+    '<div class="sc z"><div class="l">Total p/ troca</div><div class="v">' + s.r + '</div></div>' +
+    '<div class="sc"><div class="l">Diferentes</div><div class="v">' + diferentes + '</div></div>' +
+  '</div>';
+
+  h += '<div class="cmp-grid">';
+
+  for (let grupo in GRUPOS) {
+    const sels = GRUPOS[grupo];
+    let linhas = '';
+    for (let idx = 0; idx < sels.length; idx++) {
+      const sel = sels[idx];
+      const nums = [];
+      for (let i = 1; i <= 20; i++) {
+        const q = getQ(grupo + "-" + sel[1] + "-" + i);
+        if (q > 1) nums.push(numLbl((i < 10 ? "0" : "") + i, q - 1));
+      }
+      if (nums.length > 0) {
+        linhas += '<div class="cmp-sel"><span class="cmp-cod">' + flagImgP(sel[1]) + sel[1] + '</span><span class="cmp-nums">' + nums.join(' · ') + '</span></div>';
+      }
+    }
+    if (linhas) h += '<div class="cmp-grp"><div class="cmp-gh">GRUPO ' + grupo + '</div>' + linhas + '</div>';
   }
+
+  const fwcNums = [], ccNums = [];
+  for (let i = 0; i < 20; i++) { const q = getQ("FWC-FWC-" + i); if (q > 1) fwcNums.push(numLbl((i < 10 ? "0" : "") + i, q - 1)); }
+  for (let i = 1; i <= 14; i++) { const q = getQ("CC-CC-" + i); if (q > 1) ccNums.push(numLbl("CC" + i, q - 1)); }
+  if (fwcNums.length > 0 || ccNums.length > 0) {
+    h += '<div class="cmp-grp cmp-grp-esp"><div class="cmp-gh cmp-gh-esp">ESPECIAIS</div>';
+    if (fwcNums.length > 0) h += '<div class="cmp-sel"><span class="cmp-cod">FWC</span><span class="cmp-nums">' + fwcNums.join(' · ') + '</span></div>';
+    if (ccNums.length > 0) h += '<div class="cmp-sel"><span class="cmp-cod">CC</span><span class="cmp-nums">' + ccNums.join(' · ') + '</span></div>';
+    h += '</div>';
+  }
+
   h += '</div>';
-  h += '<div style="margin-top:11px;padding:7px 11px;background:#FEF3C7;border-left:3px solid #F4C430;font-size:10px;color:#78350F;border-radius:3px"><strong>💡 Dica:</strong> leve esta lista nos encontros de troca.</div>';
+  h += '<div style="margin-top:11px;padding:8px 12px;background:#FEF3C7;border-left:3px solid #F4C430;font-size:11px;color:#78350F;border-radius:3px"><strong>💡 Dica:</strong> leve esta lista nos encontros de troca. O <strong>×N</strong> indica quantas você tem sobrando de cada figurinha.</div>';
   return h;
 }
 
@@ -1698,6 +1841,7 @@ function nomeSel(cod) {
   return cod;
 }
 
+// Pontuação fase de grupos: placar exato = 3, acertou o resultado (vencedor/empate) = 1, senão 0
 function calcPtsJogo(ac, av, rc, rv) {
   if (rc===null||rc===undefined||rv===null||rv===undefined) return null;
   ac=Number(ac)||0; av=Number(av)||0;
@@ -1706,26 +1850,161 @@ function calcPtsJogo(ac, av, rc, rv) {
   return 0;
 }
 
+// Pontuação eliminatórias (não há empate: empate no tempo normal vai aos pênaltis).
+// 3 = acertou o placar do tempo normal
+// 1 = errou o placar mas acertou quem se classificou (no empate, usa o palpite de pênaltis)
+// 0 = errou o classificado
+function calcPtsKnockout(a, r) {
+  if (!a || !r || r.c===null||r.c===undefined||r.v===null||r.v===undefined) return null;
+  var ac=Number(a.c)||0, av=Number(a.v)||0, rc=Number(r.c)||0, rv=Number(r.v)||0;
+  if (ac===rc && av===rv) return 3; // placar exato
+  var classApostou = ac>av ? 'c' : ac<av ? 'v' : (a.pen||null);
+  var classReal    = rc>rv ? 'c' : rc<rv ? 'v' : (r.pen||null);
+  if (classApostou && classReal && classApostou===classReal) return 1;
+  return 0;
+}
+
+// Lê as apostas de um documento, recuperando dados salvos com o bug antigo
+// (chaves achatadas "jogos.<id>" / "especiais.<campo>" no topo do documento).
+function extrairApostasDoc(d) {
+  var jogos = Object.assign({}, d.jogos||{});
+  var especiais = Object.assign({}, d.especiais||{});
+  for (var fk in d) {
+    if (fk.indexOf('jogos.')===0) { var jk=fk.slice(6); if(jogos[jk]===undefined) jogos[jk]=d[fk]; }
+    else if (fk.indexOf('especiais.')===0) { var ek=fk.slice(10); if(especiais[ek]===undefined) especiais[ek]=d[fk]; }
+  }
+  return { jogos: jogos, especiais: especiais };
+}
+
 function renderBolao() {
-  var secs=[{id:'grupos',l:'⚽ Grupos'},{id:'chave',l:'🏆 Chaveamento'},{id:'especiais',l:'⭐ Especiais'},{id:'ranking',l:'🥇 Ranking'}];
+  if (bolaoSec==='especiais') bolaoSec='grupos';
+  var secs=[{id:'grupos',l:'⚽ Grupos'},{id:'chave',l:'🏆 Chaveamento'},{id:'ranking',l:'🥇 Ranking'}];
   var h='<div class="bolao-menu">';
-  secs.forEach(function(s){h+='<button class="bolao-mbtn'+(bolaoSec===s.id?' active':'')+ '" onclick="bolaoIr(\''+s.id+'\')">'+s.l+'</button>';});
-  h+='</div><div id="bolao-cnt"><div class="empty"><div class="big">⚽</div><p>Carregando...</p></div></div>';
+  secs.forEach(function(s){h+='<button class="bolao-mbtn'+(bolaoSec===s.id?' active':'')+ '" data-sec="'+s.id+'" onclick="bolaoIr(\''+s.id+'\')">'+s.l+'</button>';});
+  h+='</div>';
+  h+='<div style="text-align:right;margin-bottom:8px"><button class="btn" onclick="imprimirRegrasBolao()" style="font-size:11px;padding:6px 12px">📖 Regras do bolão (PDF)</button></div>';
+  h+='<div id="bolao-cnt"><div class="empty"><div class="big">⚽</div><p>Carregando...</p></div></div>';
   document.getElementById('content').innerHTML=h;
   carregarBolao();
 }
 
 function bolaoIr(sec) {
   bolaoSec=sec;
-  document.querySelectorAll('.bolao-mbtn').forEach(function(b,i){b.classList.toggle('active',['grupos','chave','especiais','ranking'][i]===sec);});
+  document.querySelectorAll('.bolao-mbtn').forEach(function(b){b.classList.toggle('active', b.dataset.sec===sec);});
   renderBolaoSec();
 }
 
 function renderBolaoSec() {
   if (bolaoSec==='grupos') renderBolaoGrupos();
   else if (bolaoSec==='chave') renderBolaoChave();
-  else if (bolaoSec==='especiais') renderBolaoEspeciais();
   else if (bolaoSec==='ranking') renderBolaoRanking();
+  else renderBolaoGrupos();
+}
+
+// ====== PDF DE REGRAS DO BOLÃO ======
+function imprimirRegrasBolao() {
+  var html = gerarRegrasBolaoHTML();
+  var w = window.open("", "_blank");
+  if (!w) { toast("Permita pop-ups para abrir as regras"); return; }
+  w.document.open(); w.document.write(html); w.document.close();
+}
+
+// monta um "placar" de exemplo (sua aposta × resultado) com o selo de pontos
+function exJogo(apC, apV, rC, rV, pts, nota) {
+  var cor = pts===3?'ok3':pts===1?'ok1':'ok0';
+  var selo = pts===3?'+3 pts':pts===1?'+1 pt':'0 pts';
+  return '<div class="ex '+cor+'">' +
+    '<div class="ex-line"><span class="ex-lbl">Sua aposta</span><span class="ex-sc">'+apC+' × '+apV+'</span></div>' +
+    '<div class="ex-line"><span class="ex-lbl">Resultado</span><span class="ex-sc">'+rC+' × '+rV+'</span></div>' +
+    '<div class="ex-foot"><span class="ex-pts '+cor+'">'+selo+'</span><span class="ex-nota">'+nota+'</span></div>' +
+  '</div>';
+}
+
+function gerarRegrasBolaoHTML() {
+  var css = "@page{size:A4;margin:1.1cm}*{box-sizing:border-box;margin:0;padding:0}" +
+    "body{font-family:-apple-system,Segoe UI,Roboto,sans-serif;color:#0B3F4A;background:#fff;font-size:12.5px;line-height:1.45;padding:16px}" +
+    ".pa{background:#0F4C5C;color:#fff;padding:12px 16px;border-radius:10px;margin-bottom:14px;display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap}" +
+    ".pa .i strong{display:block;font-size:15px}.pa .i{font-size:12px;opacity:.9}" +
+    ".pa button{background:#F4C430;color:#0B3F4A;border:none;padding:9px 16px;border-radius:7px;font-weight:700;cursor:pointer;font-size:13px}" +
+    ".pa button.x{background:#fff;color:#0F4C5C;margin-left:6px}" +
+    ".hero{text-align:center;background:linear-gradient(135deg,#0F4C5C,#185FA5);color:#fff;border-radius:14px;padding:20px;margin-bottom:16px}" +
+    ".hero .t{font-size:11px;letter-spacing:1px;font-weight:700;opacity:.85}" +
+    ".hero h1{font-size:23px;margin:4px 0 2px}.hero p{font-size:12.5px;opacity:.9}" +
+    ".sec{margin-bottom:16px;break-inside:avoid}" +
+    ".sec-h{display:flex;align-items:center;gap:8px;font-size:15px;font-weight:700;color:#0F4C5C;margin-bottom:9px;padding-bottom:5px;border-bottom:2px solid #E6F1FB}" +
+    ".sec-h .n{background:#0F4C5C;color:#fff;width:24px;height:24px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0}" +
+    ".cards{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}" +
+    ".pcard{border:1.5px solid #E5E7EB;border-radius:11px;padding:12px;text-align:center}" +
+    ".pcard .big{font-size:28px;font-weight:800;line-height:1}" +
+    ".pcard .tt{font-size:12px;font-weight:700;margin:5px 0 3px;color:#0F4C5C}" +
+    ".pcard .ds{font-size:11px;color:#475569}" +
+    ".pcard.g3{background:#F0FDF4;border-color:#10B981}.pcard.g3 .big{color:#065F46}" +
+    ".pcard.g1{background:#FFFBEB;border-color:#F4C430}.pcard.g1 .big{color:#92400E}" +
+    ".pcard.g0{background:#F8FAFC;border-color:#CBD5E1}.pcard.g0 .big{color:#64748B}" +
+    ".ex{border:1px solid #E5E7EB;border-radius:9px;padding:9px 11px;background:#fff}" +
+    ".ex.ok3{border-color:#10B981;background:#F0FDF4}.ex.ok1{border-color:#F4C430;background:#FFFBEB}.ex.ok0{border-color:#CBD5E1;background:#F8FAFC}" +
+    ".ex-line{display:flex;justify-content:space-between;align-items:center;font-size:11.5px}" +
+    ".ex-lbl{color:#6B7280}.ex-sc{font-weight:800;font-size:15px;color:#0F4C5C;letter-spacing:1px}" +
+    ".ex-foot{display:flex;justify-content:space-between;align-items:center;margin-top:6px;padding-top:6px;border-top:1px dashed #D1D5DB}" +
+    ".ex-pts{font-weight:800;font-size:13px;padding:2px 9px;border-radius:9px}" +
+    ".ex-pts.ok3{background:#10B981;color:#fff}.ex-pts.ok1{background:#F4C430;color:#0B3F4A}.ex-pts.ok0{background:#CBD5E1;color:#334155}" +
+    ".ex-nota{font-size:10.5px;color:#475569;text-align:right;max-width:60%}" +
+    ".box{background:#F8FAFC;border:1px solid #E5E7EB;border-left:4px solid #185FA5;border-radius:8px;padding:11px 13px;font-size:12px;color:#334155}" +
+    ".box.warn{border-left-color:#F4C430;background:#FFFBEB;color:#78350F}" +
+    ".box.ok{border-left-color:#10B981;background:#F0FDF4;color:#065F46}" +
+    ".box strong{color:#0F4C5C}.box.warn strong{color:#78350F}.box.ok strong{color:#065F46}" +
+    ".steps{list-style:none;counter-reset:s}" +
+    ".steps li{position:relative;padding:6px 0 6px 34px;font-size:12.5px;border-bottom:1px solid #F1F5F9}" +
+    ".steps li:last-child{border-bottom:none}" +
+    ".steps li::before{counter-increment:s;content:counter(s);position:absolute;left:0;top:5px;width:23px;height:23px;background:#185FA5;color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:12px}" +
+    ".ft{margin-top:16px;padding-top:9px;border-top:1px solid #E5E7EB;text-align:center;font-size:11px;color:#94A3B8}" +
+    "@media print{*{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important}.pa{display:none}body{padding:0}}";
+
+  var examplesGrupos =
+    exJogo(2,1,2,1,3,'Cravou o placar exato.') +
+    exJogo(2,0,3,1,1,'Errou o placar, mas acertou o vencedor (mandante).') +
+    exJogo(1,0,0,2,0,'Errou quem venceu o jogo.');
+
+  var examplesMata =
+    exJogo(3,1,3,1,3,'Placar do tempo normal exato.') +
+    exJogo(1,0,2,1,1,'Errou o placar, mas acertou quem se classificou.') +
+    '<div class="ex ok1"><div class="ex-line"><span class="ex-lbl">Empate? Você escolhe</span><span class="ex-sc">quem passa</span></div>' +
+    '<div class="ex-foot"><span class="ex-pts ok1">+1 pt</span><span class="ex-nota">Aposta 0×0 e marca o time que avança. Não se aposta o placar dos pênaltis.</span></div></div>';
+
+  return '<!DOCTYPE html><html lang="pt-BR"><head><meta charset="utf-8"><title>Regras do Bolão · Copa 2026</title><style>'+css+'</style></head><body>' +
+    '<div class="pa"><div class="i"><strong>📖 Regras do Bolão</strong>Copa do Mundo 2026 · Panini</div>' +
+    '<div><button onclick="window.print()">🖨️ Imprimir / Salvar PDF</button><button class="x" onclick="window.close()">✕ Fechar</button></div></div>' +
+
+    '<div class="hero"><div class="t">FIFA WORLD CUP 2026</div><h1>🏆 Bolão da Copa</h1>' +
+    '<p>Palpite nos jogos, some pontos e dispute o topo do ranking!</p></div>' +
+
+    '<div class="sec"><div class="sec-h"><span class="n">1</span>Como ganhar pontos</div>' +
+    '<div class="cards">' +
+      '<div class="pcard g3"><div class="big">3</div><div class="tt">Placar exato</div><div class="ds">Acertou o número de gols dos dois times</div></div>' +
+      '<div class="pcard g1"><div class="big">1</div><div class="tt">Acertou o vencedor</div><div class="ds">Errou o placar, mas acertou quem ganhou (ou o empate)</div></div>' +
+      '<div class="pcard g0"><div class="big">0</div><div class="tt">Errou</div><div class="ds">Não acertou nem o placar nem o vencedor</div></div>' +
+    '</div></div>' +
+
+    '<div class="sec"><div class="sec-h"><span class="n">2</span>Fase de grupos · exemplos</div>' +
+    '<div class="cards">'+examplesGrupos+'</div>' +
+    '<div class="box" style="margin-top:10px"><strong>📌 Importante:</strong> são 72 jogos. Se você não apostar em um jogo, ele conta como palpite <strong>0×0</strong>. Cada aposta fecha <strong>12 horas antes</strong> do início da partida 🔒.</div></div>' +
+
+    '<div class="sec"><div class="sec-h"><span class="n">3</span>Fase eliminatória (mata-mata)</div>' +
+    '<div class="cards">'+examplesMata+'</div>' +
+    '<div class="box warn" style="margin-top:10px"><strong>⚽ Sem empate no mata-mata:</strong> se o seu palpite for empate (ex.: 0×0), você só precisa <strong>escolher qual time se classifica</strong> (quem passaria nos pênaltis). Você não aposta o placar dos pênaltis nem da prorrogação. Placar exato vale <strong>3 pts</strong>; acertar só quem avança vale <strong>1 pt</strong>.</div></div>' +
+
+    '<div class="sec"><div class="sec-h"><span class="n">4</span>Como participar</div>' +
+    '<ol class="steps">' +
+      '<li>Na aba <strong>⚽ Bolão</strong>, toque em <strong>Participar</strong> para entrar no ranking.</li>' +
+      '<li>Abra cada grupo e digite o placar que você acha que vai acontecer.</li>' +
+      '<li>No <strong>🏆 Chaveamento</strong>, aposte assim que os times do confronto forem definidos.</li>' +
+      '<li>Acompanhe sua posição na aba <strong>🥇 Ranking</strong> — todos os participantes aparecem lá.</li>' +
+    '</ol></div>' +
+
+    '<div class="box ok"><strong>🎯 Dica de ouro:</strong> acertar o vencedor já garante ponto. Quando tiver confiança no jogo, arrisque o placar exato para somar 3 de uma vez!</div>' +
+
+    '<div class="ft">Álbum FIFA World Cup 2026 · Panini · Bolão entre amigos</div>' +
+    '</body></html>';
 }
 
 function carregarBolao() {
@@ -1734,8 +2013,10 @@ function carregarBolao() {
   var metaRef=db.collection('bolao_meta').doc('dados');
   Promise.all([apostRef.get(), metaRef.get()]).then(function(rs) {
     var ad=rs[0].exists?rs[0].data():{};
-    bolaoApostas=ad.jogos||{};
-    bolaoEspeciais=ad.especiais||{};
+    var ext=extrairApostasDoc(ad);
+    bolaoApostas=ext.jogos;
+    bolaoEspeciais=ext.especiais;
+    bolaoParticipa=!!ad.participa;
     var md=rs[1].exists?rs[1].data():{};
     bolaoResultados=md.resultados||{};
     bolaoChaveEq=md.chave||{};
@@ -1796,14 +2077,20 @@ function renderBolaoGrupos() {
   h+='<div><div style="font-size:10px;opacity:0.8">Apostas</div><div style="font-size:16px;font-weight:700">'+tot+'<span style="font-size:10px;opacity:0.7">/72</span></div></div>';
   h+='<div><div style="font-size:10px;opacity:0.8">Pts</div><div style="font-size:16px;font-weight:700">'+pts+'</div></div>';
   h+='</div></div>';
+  h+=bannerParticipacao();
+  h+='<div style="font-size:10px;color:#94A3B8;margin:0 2px 8px;text-align:center">Toque em um grupo para abrir e apostar</div>';
   gs.forEach(function(g){
     var jogosG=BOLAO_JOGOS.filter(function(j){return j.grupo===g;});
     var times=GRUPOS[g].map(function(t){return t[1];}).join(' · ');
-    var aberto=bolaoGrpAberto[g]!==false;
+    var apG=jogosG.filter(function(j){return bolaoApostas[j.id];}).length;
+    var completo=apG===jogosG.length;
+    var aberto=bolaoGrpAberto[g]===true; // recolhido por padrão (menos rolagem, mais prático)
     h+='<div class="grp-blk'+(aberto?' open':'') + '" id="grpblk-'+g+'">';
     h+='<div class="grp-blk-hd" onclick="toggleGrpBlk(\''+g+'\')">';
     h+='<div><div class="gbl">GRUPO '+g+'</div><div class="gbs">'+times+'</div></div>';
-    h+='<span style="font-size:14px">'+(aberto?'⌃':'⌄')+'</span></div>';
+    h+='<div style="display:flex;align-items:center;gap:8px">';
+    h+='<span class="grp-cnt'+(completo?' full':'')+'">'+(completo?'✓ ':'')+apG+'/'+jogosG.length+'</span>';
+    h+='<span class="grp-chev" style="font-size:14px">'+(aberto?'⌃':'⌄')+'</span></div></div>';
     h+='<div class="grp-blk-body">';
     [1,2,3].forEach(function(r){
       var rjogos=jogosG.filter(function(j){return j.rodada===r;});
@@ -1819,12 +2106,12 @@ function renderBolaoGrupos() {
 }
 
 function toggleGrpBlk(g) {
-  bolaoGrpAberto[g]=bolaoGrpAberto[g]===false;
+  bolaoGrpAberto[g]=!bolaoGrpAberto[g];
+  var aberto=bolaoGrpAberto[g];
   var el=document.getElementById('grpblk-'+g); if(!el) return;
-  el.classList.toggle('open', bolaoGrpAberto[g]!==false);
-  var chevron=el.querySelector('.grp-blk-hd span');
-  if(chevron) chevron.textContent=bolaoGrpAberto[g]!==false?'⌃':'⌄';
-  var body=el.querySelector('.grp-blk-body'); if(body) body.style.display='';
+  el.classList.toggle('open', aberto);
+  var chevron=el.querySelector('.grp-chev');
+  if(chevron) chevron.textContent=aberto?'⌃':'⌄';
 }
 
 function renderBolaoChave() {
@@ -1850,7 +2137,7 @@ function renderBolaoChave() {
       var res=bolaoResultados[j.id];
       var enc=res!==null&&res!==undefined;
       var minha=bolaoApostas[j.id]||null;
-      var pts=enc&&minha?calcPtsJogo(minha.c,minha.v,res.c,res.v):null;
+      var pts=enc&&minha?calcPtsKnockout(minha,res):null;
       var agora=new Date();
       var gT=new Date(j.data+'T15:00:00');
       var bloq=agora>=new Date(gT.getTime()-12*3600000)||(!casaEq||!visEq);
@@ -1862,11 +2149,21 @@ function renderBolaoChave() {
       h+=(visEq?'<span class="bslot def">'+flagImg(visEq)+visEq+'</span>':'<span class="bslot">'+j.vL+'</span>');
       h+='</div>';
       if (enc&&pts!==null) {
+        var penTxt = (res.c===res.v&&res.pen) ? ' <span style="font-size:10px;color:#94A3B8">(pên: '+(res.pen==='c'?(casaEq||'casa'):(visEq||'visit.'))+')</span>' : '';
+        h+='<span style="font-size:14px;font-weight:700;color:#0F4C5C">'+res.c+'×'+res.v+penTxt+'</span>';
+        if(minha) h+='<span class="jr-ap" style="font-size:10px;color:#94A3B8">↳'+minha.c+':'+minha.v+'</span>';
         h+='<span class="pts-b '+(pts===3?'pts-3':pts===1?'pts-1':'pts-0')+'">'+(pts===3?'+3':pts===1?'+1':'0')+'</span>';
       } else if (!bloq) {
-        h+='<input class="jogo-inp" type="number" min="0" max="20" value="'+(minha?minha.c:'')+'" placeholder="—" style="width:36px;height:36px;font-size:15px" data-jid="'+j.id+'" data-lado="c">';
+        h+='<input class="jogo-inp" type="number" min="0" max="20" value="'+(minha&&minha.c!==undefined&&minha.c!==''?minha.c:'')+'" placeholder="—" style="width:36px;height:36px;font-size:15px" data-jid="'+j.id+'" data-lado="c">';
         h+='<span class="jogo-sep" style="font-size:14px;margin:0 3px">×</span>';
-        h+='<input class="jogo-inp" type="number" min="0" max="20" value="'+(minha?minha.v:'')+'" placeholder="—" style="width:36px;height:36px;font-size:15px" data-jid="'+j.id+'" data-lado="v">';
+        h+='<input class="jogo-inp" type="number" min="0" max="20" value="'+(minha&&minha.v!==undefined&&minha.v!==''?minha.v:'')+'" placeholder="—" style="width:36px;height:36px;font-size:15px" data-jid="'+j.id+'" data-lado="v">';
+        var empAposta=minha&&minha.c!==''&&minha.c!==undefined&&minha.v!==''&&minha.v!==undefined&&Number(minha.c)===Number(minha.v);
+        var labC=casaEq?flagImg(casaEq)+casaEq:j.cL, labV=visEq?flagImg(visEq)+visEq:j.vL;
+        h+='<div class="pen-row" data-penfor="'+j.id+'" style="'+(empAposta?'display:flex;':'display:none;')+'flex-basis:100%;align-items:center;gap:6px;margin-top:7px;padding-top:7px;border-top:1px dashed #E5E7EB">';
+        h+='<span style="font-size:11px;color:#78350F;font-weight:700;white-space:nowrap">🥅 Empate! Quem se classifica?</span>';
+        h+='<button class="pen-btn'+(minha&&minha.pen==='c'?' on':'')+'" data-lado="c" onclick="salvarPenalti(\''+j.id+'\',\'c\')">'+labC+'</button>';
+        h+='<button class="pen-btn'+(minha&&minha.pen==='v'?' on':'')+'" data-lado="v" onclick="salvarPenalti(\''+j.id+'\',\'v\')">'+labV+'</button>';
+        h+='</div>';
       } else if (enc) {
         h+='<span style="font-size:16px;font-weight:700;color:#0F4C5C">'+res.c+'×'+res.v+'</span>';
       } else if (minha) {
@@ -1881,55 +2178,33 @@ function renderBolaoChave() {
   bindBolaoInputs();
 }
 
-function renderBolaoEspeciais() {
-  var cont=document.getElementById('bolao-cnt'); if(!cont) return;
-  var times=[];
-  for(var g in GRUPOS) GRUPOS[g].forEach(function(t){times.push(t);});
-  times.sort(function(a,b){return a[0].localeCompare(b[0],'pt-BR');});
-  var opts='<option value="">-- Selecione --</option>';
-  times.forEach(function(t){opts+='<option value="'+t[1]+'">'+t[0]+' ('+t[1]+')</option>';});
-  var cVal=bolaoEspeciais.campeao||'';
-  var vVal=bolaoEspeciais.vice||'';
-  var rC=bolaoResultados['ESPECIAL_campeao'];
-  var rV=bolaoResultados['ESPECIAL_vice'];
-  var h='<div style="background:linear-gradient(135deg,#F4C430,#E0B52A);border-radius:12px;padding:13px 16px;margin-bottom:14px;color:#0B3F4A">';
-  h+='<div style="font-size:14px;font-weight:700;margin-bottom:2px">⭐ Apostas Especiais</div>';
-  h+='<div style="font-size:11px;opacity:0.8">Campeão certo: 10 pts · Vice certo: 5 pts · Pode alterar até o início da final</div></div>';
-  // Campeão
-  h+='<div class="esp-card"><div class="esp-ttl">🥇 Campeão da Copa 2026</div><div class="esp-sub">Acerte o campeão: +10 pontos</div>';
-  if(rC){var ok=cVal===rC;h+='<div class="pts-b '+(ok?'pts-3':'pts-0')+'" style="padding:8px 12px;border-radius:8px;font-size:13px">'+(ok?'⭐ Acertou! +10 pts':'✗ Errou')+'&nbsp;·&nbsp;Resultado: '+flagImg(rC)+rC+'</div>';if(cVal)h+='<div style="font-size:12px;color:#6B7280;margin-top:6px">Sua aposta: '+flagImg(cVal)+cVal+'</div>';}
-  else{var sel='<select class="esp-sel" onchange="salvarEspecial(\'campeao\',this.value)">'+opts.replace('value="'+cVal+'"','value="'+cVal+'" selected')+'</select>';h+=sel;}
-  h+='</div>';
-  // Vice
-  h+='<div class="esp-card"><div class="esp-ttl">🥈 Vice-Campeão</div><div class="esp-sub">Acerte o vice: +5 pontos</div>';
-  if(rV){var okv=vVal===rV;h+='<div class="pts-b '+(okv?'pts-3':'pts-0')+'" style="padding:8px 12px;border-radius:8px;font-size:13px">'+(okv?'✅ Acertou! +5 pts':'✗ Errou')+'&nbsp;·&nbsp;Resultado: '+flagImg(rV)+rV+'</div>';if(vVal)h+='<div style="font-size:12px;color:#6B7280;margin-top:6px">Sua aposta: '+flagImg(vVal)+vVal+'</div>';}
-  else{var selv='<select class="esp-sel" onchange="salvarEspecial(\'vice\',this.value)">'+opts.replace('value="'+vVal+'"','value="'+vVal+'" selected')+'</select>';h+=selv;}
-  h+='</div>';
-  h+='<div style="background:#F0FDF4;border:1px solid #10B981;border-radius:9px;padding:10px 13px;font-size:11px;color:#065F46"><strong>💡 Dica:</strong> As apostas especiais podem ser alteradas a qualquer momento até 12h antes da final (Jul 26).</div>';
-  cont.innerHTML=h;
-}
-
-function salvarEspecial(campo, valor) {
-  if(!currentUser) return;
-  bolaoEspeciais[campo]=valor;
-  var u={}; u['especiais.'+campo]=valor;
-  db.collection('bolao_apostas').doc(currentUser.uid).set(u,{merge:true})
-    .then(function(){toast('✅ Aposta especial salva');}).catch(function(){toast('Erro ao salvar');});
-}
-
 function renderBolaoRanking() {
   var cont=document.getElementById('bolao-cnt'); if(!cont) return;
   cont.innerHTML='<div class="empty"><p>Carregando ranking...</p></div>';
-  db.collection('bolao_apostas').orderBy('pontosTotal','desc').limit(100).get().then(function(snap){
-    if(snap.empty){cont.innerHTML='<div class="empty"><div class="big">🏆</div><p>Nenhuma aposta ainda. Seja o primeiro!</p></div>';return;}
-    var entries=[]; snap.forEach(function(doc){entries.push({uid:doc.id,pts:doc.data().pontosTotal||0});});
+  // Mostra TODOS os participantes (quem marcou participar ou já apostou), mesmo com 0 pts.
+  db.collection('bolao_apostas').limit(300).get().then(function(snap){
+    var entries=[];
+    snap.forEach(function(doc){
+      var d=doc.data();
+      var ext=extrairApostasDoc(d);
+      var temAposta=Object.keys(ext.jogos).length>0||Object.keys(ext.especiais).length>0;
+      if(d.participa||temAposta){
+        entries.push({uid:doc.id,pts:d.pontosTotal||0,acertos:d.acertos||0});
+      }
+    });
+    var headerHtml=function(n){return '<div class="rank-hd">'
+      +'<div class="rank-hd-ttl">🏆 Ranking · Bolão Copa 2026</div>'
+      +'<div class="rank-hd-sub">'+n+' participante'+(n===1?'':'s')+' · placar exato = 3 pts · acertou o vencedor/classificado = 1 pt</div>'
+      +'</div>';};
+    if(entries.length===0){
+      cont.innerHTML=headerHtml(0)+bannerParticipacao()+'<div class="empty"><div class="big">🏆</div><p>Ninguém no bolão ainda. Seja o primeiro!</p></div>';
+      return;
+    }
+    entries.sort(function(a,b){return b.pts-a.pts;});
     var uids=entries.map(function(e){return e.uid;});
     var promises=uids.map(function(uid){return db.collection('users').doc(uid).get();});
     Promise.all(promises).then(function(usnaps){
-      var h='<div style="background:linear-gradient(135deg,#0F4C5C,#185FA5);border-radius:10px;padding:10px 14px;margin-bottom:10px;color:#fff">'
-        +'<div style="font-size:14px;font-weight:700">🏆 Ranking · Bolão Copa 2026</div>'
-        +'<div style="font-size:10px;opacity:0.8">'+entries.length+' participantes · acerto exato = 3pts · resultado = 1pt · campeão = 10pts · vice = 5pts</div>'
-        +'</div>';
+      var h=headerHtml(entries.length)+bannerParticipacao();
       var medals=['🥇','🥈','🥉'];
       entries.forEach(function(e,i){
         var us=usnaps[i];
@@ -1937,13 +2212,13 @@ function renderBolaoRanking() {
         var cidade=us.exists?(us.data().cidade||''):'';
         var euMesmo=e.uid===currentUser.uid;
         var podio=i<3;
-        h+='<div class="rank-item" style="'+(euMesmo?'border-color:#185FA5;background:#E6F1FB':podio?'border-color:#F4C430':'')+(podio?';background:'+(i===0?'#FFFDE7':i===1?'#FAFAFA':'#FFF8F0'):'')+';">';
-        h+='<div class="rank-pos'+(podio?' top':'')+'" style="font-size:'+(podio?'20':'14')+'px">'+(podio?medals[i]:(i+1)+'º')+'</div>';
-        h+='<div class="rank-info"><div class="rank-nome">'+esc(nome)+(euMesmo?' <span style="font-size:10px;color:#6B7280">(você)</span>':'')+'</div>';
+        var cls='rank-item'+(euMesmo?' eu':'')+(podio?' podio p'+(i+1):'');
+        h+='<div class="'+cls+'">';
+        h+='<div class="rank-pos'+(podio?' top':'')+'">'+(podio?medals[i]:(i+1)+'º')+'</div>';
+        h+='<div class="rank-info"><div class="rank-nome">'+esc(nome)+(euMesmo?' <span class="rank-eu">você</span>':'')+'</div>';
         h+='<div class="rank-det">📍 '+esc(cidade)+'</div></div>';
-        h+='<div style="text-align:right"><div class="rank-pts">'+e.pts+'<span style="font-size:10px;color:#6B7280;font-weight:400"> pts</span></div>'
-          +(podio?'<div style="font-size:9px;color:#F59E0B;font-weight:700">TOP '+(i+1)+'</div>':'')
-          +'</div></div>';
+        h+='<div class="rank-pts-wrap"><div class="rank-pts">'+e.pts+'<span class="rank-pts-u">pts</span></div></div>';
+        h+='</div>';
       });
       cont.innerHTML=h;
     });
@@ -1969,11 +2244,52 @@ function salvarApostaInput(el) {
   if(isNaN(outroVal)) outroVal=0;
   var ap=lado==='c'?{c:val,v:outroVal}:{c:outroVal,v:val};
   var prev=bolaoApostas[jid];
-  if(prev&&prev.c===ap.c&&prev.v===ap.v) return;
+  // preserva o vencedor nos pênaltis (eliminatórias) ao reeditar o placar
+  if(prev&&prev.pen) ap.pen=prev.pen;
+  if(prev&&prev.c===ap.c&&prev.v===ap.v&&prev.pen===ap.pen) return;
   bolaoApostas[jid]=ap;
-  var u={}; u['jogos.'+jid]=ap; u['updatedAt']=new Date();
-  db.collection('bolao_apostas').doc(currentUser.uid).set(u,{merge:true})
+  // IMPORTANTE: usa objeto aninhado (não chave "jogos.id"), pois set()+merge
+  // trata chaves com ponto como nome literal e as apostas não persistiam.
+  var ju={}; ju[jid]=ap;
+  bolaoParticipa=true;
+  db.collection('bolao_apostas').doc(currentUser.uid).set({jogos:ju,participa:true,updatedAt:new Date()},{merge:true})
     .then(function(){toast('💾 Aposta salva');}).catch(function(){toast('Erro ao salvar aposta');});
+  // mostra/esconde a escolha de pênaltis nas eliminatórias conforme empate
+  if(card.classList.contains('bjogo')) atualizarPenRow(card,jid,ap);
+}
+
+function atualizarPenRow(card,jid,ap) {
+  var penRow=card.querySelector('.pen-row'); if(!penRow) return;
+  var empate=ap.c===ap.v;
+  penRow.style.display=empate?'flex':'none';
+}
+
+function salvarPenalti(jid, lado) {
+  if(!currentUser) return;
+  var ap=bolaoApostas[jid]; if(!ap) return;
+  ap.pen=lado; bolaoApostas[jid]=ap;
+  var ju={}; ju[jid]=ap;
+  bolaoParticipa=true;
+  db.collection('bolao_apostas').doc(currentUser.uid).set({jogos:ju,participa:true,updatedAt:new Date()},{merge:true})
+    .then(function(){toast('✅ Classificado salvo');}).catch(function(){toast('Erro ao salvar');});
+  var row=document.querySelector('.pen-row[data-penfor="'+jid+'"]');
+  if(row) row.querySelectorAll('.pen-btn').forEach(function(b){b.classList.toggle('on', b.dataset.lado===lado);});
+}
+
+function marcarParticipacao() {
+  if(!currentUser) return;
+  bolaoParticipa=true;
+  db.collection('bolao_apostas').doc(currentUser.uid).set({participa:true,updatedAt:new Date()},{merge:true})
+    .then(function(){ toast('🎉 Bem-vindo ao bolão! Agora você aparece no ranking.'); renderBolaoSec(); })
+    .catch(function(){ bolaoParticipa=false; toast('Erro ao entrar no bolão'); });
+}
+
+function bannerParticipacao() {
+  if (bolaoParticipa) {
+    return '<div class="bolao-join in"><span class="bj-ic">✅</span><div class="bj-tx"><strong>Você está no bolão!</strong><small>Suas apostas contam para o ranking geral.</small></div></div>';
+  }
+  return '<div class="bolao-join"><span class="bj-ic">🎯</span><div class="bj-tx"><strong>Participe do Bolão Copa 2026</strong><small>Entre no ranking e dispute com a galera. É grátis!</small></div>'
+    + '<button class="bj-btn" onclick="marcarParticipacao()">Participar</button></div>';
 }
 
 function adminBolao() {
@@ -1983,6 +2299,7 @@ function adminBolao() {
     var meta=snap.exists?snap.data():{};
     var res=meta.resultados||{};
     var chave=meta.chave||{};
+    bolaoChaveEq=chave; // mantém o estado global em dia para o cálculo de campeão/vice
     var h='<div class="acts" style="margin-bottom:12px">';
     h+='<button class="btn primary" onclick="adminBolaoSalvar()">💾 Salvar Resultados</button>';
     h+='<button class="btn" onclick="adminBolaoRecalc()">🔄 Recalcular Pontos</button></div>';
@@ -2001,21 +2318,31 @@ function adminBolao() {
         h+='<span style="font-size:11px;font-weight:700;min-width:28px">'+j.vis+flagImg(j.vis)+'</span></div>';
       });
     });
-    h+='<div style="font-size:12px;font-weight:700;color:#0F4C5C;margin:16px 0 8px">Resultados — Fase Eliminatória</div>';
+    h+='<div style="font-size:12px;font-weight:700;color:#0F4C5C;margin:16px 0 8px">Times do Chaveamento <span style="font-weight:400;color:#94A3B8">(defina as siglas conforme as fases avançam — desbloqueia as apostas)</span></div>';
+    BOLAO_CHAVE.forEach(function(j){
+      h+='<div style="display:flex;align-items:center;gap:6px;margin-bottom:5px;flex-wrap:wrap">';
+      h+='<span style="font-size:11px;min-width:60px;color:#6B7280;font-weight:700">'+j.id+'</span>';
+      h+='<input id="chv_'+j.id+'_c" type="text" maxlength="7" value="'+(chave[j.id+'_c']||'')+'" placeholder="'+j.cL+'" style="width:80px;height:28px;text-align:center;border:1px solid #E5E7EB;border-radius:6px;font-size:12px;font-weight:700;text-transform:uppercase;padding:0 4px">';
+      h+='<span style="color:#94A3B8;font-size:12px">×</span>';
+      h+='<input id="chv_'+j.id+'_v" type="text" maxlength="7" value="'+(chave[j.id+'_v']||'')+'" placeholder="'+j.vL+'" style="width:80px;height:28px;text-align:center;border:1px solid #E5E7EB;border-radius:6px;font-size:12px;font-weight:700;text-transform:uppercase;padding:0 4px">';
+      h+='</div>';
+    });
+    h+='<div style="font-size:12px;font-weight:700;color:#0F4C5C;margin:16px 0 8px">Resultados — Fase Eliminatória <span style="font-weight:400;color:#94A3B8">(se empate, escolha quem passou nos pênaltis)</span></div>';
     BOLAO_CHAVE.forEach(function(j){
       var r=res[j.id]||{};
-      h+='<div style="display:flex;align-items:center;gap:6px;margin-bottom:5px">';
+      h+='<div style="display:flex;align-items:center;gap:6px;margin-bottom:5px;flex-wrap:wrap">';
       h+='<span style="font-size:10px;color:#94A3B8;min-width:55px">'+j.data.slice(5)+'</span>';
       h+='<span style="font-size:11px;min-width:60px;color:#6B7280">'+j.id+'</span>';
       h+='<input id="r_'+j.id+'_c" type="number" min="0" max="20" value="'+(r.c!==undefined?r.c:'')+'" placeholder="—" style="width:36px;height:28px;text-align:center;border:1px solid #E5E7EB;border-radius:6px;font-size:14px;font-weight:700;padding:0">';
       h+='<span style="color:#94A3B8;font-size:12px">×</span>';
       h+='<input id="r_'+j.id+'_v" type="number" min="0" max="20" value="'+(r.v!==undefined?r.v:'')+'" placeholder="—" style="width:36px;height:28px;text-align:center;border:1px solid #E5E7EB;border-radius:6px;font-size:14px;font-weight:700;padding:0">';
+      h+='<select id="rpen_'+j.id+'" style="font-size:11px;padding:4px 6px;border:1px solid #E5E7EB;border-radius:6px;color:#78350F">';
+      h+='<option value="">pên.: —</option>';
+      h+='<option value="c"'+(r.pen==='c'?' selected':'')+'>🥅 casa</option>';
+      h+='<option value="v"'+(r.pen==='v'?' selected':'')+'>🥅 visit.</option>';
+      h+='</select>';
       h+='</div>';
     });
-    h+='<div style="font-size:12px;font-weight:700;color:#0F4C5C;margin:16px 0 8px">Especiais · Times no Chaveamento</div>';
-    h+='<div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:8px">';
-    h+='<div><label style="font-size:11px;color:#6B7280">Campeão</label><br><input id="esp_campeao" type="text" value="'+(meta.resultados&&meta.resultados['ESPECIAL_campeao']||'')+'" placeholder="sigla" style="width:60px;padding:5px 8px;border:1px solid #E5E7EB;border-radius:6px;font-size:13px"></div>';
-    h+='<div><label style="font-size:11px;color:#6B7280">Vice</label><br><input id="esp_vice" type="text" value="'+(meta.resultados&&meta.resultados['ESPECIAL_vice']||'')+'" placeholder="sigla" style="width:60px;padding:5px 8px;border:1px solid #E5E7EB;border-radius:6px;font-size:13px"></div></div>';
     cont.innerHTML=h;
   }).catch(function(){cont.innerHTML='<div class="empty"><p>Erro ao carregar dados do bolão</p></div>';});
 }
@@ -2028,13 +2355,23 @@ function adminBolaoSalvar() {
     var ve=document.getElementById('r_'+j.id+'_v');
     if(!ce||!ve) return;
     var cv=ce.value.trim(), vv=ve.value.trim();
-    if(cv!==''&&vv!=='') res[j.id]={c:parseInt(cv),v:parseInt(vv)};
+    if(cv!==''&&vv!==''){
+      res[j.id]={c:parseInt(cv),v:parseInt(vv)};
+      // pênaltis só importam em empate nas eliminatórias
+      var pe=document.getElementById('rpen_'+j.id);
+      if(pe&&pe.value&&parseInt(cv)===parseInt(vv)) res[j.id].pen=pe.value;
+    }
   });
-  var ec=document.getElementById('esp_campeao');
-  var ev=document.getElementById('esp_vice');
-  if(ec&&ec.value.trim()) res['ESPECIAL_campeao']=ec.value.trim().toUpperCase();
-  if(ev&&ev.value.trim()) res['ESPECIAL_vice']=ev.value.trim().toUpperCase();
-  db.collection('bolao_meta').doc('dados').set({resultados:res,updatedAt:new Date()},{merge:true})
+  // Times do chaveamento (siglas) — desbloqueiam as apostas eliminatórias
+  var chave={};
+  BOLAO_CHAVE.forEach(function(j){
+    var cc=document.getElementById('chv_'+j.id+'_c');
+    var vc=document.getElementById('chv_'+j.id+'_v');
+    if(cc&&cc.value.trim()) chave[j.id+'_c']=cc.value.trim().toUpperCase();
+    if(vc&&vc.value.trim()) chave[j.id+'_v']=vc.value.trim().toUpperCase();
+  });
+  bolaoChaveEq=chave;
+  db.collection('bolao_meta').doc('dados').set({resultados:res,chave:chave,updatedAt:new Date()},{merge:true})
     .then(function(){bolaoResultados=res;toast('✅ Resultados salvos!');})
     .catch(function(){toast('Erro ao salvar');});
 }
@@ -2045,16 +2382,21 @@ function adminBolaoRecalc() {
     var batch=db.batch();
     var entries=[];
     snap.forEach(function(doc){
-      var d=doc.data(), apostas=d.jogos||{}, especiais=d.especiais||{};
+      var ext=extrairApostasDoc(doc.data());
+      var apostas=ext.jogos;
       var pts=0;
-      var allJ=BOLAO_JOGOS.concat(BOLAO_CHAVE);
-      allJ.forEach(function(j){
+      // Grupos: padrão 0×0 mesmo sem aposta
+      BOLAO_JOGOS.forEach(function(j){
         var r=bolaoResultados[j.id]; if(!r) return;
         var a=apostas[j.id]||{c:0,v:0};
         var p=calcPtsJogo(a.c,a.v,r.c,r.v); if(p) pts+=p;
       });
-      if(bolaoResultados['ESPECIAL_campeao']&&especiais.campeao===bolaoResultados['ESPECIAL_campeao']) pts+=10;
-      if(bolaoResultados['ESPECIAL_vice']&&especiais.vice===bolaoResultados['ESPECIAL_vice']) pts+=5;
+      // Eliminatórias: só pontua quem apostou, considerando pênaltis
+      BOLAO_CHAVE.forEach(function(j){
+        var r=bolaoResultados[j.id]; if(!r) return;
+        var a=apostas[j.id]; if(!a) return;
+        var p=calcPtsKnockout(a,r); if(p) pts+=p;
+      });
       batch.set(doc.ref,{pontosTotal:pts},{merge:true});
       entries.push({uid:doc.id,pts:pts});
     });
