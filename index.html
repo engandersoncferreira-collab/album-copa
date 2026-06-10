@@ -277,7 +277,8 @@ body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-
 .jogo-row.okg { background:#EFF6FF; }
 .jogo-row.errou { background:#FAFAFA; }
 .jogo-row.bloq { background:#F8FAFC; }
-.jr-dt { font-size:9px; color:#94A3B8; min-width:34px; line-height:1.2; }
+.jr-dt { font-size:9px; color:#94A3B8; min-width:40px; line-height:1.25; text-align:center; }
+.jr-dt b { color:#475569; font-size:9.5px; }
 .jr-tm { display:flex; align-items:center; gap:5px; flex:1; min-width:0; }
 .jr-x { font-size:10px; color:#94A3B8; font-weight:700; }
 .jr-placar { font-size:13px; font-weight:700; color:#0F4C5C; white-space:nowrap; }
@@ -665,12 +666,12 @@ const BOLAO_JOGOS = (function() {
   const r3=['2026-06-26','2026-06-26','2026-06-27','2026-06-27','2026-06-28','2026-06-28','2026-06-29','2026-06-29','2026-06-30','2026-06-30','2026-07-01','2026-07-01'];
   for (var gi=0; gi<gs.length; gi++) {
     var g=gs[gi], t=GRUPOS[g];
-    j.push({id:g+'_R1_1',grupo:g,rodada:1,casa:t[0][1],vis:t[1][1],data:r1[gi]});
-    j.push({id:g+'_R1_2',grupo:g,rodada:1,casa:t[2][1],vis:t[3][1],data:r1[gi]});
-    j.push({id:g+'_R2_1',grupo:g,rodada:2,casa:t[0][1],vis:t[2][1],data:r2[gi]});
-    j.push({id:g+'_R2_2',grupo:g,rodada:2,casa:t[1][1],vis:t[3][1],data:r2[gi]});
-    j.push({id:g+'_R3_1',grupo:g,rodada:3,casa:t[0][1],vis:t[3][1],data:r3[gi]});
-    j.push({id:g+'_R3_2',grupo:g,rodada:3,casa:t[1][1],vis:t[2][1],data:r3[gi]});
+    j.push({id:g+'_R1_1',grupo:g,rodada:1,casa:t[0][1],vis:t[1][1],data:r1[gi],hora:'13:00'});
+    j.push({id:g+'_R1_2',grupo:g,rodada:1,casa:t[2][1],vis:t[3][1],data:r1[gi],hora:'16:00'});
+    j.push({id:g+'_R2_1',grupo:g,rodada:2,casa:t[0][1],vis:t[2][1],data:r2[gi],hora:'13:00'});
+    j.push({id:g+'_R2_2',grupo:g,rodada:2,casa:t[1][1],vis:t[3][1],data:r2[gi],hora:'16:00'});
+    j.push({id:g+'_R3_1',grupo:g,rodada:3,casa:t[0][1],vis:t[3][1],data:r3[gi],hora:'17:00'});
+    j.push({id:g+'_R3_2',grupo:g,rodada:3,casa:t[1][1],vis:t[2][1],data:r3[gi],hora:'17:00'});
   }
   return j;
 })();
@@ -720,6 +721,25 @@ var bolaoEspeciais = {};
 var bolaoChaveEq = {};
 var bolaoGrpAberto = {};
 var bolaoParticipa = false;
+var bolaoHorarios = {};   // override de horários por jogo (admin) -> { jogoId: 'HH:MM' }
+var bolaoPago = false;    // status de pagamento do usuário atual
+var bolaoRemovido = false;// usuário removido do bolão pelo admin (continua no álbum)
+
+// ===== Horário/lock dos jogos (fuso de Brasília, fixo -03:00) =====
+function horaJogo(j) { return bolaoHorarios[j.id] || j.hora || '16:00'; }
+function kickoffJogo(j) { return new Date(j.data + 'T' + horaJogo(j) + ':00-03:00'); }
+function lockJogo(j) { return new Date(kickoffJogo(j).getTime() - 12 * 3600000); }
+function fmtDataJogo(j) {
+  var dfmt = new Date(j.data + 'T12:00:00').toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' });
+  return dfmt + ' · ' + horaJogo(j) + 'h';
+}
+
+// ===== Pagamento / Premiação do Bolão =====
+var PIX_CHAVE = 'damcito@hotmail.com';
+var VALOR_COTA = 100;   // R$ por participante
+var PREMIO_1 = 0.70;    // 1º lugar
+var PREMIO_2 = 0.30;    // 2º lugar
+var QR_PIX_B64 = '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';
 
 // ============================================================
 // AUTENTICAÇÃO
@@ -1895,7 +1915,7 @@ function extrairApostasDoc(d) {
 
 function renderBolao() {
   if (bolaoSec==='especiais') bolaoSec='grupos';
-  var secs=[{id:'grupos',l:'⚽ Grupos'},{id:'chave',l:'🏆 Chaveamento'},{id:'ranking',l:'🥇 Ranking'}];
+  var secs=[{id:'grupos',l:'⚽ Grupos'},{id:'chave',l:'🏆 Chaveamento'},{id:'ranking',l:'🥇 Ranking'},{id:'pagamento',l:'💰 Pagamento'}];
   var h='<div class="bolao-menu">';
   secs.forEach(function(s){h+='<button class="bolao-mbtn'+(bolaoSec===s.id?' active':'')+ '" data-sec="'+s.id+'" onclick="bolaoIr(\''+s.id+'\')">'+s.l+'</button>';});
   h+='</div>';
@@ -1915,7 +1935,82 @@ function renderBolaoSec() {
   if (bolaoSec==='grupos') renderBolaoGrupos();
   else if (bolaoSec==='chave') renderBolaoChave();
   else if (bolaoSec==='ranking') renderBolaoRanking();
+  else if (bolaoSec==='pagamento') renderBolaoPagamento();
   else renderBolaoGrupos();
+}
+
+function renderBolaoPagamento() {
+  var cont=document.getElementById('bolao-cnt'); if(!cont) return;
+  cont.innerHTML='<div class="empty"><p>Carregando...</p></div>';
+  // Conta participantes (no ranking) e quantos já pagaram para calcular o prêmio
+  db.collection('bolao_apostas').limit(300).get().then(function(snap){
+    var totalPart=0, totalPagos=0, euPago=bolaoPago;
+    snap.forEach(function(doc){
+      var d=doc.data();
+      if(d.removidoBolao) return;
+      var ext=extrairApostasDoc(d);
+      var temAposta=Object.keys(ext.jogos).length>0||Object.keys(ext.especiais).length>0;
+      if(d.participa||temAposta){
+        totalPart++;
+        if(d.pago) totalPagos++;
+        if(doc.id===currentUser.uid) euPago=!!d.pago;
+      }
+    });
+    var arrecadado=totalPagos*VALOR_COTA;
+    var premio1=Math.round(arrecadado*PREMIO_1);
+    var premio2=arrecadado-premio1; // garante que 1º+2º = total arrecadado
+    var fmt=function(n){return 'R$ '+n.toLocaleString('pt-BR');};
+
+    var h='';
+    // Status do meu pagamento
+    if(euPago){
+      h+='<div class="bolao-join in" style="margin-bottom:12px"><span class="bj-ic">✅</span><div class="bj-tx"><strong>Pagamento confirmado!</strong><small>Sua cota de '+fmt(VALOR_COTA)+' já foi registrada pelo admin.</small></div></div>';
+    } else {
+      h+='<div class="bolao-join" style="margin-bottom:12px"><span class="bj-ic">⏳</span><div class="bj-tx"><strong>Pagamento pendente</strong><small>Faça o PIX abaixo e avise o admin para confirmar.</small></div></div>';
+    }
+
+    // Card PIX + QR
+    h+='<div style="background:#fff;border:1px solid #E5E7EB;border-radius:14px;padding:16px;margin-bottom:12px;text-align:center">';
+    h+='<div style="font-size:14px;font-weight:700;color:#0F4C5C;margin-bottom:4px">💸 Pague sua cota via PIX</div>';
+    h+='<div style="font-size:24px;font-weight:800;color:#10B981;margin-bottom:10px">'+fmt(VALOR_COTA)+'</div>';
+    h+='<img src="data:image/png;base64,'+QR_PIX_B64+'" alt="QR Code PIX" style="width:200px;height:200px;border:1px solid #E5E7EB;border-radius:12px;padding:8px;background:#fff" />';
+    h+='<div style="font-size:11px;color:#6B7280;margin:10px 0 4px">Chave PIX (e-mail)</div>';
+    h+='<div style="display:flex;align-items:center;justify-content:center;gap:8px;flex-wrap:wrap">';
+    h+='<span style="font-size:14px;font-weight:700;color:#0F4C5C;background:#F1F5F9;padding:8px 12px;border-radius:8px;word-break:break-all">'+PIX_CHAVE+'</span>';
+    h+='<button class="btn primary" onclick="copiarPix()" style="font-size:12px;padding:8px 14px">📋 Copiar chave</button>';
+    h+='</div></div>';
+
+    // Regras de premiação
+    h+='<div style="background:linear-gradient(135deg,#FFFBEB,#FEF3C7);border:1px solid #F4C430;border-radius:14px;padding:16px;margin-bottom:12px">';
+    h+='<div style="font-size:14px;font-weight:700;color:#92400E;margin-bottom:10px">🏆 Premiação</div>';
+    h+='<div style="font-size:12.5px;color:#78350F;line-height:1.6">Cada participante contribui com <strong>'+fmt(VALOR_COTA)+'</strong>. No fim da Copa o prêmio é dividido entre os dois primeiros do ranking:</div>';
+    h+='<div style="display:flex;gap:10px;margin-top:12px">';
+    h+='<div style="flex:1;background:#fff;border:1.5px solid #F4C430;border-radius:11px;padding:12px;text-align:center"><div style="font-size:24px">🥇</div><div style="font-size:11px;color:#92400E;font-weight:700;margin-top:2px">1º lugar</div><div style="font-size:18px;font-weight:800;color:#0F4C5C;margin-top:3px">'+fmt(premio1)+'</div><div style="font-size:10px;color:#94A3B8">70% do bolão</div></div>';
+    h+='<div style="flex:1;background:#fff;border:1.5px solid #CBD5E1;border-radius:11px;padding:12px;text-align:center"><div style="font-size:24px">🥈</div><div style="font-size:11px;color:#475569;font-weight:700;margin-top:2px">2º lugar</div><div style="font-size:18px;font-weight:800;color:#0F4C5C;margin-top:3px">'+fmt(premio2)+'</div><div style="font-size:10px;color:#94A3B8">30% do bolão</div></div>';
+    h+='</div></div>';
+
+    // Resumo da arrecadação
+    h+='<div style="background:#fff;border:1px solid #E5E7EB;border-radius:12px;padding:13px 15px">';
+    h+='<div style="font-size:12px;font-weight:700;color:#0F4C5C;margin-bottom:8px">📊 Arrecadação parcial</div>';
+    h+='<div style="display:flex;justify-content:space-between;font-size:13px;padding:4px 0;color:#475569"><span>Participantes no ranking</span><strong>'+totalPart+'</strong></div>';
+    h+='<div style="display:flex;justify-content:space-between;font-size:13px;padding:4px 0;color:#475569"><span>✅ Já pagaram</span><strong style="color:#10B981">'+totalPagos+'</strong></div>';
+    h+='<div style="display:flex;justify-content:space-between;font-size:13px;padding:4px 0;color:#475569"><span>⏳ Pendentes</span><strong style="color:#F59E0B">'+(totalPart-totalPagos)+'</strong></div>';
+    h+='<div style="display:flex;justify-content:space-between;font-size:14px;padding:8px 0 0;margin-top:6px;border-top:1px dashed #E5E7EB;color:#0F4C5C;font-weight:700"><span>💰 Total arrecadado</span><span>'+fmt(arrecadado)+'</span></div>';
+    h+='<div style="font-size:10px;color:#94A3B8;margin-top:8px">O valor da premiação é atualizado conforme os pagamentos são confirmados pelo admin.</div>';
+    h+='</div>';
+
+    cont.innerHTML=h;
+  }).catch(function(){cont.innerHTML='<div class="empty"><p>Erro ao carregar dados de pagamento</p></div>';});
+}
+
+function copiarPix() {
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(PIX_CHAVE)
+      .then(function(){ toast('📋 Chave PIX copiada!'); })
+      .catch(function(){ toast('Copie manualmente: '+PIX_CHAVE); });
+  } else {
+    toast('Copie manualmente: '+PIX_CHAVE);
+  }
 }
 
 // ====== PDF DE REGRAS DO BOLÃO ======
@@ -2026,6 +2121,13 @@ function gerarRegrasBolaoHTML() {
       '<li>Acompanhe sua posição na aba <strong>🥇 Ranking</strong> — todos os participantes aparecem lá.</li>' +
     '</ol></div>' +
 
+    '<div class="sec"><div class="sec-h"><span class="n">5</span>Premiação e pagamento</div>' +
+    '<div class="cards" style="grid-template-columns:repeat(2,1fr)">' +
+      '<div class="pcard g1"><div class="big">🥇</div><div class="tt">1º lugar · 70%</div><div class="ds">Leva 70% do total arrecadado no bolão</div></div>' +
+      '<div class="pcard gg"><div class="big">🥈</div><div class="tt">2º lugar · 30%</div><div class="ds">Leva 30% do total arrecadado no bolão</div></div>' +
+    '</div>' +
+    '<div class="box" style="margin-top:10px"><strong>💰 Cota:</strong> cada participante contribui com <strong>R$ 100,00</strong> via PIX (chave <strong>'+PIX_CHAVE+'</strong>). O pagamento é confirmado pelo admin e fica marcado com um 🟢 ao lado do nome no ranking. A premiação é paga ao fim da Copa conforme a classificação final.</div></div>' +
+
     '<div class="box ok"><strong>🎯 Dica de ouro:</strong> acertar o vencedor já garante 2 pontos. Quando tiver confiança no jogo, arrisque o placar exato para somar 5 de uma vez!</div>' +
 
     '<div class="ft">Álbum FIFA World Cup 2026 · Panini · Bolão entre amigos</div>' +
@@ -2042,26 +2144,27 @@ function carregarBolao() {
     bolaoApostas=ext.jogos;
     bolaoEspeciais=ext.especiais;
     bolaoParticipa=!!ad.participa;
+    bolaoPago=!!ad.pago;
+    bolaoRemovido=!!ad.removidoBolao;
     var md=rs[1].exists?rs[1].data():{};
     bolaoResultados=md.resultados||{};
     bolaoChaveEq=md.chave||{};
+    bolaoHorarios=md.horarios||{};
     renderBolaoSec();
   }).catch(function(){ renderBolaoSec(); });
 }
 
 function htmlJogoCard(j) {
   var agora=new Date();
-  var gT=new Date(j.data+'T15:00:00');
-  var lT=new Date(gT.getTime()-12*3600000);
-  var bloq=agora>=lT;
+  var bloq=agora>=lockJogo(j);
   var res=bolaoResultados[j.id];
   var enc=res!==null&&res!==undefined;
   var minha=bolaoApostas[j.id]||null;
   var pts=enc&&minha?calcPtsJogo(minha.c,minha.v,res.c,res.v):null;
-  var dfmt=new Date(j.data+'T12:00:00').toLocaleDateString('pt-BR',{day:'2-digit',month:'2-digit'});
+  var dd=new Date(j.data+'T12:00:00').toLocaleDateString('pt-BR',{day:'2-digit',month:'2-digit'});
   var cls='jogo-row'+(enc?' '+ptsRowCls(pts):(bloq?' bloq':''));
   var h='<div class="'+cls+'">';
-  h+='<span class="jr-dt">'+dfmt+'</span>';
+  h+='<span class="jr-dt">'+dd+'<br><b>'+horaJogo(j)+'h</b></span>';
   h+='<span class="jr-tm">';
   h+='<span class="jogo-cod">'+flagImg(j.casa)+j.casa+'</span>';
   h+='<span class="jr-x">×</span>';
@@ -2164,8 +2267,7 @@ function renderBolaoChave() {
       var minha=bolaoApostas[j.id]||null;
       var pts=enc&&minha?calcPtsKnockout(minha,res):null;
       var agora=new Date();
-      var gT=new Date(j.data+'T15:00:00');
-      var bloq=agora>=new Date(gT.getTime()-12*3600000)||(!casaEq||!visEq);
+      var bloq=agora>=lockJogo(j)||(!casaEq||!visEq);
       h+='<div class="bjogo">';
       h+='<span style="font-size:10px;color:#94A3B8;min-width:18px;font-weight:700">'+j.num+'</span>';
       h+='<div style="display:flex;align-items:center;gap:6px;flex:1">';
@@ -2194,7 +2296,7 @@ function renderBolaoChave() {
       } else if (minha) {
         h+='<span style="font-size:13px;font-weight:600;color:#94A3B8">'+minha.c+'×'+minha.v+'</span>';
       } else {
-        h+='<span style="font-size:10px;color:#D1D5DB">'+new Date(j.data+'T12:00:00').toLocaleDateString('pt-BR',{day:'numeric',month:'short'})+'</span>';
+        h+='<span style="font-size:10px;color:#D1D5DB">'+new Date(j.data+'T12:00:00').toLocaleDateString('pt-BR',{day:'numeric',month:'short'})+' · '+horaJogo(j)+'h</span>';
       }
       h+='</div>';
     });
@@ -2213,13 +2315,13 @@ function renderBolaoRanking() {
       var d=doc.data();
       var ext=extrairApostasDoc(d);
       var temAposta=Object.keys(ext.jogos).length>0||Object.keys(ext.especiais).length>0;
-      if(d.participa||temAposta){
-        entries.push({uid:doc.id,pts:d.pontosTotal||0,acertos:d.acertos||0});
+      if((d.participa||temAposta)&&!d.removidoBolao){
+        entries.push({uid:doc.id,pts:d.pontosTotal||0,acertos:d.acertos||0,pago:!!d.pago});
       }
     });
     var headerHtml=function(n){return '<div class="rank-hd">'
       +'<div class="rank-hd-ttl">🏆 Ranking · Bolão Copa 2026</div>'
-      +'<div class="rank-hd-sub">'+n+' participante'+(n===1?'':'s')+' · placar exato = 5 pts · vencedor = 2 pts · gols de um time = +1</div>'
+      +'<div class="rank-hd-sub">'+n+' participante'+(n===1?'':'s')+' · placar exato = 5 pts · vencedor = 2 pts · gols de um time = +1 · 🟢 pagou</div>'
       +'</div>';};
     if(entries.length===0){
       cont.innerHTML=headerHtml(0)+bannerParticipacao()+'<div class="empty"><div class="big">🏆</div><p>Ninguém no bolão ainda. Seja o primeiro!</p></div>';
@@ -2240,7 +2342,8 @@ function renderBolaoRanking() {
         var cls='rank-item'+(euMesmo?' eu':'')+(podio?' podio p'+(i+1):'');
         h+='<div class="'+cls+'">';
         h+='<div class="rank-pos'+(podio?' top':'')+'">'+(podio?medals[i]:(i+1)+'º')+'</div>';
-        h+='<div class="rank-info"><div class="rank-nome">'+esc(nome)+(euMesmo?' <span class="rank-eu">você</span>':'')+'</div>';
+        var pagoDot=e.pago?' <span title="Pagamento confirmado" style="display:inline-block;width:9px;height:9px;border-radius:50%;background:#10B981;box-shadow:0 0 0 2px #D1FAE5;vertical-align:middle"></span>':'';
+        h+='<div class="rank-info"><div class="rank-nome">'+esc(nome)+pagoDot+(euMesmo?' <span class="rank-eu">você</span>':'')+'</div>';
         h+='<div class="rank-det">📍 '+esc(cidade)+'</div></div>';
         h+='<div class="rank-pts-wrap"><div class="rank-pts">'+e.pts+'<span class="rank-pts-u">pts</span></div></div>';
         h+='</div>';
@@ -2328,6 +2431,9 @@ function convidarAmigos() {
 }
 
 function bannerParticipacao() {
+  if (bolaoRemovido) {
+    return '<div class="bolao-join" style="background:linear-gradient(135deg,#FEF2F2,#FEE2E2);border-color:#FCA5A5"><span class="bj-ic">🚫</span><div class="bj-tx"><strong>Você não está mais no bolão</strong><small>Você continua normalmente no álbum de figurinhas. Fale com o admin para voltar a participar.</small></div></div>';
+  }
   if (bolaoParticipa) {
     return '<div class="bolao-join in"><span class="bj-ic">✅</span><div class="bj-tx"><strong>Você está no bolão!</strong><small>Chame seus amigos e deixe a disputa mais animada.</small></div>'
       + '<button class="bj-btn share" onclick="convidarAmigos()">📣 Chamar amigos</button></div>';
@@ -2343,18 +2449,23 @@ function adminBolao() {
     var meta=snap.exists?snap.data():{};
     var res=meta.resultados||{};
     var chave=meta.chave||{};
+    var horarios=meta.horarios||{};
     bolaoChaveEq=chave; // mantém o estado global em dia para o cálculo de campeão/vice
+    bolaoHorarios=horarios;
+    var hr=function(j){return horarios[j.id]||j.hora||'16:00';};
     var h='<div class="acts" style="margin-bottom:12px">';
     h+='<button class="btn primary" onclick="adminBolaoSalvar()">💾 Salvar Resultados</button>';
     h+='<button class="btn" onclick="adminBolaoRecalc()">🔄 Recalcular Pontos</button></div>';
+    h+='<div style="font-size:11px;color:#6B7280;background:#F8FAFC;border:1px solid #E5E7EB;border-radius:8px;padding:9px 11px;margin-bottom:12px">🕐 Os <strong>horários</strong> são no fuso de <strong>Brasília</strong>. As apostas de cada jogo fecham <strong>12h antes</strong> do horário definido aqui.</div>';
     h+='<div style="font-size:12px;font-weight:700;color:#0F4C5C;margin-bottom:8px">Resultados — Fase de Grupos</div>';
     var gs=['A','B','C','D','E','F','G','H','I','J','K','L'];
     gs.forEach(function(g){
       h+='<div style="font-size:11px;font-weight:700;color:#6B7280;margin:10px 0 5px;text-transform:uppercase">Grupo '+g+'</div>';
       BOLAO_JOGOS.filter(function(j){return j.grupo===g;}).forEach(function(j){
-        var r=res[j.id]||{}; var rdStyle='display:flex;align-items:center;gap:6px;margin-bottom:5px';
+        var r=res[j.id]||{}; var rdStyle='display:flex;align-items:center;gap:6px;margin-bottom:5px;flex-wrap:wrap';
         h+='<div style="'+rdStyle+'">';
-        h+='<span style="font-size:10px;color:#94A3B8;min-width:70px">'+j.data.slice(5)+'</span>';
+        h+='<span style="font-size:10px;color:#94A3B8;min-width:38px">'+j.data.slice(5)+'</span>';
+        h+='<input id="hr_'+j.id+'" type="time" value="'+hr(j)+'" title="Horário (Brasília)" style="width:78px;height:28px;border:1px solid #E5E7EB;border-radius:6px;font-size:11px;padding:0 4px">';
         h+='<span style="font-size:11px;font-weight:700;min-width:28px">'+flagImg(j.casa)+j.casa+'</span>';
         h+='<input id="r_'+j.id+'_c" type="number" min="0" max="20" value="'+(r.c!==undefined?r.c:'')+'" placeholder="—" style="width:36px;height:28px;text-align:center;border:1px solid #E5E7EB;border-radius:6px;font-size:14px;font-weight:700;padding:0">';
         h+='<span style="color:#94A3B8;font-size:12px">×</span>';
@@ -2375,7 +2486,8 @@ function adminBolao() {
     BOLAO_CHAVE.forEach(function(j){
       var r=res[j.id]||{};
       h+='<div style="display:flex;align-items:center;gap:6px;margin-bottom:5px;flex-wrap:wrap">';
-      h+='<span style="font-size:10px;color:#94A3B8;min-width:55px">'+j.data.slice(5)+'</span>';
+      h+='<span style="font-size:10px;color:#94A3B8;min-width:38px">'+j.data.slice(5)+'</span>';
+      h+='<input id="hr_'+j.id+'" type="time" value="'+hr(j)+'" title="Horário (Brasília)" style="width:78px;height:28px;border:1px solid #E5E7EB;border-radius:6px;font-size:11px;padding:0 4px">';
       h+='<span style="font-size:11px;min-width:60px;color:#6B7280">'+j.id+'</span>';
       h+='<input id="r_'+j.id+'_c" type="number" min="0" max="20" value="'+(r.c!==undefined?r.c:'')+'" placeholder="—" style="width:36px;height:28px;text-align:center;border:1px solid #E5E7EB;border-radius:6px;font-size:14px;font-weight:700;padding:0">';
       h+='<span style="color:#94A3B8;font-size:12px">×</span>';
@@ -2393,8 +2505,12 @@ function adminBolao() {
 
 function adminBolaoSalvar() {
   var res={};
+  var horarios={};
   var allJogos=BOLAO_JOGOS.concat(BOLAO_CHAVE);
   allJogos.forEach(function(j){
+    // horário (Brasília) — define quando a aposta fecha (12h antes)
+    var he=document.getElementById('hr_'+j.id);
+    if(he&&he.value) horarios[j.id]=he.value;
     var ce=document.getElementById('r_'+j.id+'_c');
     var ve=document.getElementById('r_'+j.id+'_v');
     if(!ce||!ve) return;
@@ -2415,8 +2531,9 @@ function adminBolaoSalvar() {
     if(vc&&vc.value.trim()) chave[j.id+'_v']=vc.value.trim().toUpperCase();
   });
   bolaoChaveEq=chave;
-  db.collection('bolao_meta').doc('dados').set({resultados:res,chave:chave,updatedAt:new Date()},{merge:true})
-    .then(function(){bolaoResultados=res;toast('✅ Resultados salvos!');})
+  bolaoHorarios=horarios;
+  db.collection('bolao_meta').doc('dados').set({resultados:res,chave:chave,horarios:horarios,updatedAt:new Date()},{merge:true})
+    .then(function(){bolaoResultados=res;toast('✅ Resultados e horários salvos!');})
     .catch(function(){toast('Erro ao salvar');});
 }
 
@@ -2426,7 +2543,9 @@ function adminBolaoRecalc() {
     var batch=db.batch();
     var entries=[];
     snap.forEach(function(doc){
-      var ext=extrairApostasDoc(doc.data());
+      var dd=doc.data();
+      if(dd.removidoBolao) return; // removidos do bolão não entram no ranking
+      var ext=extrairApostasDoc(dd);
       var apostas=ext.jogos;
       var pts=0;
       // Grupos: padrão 0×0 mesmo sem aposta
@@ -2454,6 +2573,81 @@ function adminBolaoRecalc() {
     return batch2.commit();
   }).then(function(){toast('✅ Pontos recalculados e ranking atualizado!');})
   .catch(function(){toast('Erro ao recalcular');});
+}
+
+// ===== Admin: participantes do bolão (pagamentos e remoção) =====
+function adminBolaoParticipantes() {
+  var cont=document.getElementById('admin-content'); if(!cont) return;
+  cont.innerHTML='<div class="empty"><p>Carregando participantes...</p></div>';
+  db.collection('bolao_apostas').limit(300).get().then(function(snap){
+    var docs=[];
+    snap.forEach(function(doc){
+      var d=doc.data();
+      var ext=extrairApostasDoc(d);
+      var temAposta=Object.keys(ext.jogos).length>0||Object.keys(ext.especiais).length>0;
+      if(d.participa||temAposta){
+        docs.push({uid:doc.id,pago:!!d.pago,removido:!!d.removidoBolao,pts:d.pontosTotal||0});
+      }
+    });
+    if(docs.length===0){cont.innerHTML='<div class="empty"><div class="big">💰</div><p>Ninguém no bolão ainda.</p></div>';return;}
+    var promises=docs.map(function(e){return db.collection('users').doc(e.uid).get();});
+    Promise.all(promises).then(function(usnaps){
+      docs.forEach(function(e,i){var u=usnaps[i];e.apelido=u.exists?(u.data().apelido||'?'):'?';e.cidade=u.exists?(u.data().cidade||''):'';});
+      var ativos=docs.filter(function(e){return !e.removido;});
+      var pagos=ativos.filter(function(e){return e.pago;}).length;
+      var arrecadado=pagos*VALOR_COTA;
+      var p1=Math.round(arrecadado*PREMIO_1), p2=arrecadado-p1;
+      var fmt=function(n){return 'R$ '+n.toLocaleString('pt-BR');};
+      var h='<div style="background:linear-gradient(135deg,#0F4C5C,#185FA5);border-radius:10px;padding:11px 13px;margin-bottom:12px;color:#fff">';
+      h+='<div style="font-size:13px;font-weight:700;margin-bottom:6px">💰 Pagamentos do Bolão</div>';
+      h+='<div style="display:flex;gap:14px;font-size:11px;flex-wrap:wrap">';
+      h+='<span>✅ Pagos: <strong>'+pagos+'</strong>/'+ativos.length+'</span>';
+      h+='<span>💵 Arrecadado: <strong>'+fmt(arrecadado)+'</strong></span>';
+      h+='<span>🥇 '+fmt(p1)+'</span><span>🥈 '+fmt(p2)+'</span>';
+      h+='</div></div>';
+      // ordena: pendentes primeiro, depois pagos; removidos no fim
+      docs.sort(function(a,b){
+        if(a.removido!==b.removido) return a.removido?1:-1;
+        if(a.pago!==b.pago) return a.pago?1:-1;
+        return (a.apelido||'').localeCompare(b.apelido||'');
+      });
+      docs.forEach(function(e){
+        var dot=e.pago?'<span style="display:inline-block;width:11px;height:11px;border-radius:50%;background:#10B981;box-shadow:0 0 0 2px #D1FAE5"></span>':'<span style="display:inline-block;width:11px;height:11px;border-radius:50%;background:#E5E7EB"></span>';
+        h+='<div class="admin-user-card"'+(e.removido?' style="opacity:0.55"':'')+'>';
+        h+='<div class="admin-user-info">';
+        h+='<div class="admin-user-name">'+dot+' '+esc(e.apelido)+(e.removido?' <span style="font-size:10px;color:#991B1B">(removido do bolão)</span>':'')+'</div>';
+        h+='<div class="admin-user-detail">📍 '+esc(e.cidade)+' · '+e.pts+' pts · '+(e.pago?'<span style="color:#10B981;font-weight:700">✅ Pago</span>':'<span style="color:#F59E0B;font-weight:700">⏳ Pendente</span>')+'</div>';
+        h+='</div><div class="admin-user-actions">';
+        if(!e.removido){
+          h+='<button class="btn '+(e.pago?'':'primary')+'" onclick="adminTogglePago(\''+e.uid+'\','+(e.pago?'false':'true')+',\''+esc(e.apelido)+'\')" style="font-size:11px">'+(e.pago?'↩ Desmarcar pago':'✅ Marcar pago')+'</button>';
+          h+='<button class="btn danger" onclick="adminRemoverBolao(\''+e.uid+'\',\''+esc(e.apelido)+'\')" style="font-size:11px">🚫 Remover do bolão</button>';
+        } else {
+          h+='<button class="btn" onclick="adminReadmitirBolao(\''+e.uid+'\',\''+esc(e.apelido)+'\')" style="font-size:11px">↩ Readmitir</button>';
+        }
+        h+='</div></div>';
+      });
+      cont.innerHTML=h;
+    });
+  }).catch(function(){cont.innerHTML='<div class="empty"><p>Erro ao carregar participantes</p></div>';});
+}
+
+function adminTogglePago(uid, pago, apelido) {
+  db.collection('bolao_apostas').doc(uid).set({pago:pago,pagoEm:pago?new Date():null},{merge:true})
+    .then(function(){toast(pago?'✅ '+apelido+' marcado como PAGO':'↩ '+apelido+' marcado como pendente');adminBolaoParticipantes();})
+    .catch(function(){toast('Erro ao atualizar pagamento');});
+}
+
+function adminRemoverBolao(uid, apelido) {
+  if(!confirm('Remover '+apelido+' do BOLÃO?\n\nEle sai do ranking e da disputa, mas continua normalmente no álbum de figurinhas.')) return;
+  db.collection('bolao_apostas').doc(uid).set({removidoBolao:true,participa:false,updatedAt:new Date()},{merge:true})
+    .then(function(){toast('🚫 '+apelido+' removido do bolão');adminBolaoParticipantes();})
+    .catch(function(){toast('Erro ao remover do bolão');});
+}
+
+function adminReadmitirBolao(uid, apelido) {
+  db.collection('bolao_apostas').doc(uid).set({removidoBolao:false,participa:true,updatedAt:new Date()},{merge:true})
+    .then(function(){toast('↩ '+apelido+' readmitido no bolão');adminBolaoParticipantes();})
+    .catch(function(){toast('Erro ao readmitir');});
 }
 
 // ============================================================
@@ -2815,6 +3009,7 @@ function renderAdmin() {
       '<button class="btn primary" onclick="adminVerUsuarios()">👥 Usuários</button>' +
       '<button class="btn" onclick="adminVerMensagens()">📩 Mensagens Dev</button>' +
       '<button class="btn" onclick="adminBolao()">⚽ Bolão</button>' +
+      '<button class="btn" onclick="adminBolaoParticipantes()">💰 Pagamentos</button>' +
     '</div>' +
     '<div id="admin-content"><div class="empty"><p>Carregando...</p></div></div>';
   adminVerUsuarios();
