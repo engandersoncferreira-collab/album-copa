@@ -658,41 +658,56 @@ function flagImgP(cod, cls) {
 const TOTAL = 48*20 + 20 + 14;
 
 // BOLÃO - Fase de Grupos (72 jogos gerados de GRUPOS)
+// Calendário OFICIAL da Copa 2026 (horário de Brasília, fuso -03:00).
+// Para cada grupo, 6 jogos na ordem [R1_1, R1_2, R2_1, R2_2, R3_1, R3_2],
+// cada um como [data, hora]. Os horários seguem o par de confronto (não o
+// "mando"): R1=t0×t1,t2×t3 · R2=t0×t2,t1×t3 · R3=t0×t3,t1×t2.
+const BOLAO_SCHED = {
+  A: [['2026-06-11','16:00'],['2026-06-11','23:00'],['2026-06-18','22:00'],['2026-06-18','13:00'],['2026-06-24','22:00'],['2026-06-24','22:00']],
+  B: [['2026-06-12','16:00'],['2026-06-13','16:00'],['2026-06-18','19:00'],['2026-06-18','16:00'],['2026-06-24','16:00'],['2026-06-24','16:00']],
+  C: [['2026-06-13','19:00'],['2026-06-13','22:00'],['2026-06-19','21:30'],['2026-06-19','19:00'],['2026-06-24','19:00'],['2026-06-24','19:00']],
+  D: [['2026-06-12','22:00'],['2026-06-14','01:00'],['2026-06-19','16:00'],['2026-06-20','00:00'],['2026-06-25','23:00'],['2026-06-25','23:00']],
+  E: [['2026-06-14','14:00'],['2026-06-14','20:00'],['2026-06-20','17:00'],['2026-06-20','21:00'],['2026-06-25','17:00'],['2026-06-25','17:00']],
+  F: [['2026-06-14','17:00'],['2026-06-14','23:00'],['2026-06-20','14:00'],['2026-06-20','23:00'],['2026-06-25','20:00'],['2026-06-25','20:00']],
+  G: [['2026-06-15','16:00'],['2026-06-15','22:00'],['2026-06-21','16:00'],['2026-06-21','22:00'],['2026-06-27','00:00'],['2026-06-27','00:00']],
+  H: [['2026-06-15','13:00'],['2026-06-15','19:00'],['2026-06-21','13:00'],['2026-06-21','19:00'],['2026-06-26','21:00'],['2026-06-26','21:00']],
+  I: [['2026-06-16','16:00'],['2026-06-16','19:00'],['2026-06-22','18:00'],['2026-06-22','21:00'],['2026-06-26','16:00'],['2026-06-26','16:00']],
+  J: [['2026-06-16','22:00'],['2026-06-17','01:00'],['2026-06-22','14:00'],['2026-06-23','00:00'],['2026-06-27','23:00'],['2026-06-27','23:00']],
+  K: [['2026-06-17','14:00'],['2026-06-17','21:00'],['2026-06-23','14:00'],['2026-06-23','23:00'],['2026-06-27','20:30'],['2026-06-27','20:30']],
+  L: [['2026-06-17','17:00'],['2026-06-17','20:00'],['2026-06-23','17:00'],['2026-06-23','20:00'],['2026-06-27','18:00'],['2026-06-27','18:00']]
+};
 const BOLAO_JOGOS = (function() {
   const j = [];
   const gs = ['A','B','C','D','E','F','G','H','I','J','K','L'];
-  const r1=['2026-06-11','2026-06-11','2026-06-12','2026-06-12','2026-06-13','2026-06-13','2026-06-14','2026-06-14','2026-06-15','2026-06-15','2026-06-16','2026-06-16'];
-  const r2=['2026-06-18','2026-06-18','2026-06-19','2026-06-19','2026-06-20','2026-06-20','2026-06-21','2026-06-21','2026-06-22','2026-06-22','2026-06-23','2026-06-23'];
-  const r3=['2026-06-26','2026-06-26','2026-06-27','2026-06-27','2026-06-28','2026-06-28','2026-06-29','2026-06-29','2026-06-30','2026-06-30','2026-07-01','2026-07-01'];
   for (var gi=0; gi<gs.length; gi++) {
-    var g=gs[gi], t=GRUPOS[g];
-    j.push({id:g+'_R1_1',grupo:g,rodada:1,casa:t[0][1],vis:t[1][1],data:r1[gi],hora:'13:00'});
-    j.push({id:g+'_R1_2',grupo:g,rodada:1,casa:t[2][1],vis:t[3][1],data:r1[gi],hora:'16:00'});
-    j.push({id:g+'_R2_1',grupo:g,rodada:2,casa:t[0][1],vis:t[2][1],data:r2[gi],hora:'13:00'});
-    j.push({id:g+'_R2_2',grupo:g,rodada:2,casa:t[1][1],vis:t[3][1],data:r2[gi],hora:'16:00'});
-    j.push({id:g+'_R3_1',grupo:g,rodada:3,casa:t[0][1],vis:t[3][1],data:r3[gi],hora:'17:00'});
-    j.push({id:g+'_R3_2',grupo:g,rodada:3,casa:t[1][1],vis:t[2][1],data:r3[gi],hora:'17:00'});
+    var g=gs[gi], t=GRUPOS[g], s=BOLAO_SCHED[g];
+    j.push({id:g+'_R1_1',grupo:g,rodada:1,casa:t[0][1],vis:t[1][1],data:s[0][0],hora:s[0][1]});
+    j.push({id:g+'_R1_2',grupo:g,rodada:1,casa:t[2][1],vis:t[3][1],data:s[1][0],hora:s[1][1]});
+    j.push({id:g+'_R2_1',grupo:g,rodada:2,casa:t[0][1],vis:t[2][1],data:s[2][0],hora:s[2][1]});
+    j.push({id:g+'_R2_2',grupo:g,rodada:2,casa:t[1][1],vis:t[3][1],data:s[3][0],hora:s[3][1]});
+    j.push({id:g+'_R3_1',grupo:g,rodada:3,casa:t[0][1],vis:t[3][1],data:s[4][0],hora:s[4][1]});
+    j.push({id:g+'_R3_2',grupo:g,rodada:3,casa:t[1][1],vis:t[2][1],data:s[5][0],hora:s[5][1]});
   }
   return j;
 })();
 
 // BOLÃO - Fase Eliminatória
 const BOLAO_CHAVE = [
-  {id:'R32_01',fase:'rodada32',num:1,cL:'1A',vL:'2B',data:'2026-07-04'},{id:'R32_02',fase:'rodada32',num:2,cL:'1C',vL:'3D/E/F',data:'2026-07-04'},{id:'R32_03',fase:'rodada32',num:3,cL:'1E',vL:'2F',data:'2026-07-04'},
-  {id:'R32_04',fase:'rodada32',num:4,cL:'1G',vL:'3A/B/I',data:'2026-07-05'},{id:'R32_05',fase:'rodada32',num:5,cL:'1I',vL:'2J',data:'2026-07-05'},{id:'R32_06',fase:'rodada32',num:6,cL:'1K',vL:'3G/H/K',data:'2026-07-05'},
-  {id:'R32_07',fase:'rodada32',num:7,cL:'1B',vL:'2A',data:'2026-07-06'},{id:'R32_08',fase:'rodada32',num:8,cL:'1D',vL:'3B/C/J',data:'2026-07-06'},{id:'R32_09',fase:'rodada32',num:9,cL:'1F',vL:'2E',data:'2026-07-06'},
-  {id:'R32_10',fase:'rodada32',num:10,cL:'1H',vL:'3A/C/L',data:'2026-07-07'},{id:'R32_11',fase:'rodada32',num:11,cL:'1J',vL:'2I',data:'2026-07-07'},{id:'R32_12',fase:'rodada32',num:12,cL:'1L',vL:'3F/H/I',data:'2026-07-07'},
-  {id:'R32_13',fase:'rodada32',num:13,cL:'2C',vL:'3A/D/E',data:'2026-07-08'},{id:'R32_14',fase:'rodada32',num:14,cL:'2G',vL:'3B/D/L',data:'2026-07-08'},{id:'R32_15',fase:'rodada32',num:15,cL:'2K',vL:'3E/G/K',data:'2026-07-08'},{id:'R32_16',fase:'rodada32',num:16,cL:'2L',vL:'3C/I/J',data:'2026-07-08'},
-  {id:'R16_01',fase:'oitavas',num:1,cL:'R32-1',vL:'R32-2',data:'2026-07-10'},{id:'R16_02',fase:'oitavas',num:2,cL:'R32-3',vL:'R32-4',data:'2026-07-10'},
-  {id:'R16_03',fase:'oitavas',num:3,cL:'R32-5',vL:'R32-6',data:'2026-07-11'},{id:'R16_04',fase:'oitavas',num:4,cL:'R32-7',vL:'R32-8',data:'2026-07-11'},
-  {id:'R16_05',fase:'oitavas',num:5,cL:'R32-9',vL:'R32-10',data:'2026-07-12'},{id:'R16_06',fase:'oitavas',num:6,cL:'R32-11',vL:'R32-12',data:'2026-07-12'},
-  {id:'R16_07',fase:'oitavas',num:7,cL:'R32-13',vL:'R32-14',data:'2026-07-13'},{id:'R16_08',fase:'oitavas',num:8,cL:'R32-15',vL:'R32-16',data:'2026-07-13'},
-  {id:'QF_01',fase:'quartas',num:1,cL:'R16-1',vL:'R16-2',data:'2026-07-17'},{id:'QF_02',fase:'quartas',num:2,cL:'R16-3',vL:'R16-4',data:'2026-07-17'},
-  {id:'QF_03',fase:'quartas',num:3,cL:'R16-5',vL:'R16-6',data:'2026-07-18'},{id:'QF_04',fase:'quartas',num:4,cL:'R16-7',vL:'R16-8',data:'2026-07-18'},
-  {id:'SF_01',fase:'semi',num:1,cL:'QF1',vL:'QF2',data:'2026-07-21'},{id:'SF_02',fase:'semi',num:2,cL:'QF3',vL:'QF4',data:'2026-07-22'},
-  {id:'SF_03',fase:'semifinal',num:1,cL:'SF1',vL:'SF2',data:'2026-07-25'},{id:'SF_04',fase:'semifinal',num:2,cL:'SF3',vL:'SF4',data:'2026-07-25'},
-  {id:'3RD',fase:'terceiro',num:1,cL:'Perda SF1',vL:'Perda SF2',data:'2026-07-25'},
-  {id:'FIN',fase:'final',num:1,cL:'Vence SF1',vL:'Vence SF2',data:'2026-07-26'}
+  {id:'R32_01',fase:'rodada32',num:1,cL:'1A',vL:'2B',data:'2026-06-28',hora:'16:00'},{id:'R32_02',fase:'rodada32',num:2,cL:'1C',vL:'3D/E/F',data:'2026-06-29',hora:'14:00'},{id:'R32_03',fase:'rodada32',num:3,cL:'1E',vL:'2F',data:'2026-06-29',hora:'17:30'},
+  {id:'R32_04',fase:'rodada32',num:4,cL:'1G',vL:'3A/B/I',data:'2026-06-29',hora:'22:00'},{id:'R32_05',fase:'rodada32',num:5,cL:'1I',vL:'2J',data:'2026-06-30',hora:'14:00'},{id:'R32_06',fase:'rodada32',num:6,cL:'1K',vL:'3G/H/K',data:'2026-06-30',hora:'18:00'},
+  {id:'R32_07',fase:'rodada32',num:7,cL:'1B',vL:'2A',data:'2026-06-30',hora:'22:00'},{id:'R32_08',fase:'rodada32',num:8,cL:'1D',vL:'3B/C/J',data:'2026-07-01',hora:'13:00'},{id:'R32_09',fase:'rodada32',num:9,cL:'1F',vL:'2E',data:'2026-07-01',hora:'17:00'},
+  {id:'R32_10',fase:'rodada32',num:10,cL:'1H',vL:'3A/C/L',data:'2026-07-01',hora:'21:00'},{id:'R32_11',fase:'rodada32',num:11,cL:'1J',vL:'2I',data:'2026-07-02',hora:'16:00'},{id:'R32_12',fase:'rodada32',num:12,cL:'1L',vL:'3F/H/I',data:'2026-07-02',hora:'20:00'},
+  {id:'R32_13',fase:'rodada32',num:13,cL:'2C',vL:'3A/D/E',data:'2026-07-03',hora:'00:00'},{id:'R32_14',fase:'rodada32',num:14,cL:'2G',vL:'3B/D/L',data:'2026-07-03',hora:'15:00'},{id:'R32_15',fase:'rodada32',num:15,cL:'2K',vL:'3E/G/K',data:'2026-07-03',hora:'19:00'},{id:'R32_16',fase:'rodada32',num:16,cL:'2L',vL:'3C/I/J',data:'2026-07-03',hora:'22:30'},
+  {id:'R16_01',fase:'oitavas',num:1,cL:'R32-1',vL:'R32-2',data:'2026-07-04',hora:'14:00'},{id:'R16_02',fase:'oitavas',num:2,cL:'R32-3',vL:'R32-4',data:'2026-07-04',hora:'18:00'},
+  {id:'R16_03',fase:'oitavas',num:3,cL:'R32-5',vL:'R32-6',data:'2026-07-05',hora:'17:00'},{id:'R16_04',fase:'oitavas',num:4,cL:'R32-7',vL:'R32-8',data:'2026-07-05',hora:'21:00'},
+  {id:'R16_05',fase:'oitavas',num:5,cL:'R32-9',vL:'R32-10',data:'2026-07-06',hora:'16:00'},{id:'R16_06',fase:'oitavas',num:6,cL:'R32-11',vL:'R32-12',data:'2026-07-06',hora:'21:00'},
+  {id:'R16_07',fase:'oitavas',num:7,cL:'R32-13',vL:'R32-14',data:'2026-07-07',hora:'13:00'},{id:'R16_08',fase:'oitavas',num:8,cL:'R32-15',vL:'R32-16',data:'2026-07-07',hora:'17:00'},
+  {id:'QF_01',fase:'quartas',num:1,cL:'R16-1',vL:'R16-2',data:'2026-07-09',hora:'17:00'},{id:'QF_02',fase:'quartas',num:2,cL:'R16-3',vL:'R16-4',data:'2026-07-10',hora:'16:00'},
+  {id:'QF_03',fase:'quartas',num:3,cL:'R16-5',vL:'R16-6',data:'2026-07-11',hora:'18:00'},{id:'QF_04',fase:'quartas',num:4,cL:'R16-7',vL:'R16-8',data:'2026-07-11',hora:'22:00'},
+  {id:'SF_01',fase:'semi',num:1,cL:'QF1',vL:'QF2',data:'2026-07-14',hora:'16:00'},{id:'SF_02',fase:'semi',num:2,cL:'QF3',vL:'QF4',data:'2026-07-15',hora:'16:00'},
+  {id:'SF_03',fase:'semifinal',num:1,cL:'SF1',vL:'SF2',data:'2026-07-14',hora:'16:00'},{id:'SF_04',fase:'semifinal',num:2,cL:'SF3',vL:'SF4',data:'2026-07-15',hora:'16:00'},
+  {id:'3RD',fase:'terceiro',num:1,cL:'Perda SF1',vL:'Perda SF2',data:'2026-07-18',hora:'18:00'},
+  {id:'FIN',fase:'final',num:1,cL:'Vence SF1',vL:'Vence SF2',data:'2026-07-19',hora:'16:00'}
 ];
 const CIDADES_BR = [
   "João Monlevade", "Belo Horizonte", "Brasília", "Rio de Janeiro", "São Paulo",
@@ -726,7 +741,10 @@ var bolaoPago = false;    // status de pagamento do usuário atual
 var bolaoRemovido = false;// usuário removido do bolão pelo admin (continua no álbum)
 
 // ===== Horário/lock dos jogos (fuso de Brasília, fixo -03:00) =====
-function horaJogo(j) { return bolaoHorarios[j.id] || j.hora || '16:00'; }
+// Fonte de verdade = calendário OFICIAL embutido (j.hora). O override do admin
+// (bolaoHorarios) só vale como fallback p/ jogos sem horário oficial — assim
+// nenhum override antigo/errado salvo no Firebase sobrepõe a tabela correta.
+function horaJogo(j) { return j.hora || bolaoHorarios[j.id] || '16:00'; }
 function kickoffJogo(j) { return new Date(j.data + 'T' + horaJogo(j) + ':00-03:00'); }
 function lockJogo(j) { return new Date(kickoffJogo(j).getTime() - 12 * 3600000); }
 function fmtDataJogo(j) {
@@ -2452,11 +2470,11 @@ function adminBolao() {
     var horarios=meta.horarios||{};
     bolaoChaveEq=chave; // mantém o estado global em dia para o cálculo de campeão/vice
     bolaoHorarios=horarios;
-    var hr=function(j){return horarios[j.id]||j.hora||'16:00';};
+    var hr=function(j){return j.hora||horarios[j.id]||'16:00';};
     var h='<div class="acts" style="margin-bottom:12px">';
     h+='<button class="btn primary" onclick="adminBolaoSalvar()">💾 Salvar Resultados</button>';
     h+='<button class="btn" onclick="adminBolaoRecalc()">🔄 Recalcular Pontos</button></div>';
-    h+='<div style="font-size:11px;color:#6B7280;background:#F8FAFC;border:1px solid #E5E7EB;border-radius:8px;padding:9px 11px;margin-bottom:12px">🕐 Os <strong>horários</strong> são no fuso de <strong>Brasília</strong>. As apostas de cada jogo fecham <strong>12h antes</strong> do horário definido aqui.</div>';
+    h+='<div style="font-size:11px;color:#6B7280;background:#F8FAFC;border:1px solid #E5E7EB;border-radius:8px;padding:9px 11px;margin-bottom:12px">🕐 Os <strong>horários</strong> exibidos seguem a <strong>tabela oficial da Copa 2026</strong> (fuso de Brasília). Cada aposta fecha automaticamente <strong>12h antes</strong> do início da partida.</div>';
     h+='<div style="font-size:12px;font-weight:700;color:#0F4C5C;margin-bottom:8px">Resultados — Fase de Grupos</div>';
     var gs=['A','B','C','D','E','F','G','H','I','J','K','L'];
     gs.forEach(function(g){
@@ -2465,7 +2483,7 @@ function adminBolao() {
         var r=res[j.id]||{}; var rdStyle='display:flex;align-items:center;gap:6px;margin-bottom:5px;flex-wrap:wrap';
         h+='<div style="'+rdStyle+'">';
         h+='<span style="font-size:10px;color:#94A3B8;min-width:38px">'+j.data.slice(5)+'</span>';
-        h+='<input id="hr_'+j.id+'" type="time" value="'+hr(j)+'" title="Horário (Brasília)" style="width:78px;height:28px;border:1px solid #E5E7EB;border-radius:6px;font-size:11px;padding:0 4px">';
+        h+='<span style="font-size:11px;font-weight:700;color:#0F4C5C;min-width:42px" title="Horário oficial (Brasília)">🕐'+hr(j)+'</span>';
         h+='<span style="font-size:11px;font-weight:700;min-width:28px">'+flagImg(j.casa)+j.casa+'</span>';
         h+='<input id="r_'+j.id+'_c" type="number" min="0" max="20" value="'+(r.c!==undefined?r.c:'')+'" placeholder="—" style="width:36px;height:28px;text-align:center;border:1px solid #E5E7EB;border-radius:6px;font-size:14px;font-weight:700;padding:0">';
         h+='<span style="color:#94A3B8;font-size:12px">×</span>';
@@ -2487,7 +2505,7 @@ function adminBolao() {
       var r=res[j.id]||{};
       h+='<div style="display:flex;align-items:center;gap:6px;margin-bottom:5px;flex-wrap:wrap">';
       h+='<span style="font-size:10px;color:#94A3B8;min-width:38px">'+j.data.slice(5)+'</span>';
-      h+='<input id="hr_'+j.id+'" type="time" value="'+hr(j)+'" title="Horário (Brasília)" style="width:78px;height:28px;border:1px solid #E5E7EB;border-radius:6px;font-size:11px;padding:0 4px">';
+      h+='<span style="font-size:11px;font-weight:700;color:#0F4C5C;min-width:42px" title="Horário oficial (Brasília)">🕐'+hr(j)+'</span>';
       h+='<span style="font-size:11px;min-width:60px;color:#6B7280">'+j.id+'</span>';
       h+='<input id="r_'+j.id+'_c" type="number" min="0" max="20" value="'+(r.c!==undefined?r.c:'')+'" placeholder="—" style="width:36px;height:28px;text-align:center;border:1px solid #E5E7EB;border-radius:6px;font-size:14px;font-weight:700;padding:0">';
       h+='<span style="color:#94A3B8;font-size:12px">×</span>';
@@ -2505,12 +2523,9 @@ function adminBolao() {
 
 function adminBolaoSalvar() {
   var res={};
-  var horarios={};
+  // Horários seguem a tabela oficial embutida (j.hora); não há mais override manual.
   var allJogos=BOLAO_JOGOS.concat(BOLAO_CHAVE);
   allJogos.forEach(function(j){
-    // horário (Brasília) — define quando a aposta fecha (12h antes)
-    var he=document.getElementById('hr_'+j.id);
-    if(he&&he.value) horarios[j.id]=he.value;
     var ce=document.getElementById('r_'+j.id+'_c');
     var ve=document.getElementById('r_'+j.id+'_v');
     if(!ce||!ve) return;
@@ -2531,9 +2546,8 @@ function adminBolaoSalvar() {
     if(vc&&vc.value.trim()) chave[j.id+'_v']=vc.value.trim().toUpperCase();
   });
   bolaoChaveEq=chave;
-  bolaoHorarios=horarios;
-  db.collection('bolao_meta').doc('dados').set({resultados:res,chave:chave,horarios:horarios,updatedAt:new Date()},{merge:true})
-    .then(function(){bolaoResultados=res;toast('✅ Resultados e horários salvos!');})
+  db.collection('bolao_meta').doc('dados').set({resultados:res,chave:chave,updatedAt:new Date()},{merge:true})
+    .then(function(){bolaoResultados=res;toast('✅ Resultados salvos!');})
     .catch(function(){toast('Erro ao salvar');});
 }
 
