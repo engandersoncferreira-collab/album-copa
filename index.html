@@ -399,6 +399,16 @@ html, body { background: radial-gradient(1100px 460px at 50% -180px, #E7F0FA 0%,
 .grp-cnt.full { background: #10B981; color: #fff; }
 .grp-chev { transition: transform 0.2s ease; }
 
+/* Toggle de visão (Por grupo / Por data) */
+.bvis-toggle { display: inline-flex; background: #E8F0F8; border-radius: 10px; padding: 3px; gap: 3px; box-shadow: inset 0 1px 3px rgba(15,76,92,0.06); }
+.bvis-btn { border: none; background: transparent; color: #64748B; font-size: 11px; font-weight: 700; padding: 6px 14px; border-radius: 7px; cursor: pointer; font-family: inherit; transition: background 0.18s ease, color 0.18s ease, box-shadow 0.18s ease; }
+.bvis-btn:active { transform: scale(0.96); }
+.bvis-btn.active { background: linear-gradient(135deg, #0F4C5C, #185FA5); color: #fff; box-shadow: 0 3px 9px rgba(15,76,92,0.25); }
+
+/* Visão por data: cabeçalho com gradiente distinto + dia capitalizado */
+.grp-blk.data .grp-blk-hd { background: linear-gradient(135deg, #185FA5, #378ADD); }
+.grp-blk.data .grp-blk-hd .gbl { text-transform: capitalize; }
+
 /* Banner participar do bolão */
 .bolao-join { display: flex; align-items: center; gap: 12px; padding: 12px 14px; border-radius: 13px; margin-bottom: 12px; background: linear-gradient(135deg, #FFF7E6, #FFE9B0); border: 1px solid #F4C430; box-shadow: 0 3px 12px rgba(244,196,48,0.18); animation: contentIn 0.35s ease; }
 .bolao-join.in { background: linear-gradient(135deg, #ECFDF5, #D1FAE5); border-color: #10B981; box-shadow: none; }
@@ -735,6 +745,8 @@ var bolaoResultados = {};
 var bolaoEspeciais = {};
 var bolaoChaveEq = {};
 var bolaoGrpAberto = {};
+var bolaoVisaoGrupos = 'grupo'; // 'grupo' | 'data' — como agrupar a fase de grupos
+var bolaoDiaAberto = {};        // estado aberto/recolhido por dia (visão por data)
 var bolaoParticipa = false;
 var bolaoHorarios = {};   // override de horários por jogo (admin) -> { jogoId: 'HH:MM' }
 var bolaoPago = false;    // status de pagamento do usuário atual
@@ -2172,7 +2184,7 @@ function carregarBolao() {
   }).catch(function(){ renderBolaoSec(); });
 }
 
-function htmlJogoCard(j) {
+function htmlJogoCard(j, ctx) {
   var agora=new Date();
   var bloq=agora>=lockJogo(j);
   var res=bolaoResultados[j.id];
@@ -2182,7 +2194,9 @@ function htmlJogoCard(j) {
   var dd=new Date(j.data+'T12:00:00').toLocaleDateString('pt-BR',{day:'2-digit',month:'2-digit'});
   var cls='jogo-row'+(enc?' '+ptsRowCls(pts):(bloq?' bloq':''));
   var h='<div class="'+cls+'">';
-  h+='<span class="jr-dt">'+dd+'<br><b>'+horaJogo(j)+'h</b></span>';
+  // Na visão por data a coluna mostra hora + grupo (a data já é o cabeçalho do bloco)
+  if (ctx==='data') h+='<span class="jr-dt"><b>'+horaJogo(j)+'h</b><br>Gr '+j.grupo+'</span>';
+  else h+='<span class="jr-dt">'+dd+'<br><b>'+horaJogo(j)+'h</b></span>';
   h+='<span class="jr-tm">';
   h+='<span class="jogo-cod">'+flagImg(j.casa)+j.casa+'</span>';
   h+='<span class="jr-x">×</span>';
@@ -2224,6 +2238,17 @@ function renderBolaoGrupos() {
   h+='<div><div style="font-size:10px;opacity:0.8">Pts</div><div style="font-size:16px;font-weight:700">'+pts+'</div></div>';
   h+='</div></div>';
   h+=bannerParticipacao();
+  // Toggle de visão: agrupar por grupo (A-L) ou por dia de jogo
+  h+='<div style="display:flex;justify-content:center;margin:2px 0 10px"><div class="bvis-toggle">';
+  h+='<button class="bvis-btn'+(bolaoVisaoGrupos==='grupo'?' active':'')+'" onclick="setBolaoVisao(\'grupo\')">🔤 Por grupo</button>';
+  h+='<button class="bvis-btn'+(bolaoVisaoGrupos==='data'?' active':'')+'" onclick="setBolaoVisao(\'data\')">📅 Por data</button>';
+  h+='</div></div>';
+  if (bolaoVisaoGrupos==='data') {
+    h+=htmlBolaoPorData();
+    cont.innerHTML=h;
+    bindBolaoInputs();
+    return;
+  }
   h+='<div style="font-size:10px;color:#94A3B8;margin:0 2px 8px;text-align:center">Toque em um grupo para abrir e apostar</div>';
   gs.forEach(function(g){
     var jogosG=BOLAO_JOGOS.filter(function(j){return j.grupo===g;});
@@ -2249,6 +2274,48 @@ function renderBolaoGrupos() {
   });
   cont.innerHTML=h;
   bindBolaoInputs();
+}
+
+// Visão por data: agrupa os 72 jogos da fase de grupos por dia (ordenados por hora)
+function htmlBolaoPorData() {
+  var porDia={};
+  BOLAO_JOGOS.forEach(function(j){ (porDia[j.data]=porDia[j.data]||[]).push(j); });
+  var dias=Object.keys(porDia).sort();
+  var h='<div style="font-size:10px;color:#94A3B8;margin:0 2px 8px;text-align:center">Toque em um dia para abrir e apostar</div>';
+  dias.forEach(function(dia){
+    var jogos=porDia[dia].slice().sort(function(a,b){return horaJogo(a).localeCompare(horaJogo(b));});
+    var apN=jogos.filter(function(j){return bolaoApostas[j.id];}).length;
+    var completo=apN===jogos.length;
+    var aberto=bolaoDiaAberto[dia]===true;
+    var dObj=new Date(dia+'T12:00:00');
+    var wd=dObj.toLocaleDateString('pt-BR',{weekday:'long'}).replace(/-feira$/,'');
+    var dm=dObj.toLocaleDateString('pt-BR',{day:'2-digit',month:'2-digit'});
+    h+='<div class="grp-blk data'+(aberto?' open':'')+'" id="diablk-'+dia+'">';
+    h+='<div class="grp-blk-hd" onclick="toggleDiaBlk(\''+dia+'\')">';
+    h+='<div><div class="gbl">📅 '+wd+', '+dm+'</div><div class="gbs">'+jogos.length+' jogo'+(jogos.length>1?'s':'')+'</div></div>';
+    h+='<div style="display:flex;align-items:center;gap:8px">';
+    h+='<span class="grp-cnt'+(completo?' full':'')+'">'+(completo?'✓ ':'')+apN+'/'+jogos.length+'</span>';
+    h+='<span class="grp-chev" style="font-size:14px">'+(aberto?'⌃':'⌄')+'</span></div></div>';
+    h+='<div class="grp-blk-body"><div class="grp-games">';
+    jogos.forEach(function(j){ h+=htmlJogoCard(j,'data'); });
+    h+='</div></div></div>';
+  });
+  return h;
+}
+
+function setBolaoVisao(v) {
+  if(bolaoVisaoGrupos===v) return;
+  bolaoVisaoGrupos=v;
+  renderBolaoGrupos();
+}
+
+function toggleDiaBlk(dia) {
+  bolaoDiaAberto[dia]=!bolaoDiaAberto[dia];
+  var aberto=bolaoDiaAberto[dia];
+  var el=document.getElementById('diablk-'+dia); if(!el) return;
+  el.classList.toggle('open', aberto);
+  var chevron=el.querySelector('.grp-chev');
+  if(chevron) chevron.textContent=aberto?'⌃':'⌄';
 }
 
 function toggleGrpBlk(g) {
@@ -2500,25 +2567,42 @@ function adminBolao() {
       h+='<input id="chv_'+j.id+'_v" type="text" maxlength="7" value="'+(chave[j.id+'_v']||'')+'" placeholder="'+j.vL+'" style="width:80px;height:28px;text-align:center;border:1px solid #E5E7EB;border-radius:6px;font-size:12px;font-weight:700;text-transform:uppercase;padding:0 4px">';
       h+='</div>';
     });
-    h+='<div style="font-size:12px;font-weight:700;color:#0F4C5C;margin:16px 0 8px">Resultados — Fase Eliminatória <span style="font-weight:400;color:#94A3B8">(se empate, escolha quem passou nos pênaltis)</span></div>';
+    h+='<div style="font-size:12px;font-weight:700;color:#0F4C5C;margin:16px 0 8px">Resultados — Fase Eliminatória <span style="font-weight:400;color:#94A3B8">(o seletor de quem passou aparece sozinho quando o placar for empate)</span></div>';
     BOLAO_CHAVE.forEach(function(j){
       var r=res[j.id]||{};
+      var emp=(r.c!==undefined&&r.v!==undefined&&Number(r.c)===Number(r.v));
+      var nomeC=chave[j.id+'_c']||'casa', nomeV=chave[j.id+'_v']||'visit.';
       h+='<div style="display:flex;align-items:center;gap:6px;margin-bottom:5px;flex-wrap:wrap">';
       h+='<span style="font-size:10px;color:#94A3B8;min-width:38px">'+j.data.slice(5)+'</span>';
       h+='<span style="font-size:11px;font-weight:700;color:#0F4C5C;min-width:42px" title="Horário oficial (Brasília)">🕐'+hr(j)+'</span>';
       h+='<span style="font-size:11px;min-width:60px;color:#6B7280">'+j.id+'</span>';
-      h+='<input id="r_'+j.id+'_c" type="number" min="0" max="20" value="'+(r.c!==undefined?r.c:'')+'" placeholder="—" style="width:36px;height:28px;text-align:center;border:1px solid #E5E7EB;border-radius:6px;font-size:14px;font-weight:700;padding:0">';
+      h+='<input id="r_'+j.id+'_c" type="number" min="0" max="20" value="'+(r.c!==undefined?r.c:'')+'" placeholder="—" oninput="adminTogglePen(\''+j.id+'\')" style="width:36px;height:28px;text-align:center;border:1px solid #E5E7EB;border-radius:6px;font-size:14px;font-weight:700;padding:0">';
       h+='<span style="color:#94A3B8;font-size:12px">×</span>';
-      h+='<input id="r_'+j.id+'_v" type="number" min="0" max="20" value="'+(r.v!==undefined?r.v:'')+'" placeholder="—" style="width:36px;height:28px;text-align:center;border:1px solid #E5E7EB;border-radius:6px;font-size:14px;font-weight:700;padding:0">';
-      h+='<select id="rpen_'+j.id+'" style="font-size:11px;padding:4px 6px;border:1px solid #E5E7EB;border-radius:6px;color:#78350F">';
-      h+='<option value="">pên.: —</option>';
-      h+='<option value="c"'+(r.pen==='c'?' selected':'')+'>🥅 casa</option>';
-      h+='<option value="v"'+(r.pen==='v'?' selected':'')+'>🥅 visit.</option>';
-      h+='</select>';
+      h+='<input id="r_'+j.id+'_v" type="number" min="0" max="20" value="'+(r.v!==undefined?r.v:'')+'" placeholder="—" oninput="adminTogglePen(\''+j.id+'\')" style="width:36px;height:28px;text-align:center;border:1px solid #E5E7EB;border-radius:6px;font-size:14px;font-weight:700;padding:0">';
+      h+='<span id="penwrap_'+j.id+'" style="'+(emp?'display:inline-flex':'display:none')+';align-items:center;gap:5px">';
+      h+='<span style="font-size:11px;color:#78350F;font-weight:700;white-space:nowrap">🥅 Passou:</span>';
+      h+='<select id="rpen_'+j.id+'" style="font-size:11px;padding:4px 6px;border:1px solid #E5E7EB;border-radius:6px;color:#78350F;font-weight:700">';
+      h+='<option value="">—</option>';
+      h+='<option value="c"'+(r.pen==='c'?' selected':'')+'>'+esc(nomeC)+'</option>';
+      h+='<option value="v"'+(r.pen==='v'?' selected':'')+'>'+esc(nomeV)+'</option>';
+      h+='</select></span>';
       h+='</div>';
     });
     cont.innerHTML=h;
   }).catch(function(){cont.innerHTML='<div class="empty"><p>Erro ao carregar dados do bolão</p></div>';});
+}
+
+// Mostra o seletor "quem passou" apenas quando o placar digitado for empate.
+// Em jogo decidido no tempo normal, o admin não precisa mexer em pênaltis.
+function adminTogglePen(jid) {
+  var c=document.getElementById('r_'+jid+'_c');
+  var v=document.getElementById('r_'+jid+'_v');
+  var w=document.getElementById('penwrap_'+jid);
+  if(!c||!v||!w) return;
+  var cv=c.value.trim(), vv=v.value.trim();
+  var emp=cv!==''&&vv!==''&&parseInt(cv,10)===parseInt(vv,10);
+  w.style.display=emp?'inline-flex':'none';
+  if(!emp){ var s=document.getElementById('rpen_'+jid); if(s) s.value=''; }
 }
 
 function adminBolaoSalvar() {
