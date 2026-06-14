@@ -3149,7 +3149,13 @@ function adminVerUsuarios() {
       '</div>';
     });
     cont.innerHTML = h;
-  }).catch(() => { cont.innerHTML = '<div class="empty"><p>Erro ao carregar usuários</p></div>'; });
+  }).catch(err => {
+    var dica = err && err.code === 'permission-denied'
+      ? '<br><span style="font-size:11px;color:#991B1B">Sem permissão para listar usuários. Ajuste as Regras do Firestore (allow list para admin).</span>'
+      : '';
+    cont.innerHTML = '<div class="empty"><p>Erro ao carregar usuários</p><p style="font-size:11px;color:#6B7280">' + esc((err && (err.code || err.message)) || 'erro desconhecido') + '</p>' + dica + '</div>';
+    console.error('adminVerUsuarios:', err);
+  });
 }
 
 function adminVerMensagens() {
