@@ -849,6 +849,40 @@ function computeStandings(grupo, RES, DES) {
   return out;
 }
 
+// Um grupo está "completo" quando seus 6 jogos têm resultado.
+function _grupoCompleto(grupo, RES) {
+  return BOLAO_JOGOS.filter(function(j){ return j.grupo === grupo; })
+    .every(function(j){ var r = RES[j.id]; return r && r.c != null && r.v != null; });
+}
+
+function rankThirds(RES, DES) {
+  RES = RES || {}; DES = DES || {};
+  var ovr = (DES.thirds || null);
+  function ovrIdx(g){ return ovr ? ovr.indexOf(g) : -1; }
+  var arr = [];
+  Object.keys(GRUPOS).forEach(function(g){
+    var completo = _grupoCompleto(g, RES);
+    var st = computeStandings(g, RES, DES);
+    var t = st[2]; // 3º colocado
+    if (!t) return;
+    arr.push({grupo:g, cod:t.cod, pts:t.pts, sg:t.sg, gp:t.gp,
+              classificado:false, parcial:!completo, provisorio:false});
+  });
+  arr.sort(function(a, b){
+    if (b.pts !== a.pts) return b.pts - a.pts;
+    if (b.sg !== a.sg) return b.sg - a.sg;
+    if (b.gp !== a.gp) return b.gp - a.gp;
+    var ia = ovrIdx(a.grupo), ib = ovrIdx(b.grupo);
+    if (ia !== -1 && ib !== -1) return ia - ib;
+    a.provisorio = b.provisorio = true;
+    return a.grupo < b.grupo ? -1 : 1;
+  });
+  // Só marca os 8 classificados quando os 12 grupos estão completos
+  var todosCompletos = Object.keys(GRUPOS).every(function(g){ return _grupoCompleto(g, RES); });
+  if (todosCompletos) for (var k = 0; k < 8 && k < arr.length; k++) arr[k].classificado = true;
+  return arr;
+}
+
 /* ENGINE-TEST END */
 auth.onAuthStateChanged((user) => {
   if (user) {

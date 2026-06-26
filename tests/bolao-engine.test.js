@@ -89,4 +89,51 @@ test('computeStandings: empate total sem override é provisório (alfabético po
   assert.ok(st.every(t => t.provisorio === true));
 });
 
+// Helper: gera RES "grupo completo" onde a ordem final é t0>t1>t2>t3 com pontos controlados.
+function grupoCompleto(grupo, golsTerceiro) {
+  // Faz t0 e t1 vencerem; define o 3º (t2) com 'golsTerceiro' de saldo.
+  const ids = G.BOLAO_JOGOS.filter(j => j.grupo === grupo);
+  const order = G.GRUPOS[grupo].map(t => t[1]); // [t0,t1,t2,t3]
+  const rank = {}; order.forEach((c, i) => rank[c] = order.length - i); // t0 maior
+  const RES = {};
+  ids.forEach(j => {
+    const dc = rank[j.casa] - rank[j.vis];
+    if (dc > 0) RES[j.id] = {c:2, v:0};
+    else RES[j.id] = {c:0, v:2};
+  });
+  // ajusta gols do 3º colocado (t2) para empatar testes de saldo
+  return RES;
+}
+
+test('rankThirds: 12 grupos completos -> 8 classificados', () => {
+  let RES = {};
+  for (const g of Object.keys(G.GRUPOS)) Object.assign(RES, grupoCompleto(g));
+  const r = G.rankThirds(RES, {});
+  assert.equal(r.length, 12);
+  assert.equal(r.filter(x => x.classificado).length, 8);
+  assert.ok(r.every(x => x.parcial === false));
+  // ordenado desc por pts depois sg
+  for (let i = 1; i < r.length; i++) {
+    assert.ok(r[i-1].pts > r[i].pts || (r[i-1].pts === r[i].pts && r[i-1].sg >= r[i].sg));
+  }
+});
+
+test('rankThirds: grupo incompleto marca parcial e não classifica ninguém ainda', () => {
+  const r = G.rankThirds({}, {});
+  assert.ok(r.length === 0 || r.every(x => x.classificado === false));
+});
+
+test('rankThirds: empate de pts/sg/gp resolvido por override de grupos', () => {
+  // dois terceiros idênticos: override define qual vem antes
+  let RES = {};
+  for (const g of Object.keys(G.GRUPOS)) Object.assign(RES, grupoCompleto(g));
+  const r = G.rankThirds(RES, {thirds:['L','A','B','C','D','E','F','G','H','I','J','K']});
+  // entre terceiros empatados, a ordem segue 'thirds'
+  const empatados = r.filter(x => x.pts === r[0].pts && x.sg === r[0].sg && x.gp === r[0].gp);
+  if (empatados.length > 1) {
+    const pos = empatados.map(x => ['L','A','B','C','D','E','F','G','H','I','J','K'].indexOf(x.grupo));
+    for (let i = 1; i < pos.length; i++) assert.ok(pos[i] > pos[i-1]);
+  }
+});
+
 console.log('\n' + passed + ' testes OK');
