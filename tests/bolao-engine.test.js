@@ -136,4 +136,27 @@ test('rankThirds: empate de pts/sg/gp resolvido por override de grupos', () => {
   }
 });
 
+// ---- BOLAO_CHAVE oficial 2026 ----
+test('BOLAO_CHAVE: contagem por fase oficial', () => {
+  const cnt = {};
+  G.BOLAO_CHAVE.forEach(j => cnt[j.fase] = (cnt[j.fase]||0)+1);
+  assert.deepEqual(cnt, {rodada32:16, oitavas:8, quartas:4, semi:2, terceiro:1, final:1});
+});
+test('BOLAO_CHAVE: R32 jogo 79 = 1A vs terceiro do slot 1A', () => {
+  const j = G.BOLAO_CHAVE.find(x => x.num === 79 && x.fase === 'rodada32');
+  assert.equal(j.cL, '1A'); assert.equal(j.vL, 'T1A');
+});
+test('BOLAO_CHAVE: oitava 89 = vencedores dos jogos 74 e 77', () => {
+  const r32 = id => G.BOLAO_CHAVE.find(x => x.num === id && x.fase === 'rodada32').id;
+  const j = G.BOLAO_CHAVE.find(x => x.num === 89 && x.fase === 'oitavas');
+  assert.equal(j.cL, 'W#' + r32(74)); assert.equal(j.vL, 'W#' + r32(77));
+});
+test('BOLAO_CHAVE: 3º lugar usa perdedores das semis; final usa vencedores', () => {
+  const sf = n => G.BOLAO_CHAVE.find(x => x.fase === 'semi' && x.num === n).id;
+  const ter = G.BOLAO_CHAVE.find(x => x.fase === 'terceiro');
+  const fin = G.BOLAO_CHAVE.find(x => x.fase === 'final');
+  assert.equal(ter.cL, 'L#' + sf(1)); assert.equal(ter.vL, 'L#' + sf(2));
+  assert.equal(fin.cL, 'W#' + sf(1)); assert.equal(fin.vL, 'W#' + sf(2));
+});
+
 console.log('\n' + passed + ' testes OK');
