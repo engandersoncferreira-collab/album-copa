@@ -773,6 +773,7 @@ var chatAtivo = null;
 var chatConvUnsubscribe = null;
 var chatsListUnsubscribe = null;
 var badgeUnsubscribe = null;
+var bolaoMetaUnsub = null;   // listener ao vivo de bolao_meta/dados (resultados/chave/desempate)
 var termoPesquisa = '';
 var bolaoSec = 'grupos';
 var bolaoApostas = {};
@@ -1126,6 +1127,7 @@ function fnSair() {
     if (chatsListUnsubscribe) { chatsListUnsubscribe(); chatsListUnsubscribe = null; }
     if (chatConvUnsubscribe) { chatConvUnsubscribe(); chatConvUnsubscribe = null; }
     if (badgeUnsubscribe) { badgeUnsubscribe(); badgeUnsubscribe = null; }
+    if (bolaoMetaUnsub) { bolaoMetaUnsub(); bolaoMetaUnsub = null; }
     auth.signOut();
   }
 }
@@ -2372,28 +2374,44 @@ function gerarRegrasBolaoHTML() {
     '</body></html>';
 }
 
+// Aplica os dados do doc bolao_meta/dados nas variáveis globais usadas pelo cálculo.
+function aplicarBolaoMeta(md) {
+  md=md||{};
+  bolaoResultados=md.resultados||{};
+  bolaoChaveEq=md.chave||{};
+  bolaoChaveOverride=md.chaveOverride||{};
+  bolaoDesempate=md.desempate||{};
+  // retrocompat: se há 'chave' legado e nenhum override, usa-o como override inicial
+  if(Object.keys(bolaoChaveOverride).length===0 && md.chave) bolaoChaveOverride=md.chave;
+  bolaoHorarios=md.horarios||{};
+}
+
 function carregarBolao() {
   if (!currentUser) return;
   var apostRef=db.collection('bolao_apostas').doc(currentUser.uid);
-  var metaRef=db.collection('bolao_meta').doc('dados');
-  Promise.all([apostRef.get(), metaRef.get()]).then(function(rs) {
-    var ad=rs[0].exists?rs[0].data():{};
+  // 1) Apostas do próprio usuário: leitura única (só ele mesmo as altera).
+  apostRef.get().then(function(snap) {
+    var ad=snap.exists?snap.data():{};
     var ext=extrairApostasDoc(ad);
     bolaoApostas=ext.jogos;
     bolaoEspeciais=ext.especiais;
     bolaoParticipa=!!ad.participa;
     bolaoPago=!!ad.pago;
     bolaoRemovido=!!ad.removidoBolao;
-    var md=rs[1].exists?rs[1].data():{};
-    bolaoResultados=md.resultados||{};
-    bolaoChaveEq=md.chave||{};
-    bolaoChaveOverride=md.chaveOverride||{};
-    bolaoDesempate=md.desempate||{};
-    // retrocompat: se há 'chave' legado e nenhum override, usa-o como override inicial
-    if(Object.keys(bolaoChaveOverride).length===0 && md.chave) bolaoChaveOverride=md.chave;
-    bolaoHorarios=md.horarios||{};
-    renderBolaoSec();
-  }).catch(function(){ renderBolaoSec(); });
+  }).catch(function(){}).then(function(){
+    // 2) Resultados/chaveamento/desempates: listener AO VIVO. Assim que o admin
+    //    salva um placar, classificação e chaveamento se atualizam sozinhos.
+    if (bolaoMetaUnsub) { bolaoMetaUnsub(); bolaoMetaUnsub=null; }
+    bolaoMetaUnsub=db.collection('bolao_meta').doc('dados').onSnapshot(function(doc){
+      aplicarBolaoMeta(doc.exists?doc.data():{});
+      // Não re-renderiza a aba "grupos" enquanto o usuário digita uma aposta
+      // (evita perder o foco/valor do input). Demais abas são só leitura.
+      var digitando = bolaoSec==='grupos' && document.activeElement
+        && document.activeElement.classList
+        && document.activeElement.classList.contains('jogo-inp');
+      if (!digitando) renderBolaoSec();
+    }, function(){ renderBolaoSec(); });
+  });
 }
 
 function htmlJogoCard(j, ctx) {
@@ -3072,6 +3090,7 @@ function switchTab(tab) {
     if (chatsListUnsubscribe) { chatsListUnsubscribe(); chatsListUnsubscribe = null; }
     if (chatConvUnsubscribe) { chatConvUnsubscribe(); chatConvUnsubscribe = null; }
   }
+  if (tab !== 'bolao' && bolaoMetaUnsub) { bolaoMetaUnsub(); bolaoMetaUnsub = null; }
   if (tab === "dashboard") renderDashboard();
   else if (tab === "controle") renderControle();
   else if (tab === "trocas") renderTrocas();
