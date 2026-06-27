@@ -2803,6 +2803,7 @@ function adminBolao() {
     bolaoChaveOverride=chaveOverride;
     bolaoDesempate=desempate;
     bolaoHorarios=horarios;
+    var TEAMS=getBracketTeams();
     var hr=function(j){return j.hora||horarios[j.id]||'16:00';};
     var h='<div class="acts" style="margin-bottom:12px">';
     h+='<button class="btn primary" onclick="adminBolaoSalvar()">💾 Salvar Resultados</button>';
@@ -2824,20 +2825,35 @@ function adminBolao() {
         h+='<span style="font-size:11px;font-weight:700;min-width:28px">'+j.vis+flagImg(j.vis)+'</span></div>';
       });
     });
-    h+='<div style="font-size:12px;font-weight:700;color:#0F4C5C;margin:16px 0 8px">Times do Chaveamento <span style="font-weight:400;color:#94A3B8">(defina as siglas conforme as fases avançam — desbloqueia as apostas)</span></div>';
+    // Desempates manuais: só mostra grupos/terceiros com empate provisório
+    var dh='';
+    gs.forEach(function(g){
+      var st=getStandings(g);
+      if(st.some(function(t){return t.provisorio;})){
+        dh+='<div style="margin:6px 0"><span style="font-size:11px;font-weight:700;color:#78350F">Grupo '+g+' (ordem das siglas):</span> ';
+        dh+='<input id="des_'+g+'" type="text" value="'+esc((bolaoDesempate[g]||[]).join(','))+'" placeholder="'+esc(GRUPOS[g].map(function(t){return t[1];}).join(','))+'" style="width:210px;height:26px;font-size:11px;border:1px solid #E5E7EB;border-radius:6px;padding:0 6px;text-transform:uppercase"></div>';
+      }
+    });
+    var thD=getThirds();
+    if(thD.some(function(t){return t.provisorio;})){
+      dh+='<div style="margin:6px 0"><span style="font-size:11px;font-weight:700;color:#78350F">3º colocados (ordem de grupos):</span> ';
+      dh+='<input id="des_thirds" type="text" value="'+esc((bolaoDesempate.thirds||[]).join(','))+'" placeholder="A,B,C,..." style="width:240px;height:26px;font-size:11px;border:1px solid #E5E7EB;border-radius:6px;padding:0 6px;text-transform:uppercase"></div>';
+    }
+    if(dh) h+='<div style="font-size:12px;font-weight:700;color:#0F4C5C;margin:16px 0 8px">⚖️ Desempates manuais <span style="font-weight:400;color:#94A3B8">(só aparece quando os critérios automáticos empatam)</span></div>'+dh;
+    h+='<div style="font-size:12px;font-weight:700;color:#0F4C5C;margin:16px 0 8px">Times do Chaveamento <span style="font-weight:400;color:#94A3B8">(deixe em branco para usar o cálculo automático; preencha só para sobrescrever)</span></div>';
     BOLAO_CHAVE.forEach(function(j){
       h+='<div style="display:flex;align-items:center;gap:6px;margin-bottom:5px;flex-wrap:wrap">';
       h+='<span style="font-size:11px;min-width:60px;color:#6B7280;font-weight:700">'+j.id+'</span>';
-      h+='<input id="chv_'+j.id+'_c" type="text" maxlength="7" value="'+(chave[j.id+'_c']||'')+'" placeholder="'+j.cL+'" style="width:80px;height:28px;text-align:center;border:1px solid #E5E7EB;border-radius:6px;font-size:12px;font-weight:700;text-transform:uppercase;padding:0 4px">';
+      h+='<input id="chv_'+j.id+'_c" type="text" maxlength="7" value="'+(bolaoChaveOverride[j.id+'_c']||'')+'" placeholder="'+esc(TEAMS[j.id+'_c']||labelSlot(j.cL))+'" style="width:96px;height:28px;text-align:center;border:1px solid #E5E7EB;border-radius:6px;font-size:12px;font-weight:700;text-transform:uppercase;padding:0 4px">';
       h+='<span style="color:#94A3B8;font-size:12px">×</span>';
-      h+='<input id="chv_'+j.id+'_v" type="text" maxlength="7" value="'+(chave[j.id+'_v']||'')+'" placeholder="'+j.vL+'" style="width:80px;height:28px;text-align:center;border:1px solid #E5E7EB;border-radius:6px;font-size:12px;font-weight:700;text-transform:uppercase;padding:0 4px">';
+      h+='<input id="chv_'+j.id+'_v" type="text" maxlength="7" value="'+(bolaoChaveOverride[j.id+'_v']||'')+'" placeholder="'+esc(TEAMS[j.id+'_v']||labelSlot(j.vL))+'" style="width:96px;height:28px;text-align:center;border:1px solid #E5E7EB;border-radius:6px;font-size:12px;font-weight:700;text-transform:uppercase;padding:0 4px">';
       h+='</div>';
     });
     h+='<div style="font-size:12px;font-weight:700;color:#0F4C5C;margin:16px 0 8px">Resultados — Fase Eliminatória <span style="font-weight:400;color:#94A3B8">(o seletor de quem passou aparece sozinho quando o placar for empate)</span></div>';
     BOLAO_CHAVE.forEach(function(j){
       var r=res[j.id]||{};
       var emp=(r.c!==undefined&&r.v!==undefined&&Number(r.c)===Number(r.v));
-      var nomeC=chave[j.id+'_c']||'casa', nomeV=chave[j.id+'_v']||'visit.';
+      var nomeC=TEAMS[j.id+'_c']||labelSlot(j.cL), nomeV=TEAMS[j.id+'_v']||labelSlot(j.vL);
       h+='<div style="display:flex;align-items:center;gap:6px;margin-bottom:5px;flex-wrap:wrap">';
       h+='<span style="font-size:10px;color:#94A3B8;min-width:38px">'+j.data.slice(5)+'</span>';
       h+='<span style="font-size:11px;font-weight:700;color:#0F4C5C;min-width:42px" title="Horário oficial (Brasília)">🕐'+hr(j)+'</span>';
@@ -2887,16 +2903,24 @@ function adminBolaoSalvar() {
       if(pe&&pe.value&&parseInt(cv)===parseInt(vv)) res[j.id].pen=pe.value;
     }
   });
-  // Times do chaveamento (siglas) — desbloqueiam as apostas eliminatórias
-  var chave={};
+  // Override manual dos times do chaveamento (só os preenchidos sobrescrevem o cálculo)
+  var chaveOverride={};
   BOLAO_CHAVE.forEach(function(j){
     var cc=document.getElementById('chv_'+j.id+'_c');
     var vc=document.getElementById('chv_'+j.id+'_v');
-    if(cc&&cc.value.trim()) chave[j.id+'_c']=cc.value.trim().toUpperCase();
-    if(vc&&vc.value.trim()) chave[j.id+'_v']=vc.value.trim().toUpperCase();
+    if(cc&&cc.value.trim()) chaveOverride[j.id+'_c']=cc.value.trim().toUpperCase();
+    if(vc&&vc.value.trim()) chaveOverride[j.id+'_v']=vc.value.trim().toUpperCase();
   });
-  bolaoChaveEq=chave;
-  db.collection('bolao_meta').doc('dados').set({resultados:res,chave:chave,updatedAt:new Date()},{merge:true})
+  // Desempates manuais (grupos e terceiros)
+  var desempate={};
+  ['A','B','C','D','E','F','G','H','I','J','K','L'].forEach(function(g){
+    var e=document.getElementById('des_'+g);
+    if(e&&e.value.trim()) desempate[g]=e.value.trim().toUpperCase().split(',').map(function(s){return s.trim();}).filter(Boolean);
+  });
+  var et=document.getElementById('des_thirds');
+  if(et&&et.value.trim()) desempate.thirds=et.value.trim().toUpperCase().split(',').map(function(s){return s.trim();}).filter(Boolean);
+  bolaoChaveOverride=chaveOverride; bolaoDesempate=desempate;
+  db.collection('bolao_meta').doc('dados').set({resultados:res,chaveOverride:chaveOverride,desempate:desempate,updatedAt:new Date()},{merge:true})
     .then(function(){bolaoResultados=res;toast('✅ Resultados salvos!');})
     .catch(function(){toast('Erro ao salvar');});
 }
