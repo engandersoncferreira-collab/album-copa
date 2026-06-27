@@ -318,6 +318,11 @@ body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-
 .bjogo { background: #fff; border: 1px solid #E5E7EB; border-radius: 10px; padding: 9px 13px; margin-bottom: 6px; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
 .bslot { background: #F8FAFC; border: 1px dashed #D1D5DB; border-radius: 6px; padding: 3px 7px; font-size: 11px; color: #94A3B8; white-space: nowrap; }
 .bslot.def { background: #E6F1FB; border: 1px solid #185FA5; color: #0F4C5C; font-weight: 700; }
+.bjogo-when { display: flex; flex-direction: column; align-items: center; justify-content: center; min-width: 44px; line-height: 1.2; gap: 1px; }
+.bjw-num { font-size: 10px; font-weight: 700; color: #94A3B8; }
+.bjw-dt { font-size: 9.5px; font-weight: 700; color: #0F4C5C; white-space: nowrap; text-transform: uppercase; }
+.bjw-hr { font-size: 9px; color: #94A3B8; white-space: nowrap; }
+.bjw-fase { font-size: 8px; font-weight: 700; color: #185FA5; background: #E6F1FB; border-radius: 4px; padding: 1px 5px; white-space: nowrap; margin-top: 1px; }
 .esp-card { background: #fff; border: 1px solid #E5E7EB; border-radius: 11px; padding: 16px; margin-bottom: 12px; }
 .esp-ttl { font-size: 14px; font-weight: 700; color: #0F4C5C; margin-bottom: 4px; }
 .esp-sub { font-size: 11px; color: #6B7280; margin-bottom: 10px; }
@@ -784,6 +789,7 @@ var bolaoChaveOverride = {}; // override manual do admin por slot {id_c:SIGLA}
 var bolaoDesempate = {};     // desempates manuais {grupo:[siglas], thirds:[grupos]}
 var bolaoGrpAberto = {};
 var bolaoVisaoGrupos = 'grupo'; // 'grupo' | 'data' — como agrupar a fase de grupos
+var bolaoVisaoChave = 'fase';   // 'fase' | 'data' — como agrupar o chaveamento
 var bolaoDiaAberto = {};        // estado aberto/recolhido por dia (visão por data)
 var bolaoParticipa = false;
 var bolaoHorarios = {};   // override de horários por jogo (admin) -> { jogoId: 'HH:MM' }
@@ -2615,67 +2621,105 @@ function renderBolaoClassificacao() {
   cont.innerHTML=h;
 }
 
+var FASE_LABEL_CURTA={rodada32:'R32',oitavas:'Oitavas',quartas:'Quartas',semi:'Semi',terceiro:'3º lugar',final:'Final'};
+
+// Monta um card do chaveamento. A coluna esquerda (nº · data · hora) é sempre
+// exibida, mesmo quando o jogo está aberto para apostar.
+function htmlBracketCard(j, TEAMS, mostrarFase) {
+  var casaEq=TEAMS[j.id+'_c']||null;
+  var visEq=TEAMS[j.id+'_v']||null;
+  var res=bolaoResultados[j.id];
+  var enc=res!==null&&res!==undefined;
+  var minha=bolaoApostas[j.id]||null;
+  var pts=enc&&minha?calcPtsKnockout(minha,res):null;
+  var locked=new Date()>=lockJogo(j);
+  var bloq=locked||(!casaEq||!visEq);
+  var dataCurta=new Date(j.data+'T12:00:00').toLocaleDateString('pt-BR',{day:'2-digit',month:'short'}).replace('.','');
+  var h='<div class="bjogo">';
+  // Coluna fixa: número do jogo, data e hora (e a fase, na visão por data)
+  h+='<div class="bjogo-when">';
+  h+='<span class="bjw-num">'+j.num+'</span>';
+  h+='<span class="bjw-dt">'+dataCurta+'</span>';
+  h+='<span class="bjw-hr">'+horaJogo(j)+'h</span>';
+  if(mostrarFase) h+='<span class="bjw-fase">'+(FASE_LABEL_CURTA[j.fase]||'')+'</span>';
+  h+='</div>';
+  h+='<div style="display:flex;align-items:center;gap:6px;flex:1;min-width:118px">';
+  h+=(casaEq?'<span class="bslot def">'+flagImg(casaEq)+casaEq+'</span>':'<span class="bslot">'+labelSlot(j.cL)+'</span>');
+  h+='<span style="font-size:11px;color:#94A3B8">×</span>';
+  h+=(visEq?'<span class="bslot def">'+flagImg(visEq)+visEq+'</span>':'<span class="bslot">'+labelSlot(j.vL)+'</span>');
+  h+='</div>';
+  if (enc&&pts!==null) {
+    var penTxt = (res.c===res.v&&res.pen) ? ' <span style="font-size:10px;color:#94A3B8">(pên: '+(res.pen==='c'?(casaEq||'casa'):(visEq||'visit.'))+')</span>' : '';
+    h+='<span style="font-size:14px;font-weight:700;color:#0F4C5C">'+res.c+'×'+res.v+penTxt+'</span>';
+    if(minha) h+='<span class="jr-ap" style="font-size:10px;color:#94A3B8">↳'+minha.c+':'+minha.v+'</span>';
+    h+='<span class="pts-b '+ptsBadgeCls(pts)+'">'+ptsTxt(pts)+'</span>';
+  } else if (!bloq) {
+    h+='<input class="jogo-inp" type="number" min="0" max="20" value="'+(minha&&minha.c!==undefined&&minha.c!==''?minha.c:'')+'" placeholder="—" style="width:36px;height:36px;font-size:15px" data-jid="'+j.id+'" data-lado="c">';
+    h+='<span class="jogo-sep" style="font-size:14px;margin:0 3px">×</span>';
+    h+='<input class="jogo-inp" type="number" min="0" max="20" value="'+(minha&&minha.v!==undefined&&minha.v!==''?minha.v:'')+'" placeholder="—" style="width:36px;height:36px;font-size:15px" data-jid="'+j.id+'" data-lado="v">';
+    var empAposta=minha&&minha.c!==''&&minha.c!==undefined&&minha.v!==''&&minha.v!==undefined&&Number(minha.c)===Number(minha.v);
+    var labC=casaEq?flagImg(casaEq)+casaEq:labelSlot(j.cL), labV=visEq?flagImg(visEq)+visEq:labelSlot(j.vL);
+    h+='<div class="pen-row" data-penfor="'+j.id+'" style="'+(empAposta?'display:flex;':'display:none;')+'flex-basis:100%;align-items:center;gap:6px;margin-top:7px;padding-top:7px;border-top:1px dashed #E5E7EB">';
+    h+='<span style="font-size:11px;color:#78350F;font-weight:700;white-space:nowrap">🥅 Empate! Quem se classifica?</span>';
+    h+='<button class="pen-btn'+(minha&&minha.pen==='c'?' on':'')+'" data-lado="c" onclick="salvarPenalti(\''+j.id+'\',\'c\')">'+labC+'</button>';
+    h+='<button class="pen-btn'+(minha&&minha.pen==='v'?' on':'')+'" data-lado="v" onclick="salvarPenalti(\''+j.id+'\',\'v\')">'+labV+'</button>';
+    h+='</div>';
+  } else if (enc) {
+    h+='<span style="font-size:16px;font-weight:700;color:#0F4C5C">'+res.c+'×'+res.v+'</span>';
+  } else if (minha) {
+    h+='<span style="font-size:13px;font-weight:600;color:#94A3B8">'+minha.c+'×'+minha.v+'</span>';
+  } else if (locked) {
+    h+='<span style="font-size:13px" title="Apostas encerradas">🔒</span>';
+  }
+  h+='</div>';
+  return h;
+}
+
 function renderBolaoChave() {
   var cont=document.getElementById('bolao-cnt'); if(!cont) return;
-  var fases=[
-    {id:'rodada32',l:'Rodada de 32  ·  Jun 28 - Jul 3'},
-    {id:'oitavas',l:'Oitavas de Final  ·  Jul 4-7'},
-    {id:'quartas',l:'Quartas de Final  ·  Jul 9-11'},
-    {id:'semi',l:'Semifinais  ·  Jul 14-15'},
-    {id:'terceiro',l:'🥉 Disputa de 3º Lugar  ·  Jul 18'},
-    {id:'final',l:'🏆 Grande Final  ·  Jul 19'}
-  ];
   var TEAMS=getBracketTeams();
   var h='<div style="background:#F8FAFC;border:1px solid #E5E7EB;border-radius:10px;padding:11px 13px;margin-bottom:12px;font-size:12px;color:#475569">';
   h+='<strong style="color:#0F4C5C">📋 Como funciona:</strong> Os times aparecem automaticamente conforme a fase anterior termina. Aposte nos placares quando disponível.</div>';
-  fases.forEach(function(fase){
-    var jogos=BOLAO_CHAVE.filter(function(j){return j.fase===fase.id;});
-    if(!jogos.length) return;
-    h+='<div class="bfase-ttl">'+fase.l+'</div>';
-    jogos.forEach(function(j){
-      var casaEq=TEAMS[j.id+'_c']||null;
-      var visEq=TEAMS[j.id+'_v']||null;
-      var res=bolaoResultados[j.id];
-      var enc=res!==null&&res!==undefined;
-      var minha=bolaoApostas[j.id]||null;
-      var pts=enc&&minha?calcPtsKnockout(minha,res):null;
-      var agora=new Date();
-      var bloq=agora>=lockJogo(j)||(!casaEq||!visEq);
-      h+='<div class="bjogo">';
-      h+='<span style="font-size:10px;color:#94A3B8;min-width:18px;font-weight:700">'+j.num+'</span>';
-      h+='<div style="display:flex;align-items:center;gap:6px;flex:1">';
-      h+=(casaEq?'<span class="bslot def">'+flagImg(casaEq)+casaEq+'</span>':'<span class="bslot">'+labelSlot(j.cL)+'</span>');
-      h+='<span style="font-size:11px;color:#94A3B8">×</span>';
-      h+=(visEq?'<span class="bslot def">'+flagImg(visEq)+visEq+'</span>':'<span class="bslot">'+labelSlot(j.vL)+'</span>');
-      h+='</div>';
-      if (enc&&pts!==null) {
-        var penTxt = (res.c===res.v&&res.pen) ? ' <span style="font-size:10px;color:#94A3B8">(pên: '+(res.pen==='c'?(casaEq||'casa'):(visEq||'visit.'))+')</span>' : '';
-        h+='<span style="font-size:14px;font-weight:700;color:#0F4C5C">'+res.c+'×'+res.v+penTxt+'</span>';
-        if(minha) h+='<span class="jr-ap" style="font-size:10px;color:#94A3B8">↳'+minha.c+':'+minha.v+'</span>';
-        h+='<span class="pts-b '+ptsBadgeCls(pts)+'">'+ptsTxt(pts)+'</span>';
-      } else if (!bloq) {
-        h+='<input class="jogo-inp" type="number" min="0" max="20" value="'+(minha&&minha.c!==undefined&&minha.c!==''?minha.c:'')+'" placeholder="—" style="width:36px;height:36px;font-size:15px" data-jid="'+j.id+'" data-lado="c">';
-        h+='<span class="jogo-sep" style="font-size:14px;margin:0 3px">×</span>';
-        h+='<input class="jogo-inp" type="number" min="0" max="20" value="'+(minha&&minha.v!==undefined&&minha.v!==''?minha.v:'')+'" placeholder="—" style="width:36px;height:36px;font-size:15px" data-jid="'+j.id+'" data-lado="v">';
-        var empAposta=minha&&minha.c!==''&&minha.c!==undefined&&minha.v!==''&&minha.v!==undefined&&Number(minha.c)===Number(minha.v);
-        var labC=casaEq?flagImg(casaEq)+casaEq:labelSlot(j.cL), labV=visEq?flagImg(visEq)+visEq:labelSlot(j.vL);
-        h+='<div class="pen-row" data-penfor="'+j.id+'" style="'+(empAposta?'display:flex;':'display:none;')+'flex-basis:100%;align-items:center;gap:6px;margin-top:7px;padding-top:7px;border-top:1px dashed #E5E7EB">';
-        h+='<span style="font-size:11px;color:#78350F;font-weight:700;white-space:nowrap">🥅 Empate! Quem se classifica?</span>';
-        h+='<button class="pen-btn'+(minha&&minha.pen==='c'?' on':'')+'" data-lado="c" onclick="salvarPenalti(\''+j.id+'\',\'c\')">'+labC+'</button>';
-        h+='<button class="pen-btn'+(minha&&minha.pen==='v'?' on':'')+'" data-lado="v" onclick="salvarPenalti(\''+j.id+'\',\'v\')">'+labV+'</button>';
-        h+='</div>';
-      } else if (enc) {
-        h+='<span style="font-size:16px;font-weight:700;color:#0F4C5C">'+res.c+'×'+res.v+'</span>';
-      } else if (minha) {
-        h+='<span style="font-size:13px;font-weight:600;color:#94A3B8">'+minha.c+'×'+minha.v+'</span>';
-      } else {
-        h+='<span style="font-size:10px;color:#D1D5DB">'+new Date(j.data+'T12:00:00').toLocaleDateString('pt-BR',{day:'numeric',month:'short'})+' · '+horaJogo(j)+'h</span>';
-      }
-      h+='</div>';
+  // Toggle de visão: por fase (chaveamento) ou por dia de jogo
+  h+='<div style="display:flex;justify-content:center;margin:2px 0 10px"><div class="bvis-toggle">';
+  h+='<button class="bvis-btn'+(bolaoVisaoChave==='fase'?' active':'')+'" onclick="setBolaoVisaoChave(\'fase\')">🏆 Por fase</button>';
+  h+='<button class="bvis-btn'+(bolaoVisaoChave==='data'?' active':'')+'" onclick="setBolaoVisaoChave(\'data\')">📅 Por data</button>';
+  h+='</div></div>';
+  if (bolaoVisaoChave==='data') {
+    var porDia={};
+    BOLAO_CHAVE.forEach(function(j){ (porDia[j.data]=porDia[j.data]||[]).push(j); });
+    Object.keys(porDia).sort().forEach(function(dia){
+      var jogos=porDia[dia].slice().sort(function(a,b){return horaJogo(a).localeCompare(horaJogo(b));});
+      var dObj=new Date(dia+'T12:00:00');
+      var wd=dObj.toLocaleDateString('pt-BR',{weekday:'long'}).replace(/-feira$/,'');
+      var dm=dObj.toLocaleDateString('pt-BR',{day:'2-digit',month:'long'});
+      h+='<div class="bfase-ttl">📅 '+wd.charAt(0).toUpperCase()+wd.slice(1)+', '+dm+'</div>';
+      jogos.forEach(function(j){ h+=htmlBracketCard(j,TEAMS,true); });
     });
-  });
+  } else {
+    var fases=[
+      {id:'rodada32',l:'Rodada de 32  ·  Jun 28 - Jul 3'},
+      {id:'oitavas',l:'Oitavas de Final  ·  Jul 4-7'},
+      {id:'quartas',l:'Quartas de Final  ·  Jul 9-11'},
+      {id:'semi',l:'Semifinais  ·  Jul 14-15'},
+      {id:'terceiro',l:'🥉 Disputa de 3º Lugar  ·  Jul 18'},
+      {id:'final',l:'🏆 Grande Final  ·  Jul 19'}
+    ];
+    fases.forEach(function(fase){
+      var jogos=BOLAO_CHAVE.filter(function(j){return j.fase===fase.id;});
+      if(!jogos.length) return;
+      h+='<div class="bfase-ttl">'+fase.l+'</div>';
+      jogos.forEach(function(j){ h+=htmlBracketCard(j,TEAMS,false); });
+    });
+  }
   cont.innerHTML=h;
   bindBolaoInputs();
+}
+
+function setBolaoVisaoChave(v) {
+  if(bolaoVisaoChave===v) return;
+  bolaoVisaoChave=v;
+  renderBolaoChave();
 }
 
 function renderBolaoRanking() {
