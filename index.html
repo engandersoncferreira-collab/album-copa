@@ -770,6 +770,8 @@ var bolaoApostas = {};
 var bolaoResultados = {};
 var bolaoEspeciais = {};
 var bolaoChaveEq = {};
+var bolaoChaveOverride = {}; // override manual do admin por slot {id_c:SIGLA}
+var bolaoDesempate = {};     // desempates manuais {grupo:[siglas], thirds:[grupos]}
 var bolaoGrpAberto = {};
 var bolaoVisaoGrupos = 'grupo'; // 'grupo' | 'data' — como agrupar a fase de grupos
 var bolaoDiaAberto = {};        // estado aberto/recolhido por dia (visão por data)
@@ -964,6 +966,12 @@ function computeBracketTeams(RES, DES, OVR) {
 }
 
 /* ENGINE-TEST END */
+
+// Wrappers que injetam o estado global do bolão nas funções puras da engine.
+function getBracketTeams() { return computeBracketTeams(bolaoResultados, bolaoDesempate, bolaoChaveOverride); }
+function getStandings(grupo) { return computeStandings(grupo, bolaoResultados, bolaoDesempate); }
+function getThirds() { return rankThirds(bolaoResultados, bolaoDesempate); }
+
 auth.onAuthStateChanged((user) => {
   if (user) {
     currentUser = user;
@@ -2369,6 +2377,10 @@ function carregarBolao() {
     var md=rs[1].exists?rs[1].data():{};
     bolaoResultados=md.resultados||{};
     bolaoChaveEq=md.chave||{};
+    bolaoChaveOverride=md.chaveOverride||{};
+    bolaoDesempate=md.desempate||{};
+    // retrocompat: se há 'chave' legado e nenhum override, usa-o como override inicial
+    if(Object.keys(bolaoChaveOverride).length===0 && md.chave) bolaoChaveOverride=md.chave;
     bolaoHorarios=md.horarios||{};
     renderBolaoSec();
   }).catch(function(){ renderBolaoSec(); });
@@ -2724,8 +2736,13 @@ function adminBolao() {
     var meta=snap.exists?snap.data():{};
     var res=meta.resultados||{};
     var chave=meta.chave||{};
+    var chaveOverride=meta.chaveOverride||chave;
+    var desempate=meta.desempate||{};
     var horarios=meta.horarios||{};
+    bolaoResultados=res;
     bolaoChaveEq=chave; // mantém o estado global em dia para o cálculo de campeão/vice
+    bolaoChaveOverride=chaveOverride;
+    bolaoDesempate=desempate;
     bolaoHorarios=horarios;
     var hr=function(j){return j.hora||horarios[j.id]||'16:00';};
     var h='<div class="acts" style="margin-bottom:12px">';
