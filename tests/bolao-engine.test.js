@@ -159,4 +159,53 @@ test('BOLAO_CHAVE: 3º lugar usa perdedores das semis; final usa vencedores', ()
   assert.equal(fin.cL, 'W#' + sf(1)); assert.equal(fin.vL, 'W#' + sf(2));
 });
 
+// ---- computeBracketTeams ----
+test('computeBracketTeams: 1º/2º diretos preenchem R32', () => {
+  let RES = {};
+  for (const g of Object.keys(G.GRUPOS)) Object.assign(RES, grupoCompleto(g));
+  const teams = G.computeBracketTeams(RES, {}, {});
+  const st = (g) => G.computeStandings(g, RES, {});
+  assert.equal(teams['R32_01_c'], st('A')[1].cod); // 2A
+  assert.equal(teams['R32_01_v'], st('B')[1].cod); // 2B
+  assert.equal(teams['R32_04_c'], st('C')[0].cod); // 1C
+});
+
+test('computeBracketTeams: terceiros alocados via tabela das 495', () => {
+  let RES = {};
+  for (const g of Object.keys(G.GRUPOS)) Object.assign(RES, grupoCompleto(g));
+  const teams = G.computeBracketTeams(RES, {}, {});
+  const ranked = G.rankThirds(RES, {});
+  const quals = ranked.filter(x => x.classificado).map(x => x.grupo).sort().join('');
+  const combo = G.THIRD_PLACE_TABLE[quals];
+  assert.ok(combo, 'combinação ' + quals + ' deve existir na tabela');
+  const terceiroGrupoA = combo['1A'];
+  assert.equal(teams['R32_07_v'], G.computeStandings(terceiroGrupoA, RES, {})[2].cod);
+});
+
+test('computeBracketTeams: avança vencedor para a oitava', () => {
+  let RES = {};
+  for (const g of Object.keys(G.GRUPOS)) Object.assign(RES, grupoCompleto(g));
+  RES['R32_02'] = {c:1, v:0};
+  RES['R32_05'] = {c:0, v:2};
+  const teams = G.computeBracketTeams(RES, {}, {});
+  assert.equal(teams['R16_01_c'], teams['R32_02_c']);
+  assert.equal(teams['R16_01_v'], teams['R32_05_v']);
+});
+
+test('computeBracketTeams: override do admin prevalece', () => {
+  let RES = {};
+  for (const g of Object.keys(G.GRUPOS)) Object.assign(RES, grupoCompleto(g));
+  const teams = G.computeBracketTeams(RES, {}, {'R32_01_c':'XXX'});
+  assert.equal(teams['R32_01_c'], 'XXX');
+});
+
+test('computeBracketTeams: empate na oitava usa pen', () => {
+  let RES = {};
+  for (const g of Object.keys(G.GRUPOS)) Object.assign(RES, grupoCompleto(g));
+  RES['R32_02'] = {c:1, v:1, pen:'v'}; // empate, passa o visitante
+  RES['R32_05'] = {c:2, v:0};
+  const teams = G.computeBracketTeams(RES, {}, {});
+  assert.equal(teams['R16_01_c'], teams['R32_02_v']); // visitante avançou
+});
+
 console.log('\n' + passed + ' testes OK');

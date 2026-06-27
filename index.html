@@ -909,6 +909,60 @@ function rankThirds(RES, DES) {
   return arr;
 }
 
+function vencedorJogo(id, RES, teams) {
+  var r = RES[id]; if (!r || r.c == null || r.v == null) return null;
+  var c = teams[id + '_c'], v = teams[id + '_v'];
+  if (c == null || v == null) return null;
+  if (r.c > r.v) return c;
+  if (r.c < r.v) return v;
+  return r.pen === 'c' ? c : r.pen === 'v' ? v : null; // empate sem pen = indefinido
+}
+function perdedorJogo(id, RES, teams) {
+  var r = RES[id]; if (!r || r.c == null || r.v == null) return null;
+  var c = teams[id + '_c'], v = teams[id + '_v'];
+  if (c == null || v == null) return null;
+  if (r.c > r.v) return v;
+  if (r.c < r.v) return c;
+  return r.pen === 'c' ? v : r.pen === 'v' ? c : null;
+}
+
+function computeBracketTeams(RES, DES, OVR) {
+  RES = RES || {}; DES = DES || {}; OVR = OVR || {};
+  // 1) slots de grupo 1X/2X/3X
+  var slot = {};
+  Object.keys(GRUPOS).forEach(function(g){
+    var st = computeStandings(g, RES, DES);
+    if (st[0]) slot['1' + g] = st[0].cod;
+    if (st[1]) slot['2' + g] = st[1].cod;
+    if (st[2]) slot['3' + g] = st[2].cod;
+  });
+  // 2) combinação dos terceiros (só quando há 8 classificados)
+  var ranked = rankThirds(RES, DES);
+  var quals = ranked.filter(function(x){ return x.classificado; }).map(function(x){ return x.grupo; });
+  var combo = (quals.length === 8) ? THIRD_PLACE_TABLE[quals.slice().sort().join('')] : null;
+
+  var teams = {};
+  function resolve(token) {
+    if (/^[123][A-L]$/.test(token)) return slot[token] || null;
+    if (/^T1[A-L]$/.test(token)) {
+      if (!combo) return null;
+      var grp = combo[token.slice(1)]; // 'T1E' -> chave '1E' na tabela
+      return grp ? (slot['3' + grp] || null) : null;
+    }
+    if (token.indexOf('W#') === 0) return vencedorJogo(token.slice(2), RES, teams);
+    if (token.indexOf('L#') === 0) return perdedorJogo(token.slice(2), RES, teams);
+    return null;
+  }
+  // BOLAO_CHAVE já está em ordem de fase -> dependências resolvidas em sequência
+  BOLAO_CHAVE.forEach(function(j){
+    var c = (OVR[j.id + '_c'] != null && OVR[j.id + '_c'] !== '') ? OVR[j.id + '_c'] : resolve(j.cL);
+    var v = (OVR[j.id + '_v'] != null && OVR[j.id + '_v'] !== '') ? OVR[j.id + '_v'] : resolve(j.vL);
+    if (c) teams[j.id + '_c'] = c;
+    if (v) teams[j.id + '_v'] = v;
+  });
+  return teams;
+}
+
 /* ENGINE-TEST END */
 auth.onAuthStateChanged((user) => {
   if (user) {
