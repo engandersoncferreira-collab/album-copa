@@ -2143,7 +2143,7 @@ function extrairApostasDoc(d) {
 
 function renderBolao() {
   if (bolaoSec==='especiais') bolaoSec='grupos';
-  var secs=[{id:'grupos',l:'⚽ Grupos'},{id:'chave',l:'🏆 Chaveamento'},{id:'ranking',l:'🥇 Ranking'},{id:'pagamento',l:'💰 Pagamento'}];
+  var secs=[{id:'grupos',l:'⚽ Grupos'},{id:'classificacao',l:'📊 Classificação'},{id:'chave',l:'🏆 Chaveamento'},{id:'ranking',l:'🥇 Ranking'},{id:'pagamento',l:'💰 Pagamento'}];
   var h='<div class="bolao-menu">';
   secs.forEach(function(s){h+='<button class="bolao-mbtn'+(bolaoSec===s.id?' active':'')+ '" data-sec="'+s.id+'" onclick="bolaoIr(\''+s.id+'\')">'+s.l+'</button>';});
   h+='</div>';
@@ -2161,6 +2161,7 @@ function bolaoIr(sec) {
 
 function renderBolaoSec() {
   if (bolaoSec==='grupos') renderBolaoGrupos();
+  else if (bolaoSec==='classificacao') renderBolaoClassificacao();
   else if (bolaoSec==='chave') renderBolaoChave();
   else if (bolaoSec==='ranking') renderBolaoRanking();
   else if (bolaoSec==='pagamento') renderBolaoPagamento();
@@ -2527,6 +2528,55 @@ function toggleGrpBlk(g) {
   el.classList.toggle('open', aberto);
   var chevron=el.querySelector('.grp-chev');
   if(chevron) chevron.textContent=aberto?'⌃':'⌄';
+}
+
+function renderBolaoClassificacao() {
+  var cont=document.getElementById('bolao-cnt'); if(!cont) return;
+  var thS='padding:6px 4px;font-size:10px;font-weight:700;color:#fff;background:#0F4C5C;border:0.5px solid #0B3F4A;text-align:center';
+  var tdS='border:0.5px solid #E5E7EB;padding:4px 3px;text-align:center;font-size:12px';
+  var h='<div style="background:#F8FAFC;border:1px solid #E5E7EB;border-radius:10px;padding:11px 13px;margin-bottom:12px;font-size:12px;color:#475569">';
+  h+='<strong style="color:#0F4C5C">📊 Como funciona:</strong> A tabela é calculada automaticamente dos resultados oficiais. '
+   + 'Critérios: pontos → confronto direto → saldo → gols. <span style="color:#16A34A;font-weight:700">Verde</span> = classificado (1º/2º); '
+   + '<span style="color:#D97706;font-weight:700">âmbar</span> = disputa de melhor 3º.</div>';
+  var gs=Object.keys(GRUPOS);
+  gs.forEach(function(g){
+    var st=getStandings(g);
+    h+='<div class="bfase-ttl">Grupo '+g+'</div>';
+    h+='<table style="width:100%;border-collapse:collapse;margin-bottom:10px"><thead><tr>'
+      +'<th style="'+thS+';width:34px">#</th><th style="'+thS+';text-align:left;padding-left:7px">Seleção</th>'
+      +'<th style="'+thS+'">P</th><th style="'+thS+'">V</th><th style="'+thS+'">E</th><th style="'+thS+'">D</th>'
+      +'<th style="'+thS+'">GP</th><th style="'+thS+'">GC</th><th style="'+thS+'">SG</th><th style="'+thS+'">Pts</th></tr></thead><tbody>';
+    st.forEach(function(t){
+      var cor = t.pos<=2 ? 'background:#ECFDF5' : t.pos===3 ? 'background:#FFFBEB' : '';
+      var prov = t.provisorio ? ' <span title="Desempate provisório" style="color:#D97706">⚠</span>' : '';
+      h+='<tr style="'+cor+'"><td style="'+tdS+';font-weight:700">'+t.pos+'º</td>'
+        +'<td style="'+tdS+';text-align:left;padding-left:7px">'+flagImg(t.cod)+' '+esc(t.nome)+prov+'</td>'
+        +'<td style="'+tdS+'">'+t.P+'</td><td style="'+tdS+'">'+t.V+'</td><td style="'+tdS+'">'+t.E+'</td><td style="'+tdS+'">'+t.D+'</td>'
+        +'<td style="'+tdS+'">'+t.gp+'</td><td style="'+tdS+'">'+t.gc+'</td><td style="'+tdS+'">'+(t.sg>0?'+':'')+t.sg+'</td>'
+        +'<td style="'+tdS+';font-weight:800;color:#0F4C5C">'+t.pts+'</td></tr>';
+    });
+    h+='</tbody></table>';
+  });
+  // Ranking dos terceiros
+  var thirds=getThirds();
+  h+='<div class="bfase-ttl">🥉 Ranking dos 3º colocados <span style="font-weight:400;opacity:.8">(os 8 melhores avançam)</span></div>';
+  if(!thirds.length){
+    h+='<div class="empty"><p>Aguardando resultados da fase de grupos.</p></div>';
+  } else {
+    h+='<table style="width:100%;border-collapse:collapse"><thead><tr><th style="'+thS+';width:34px">#</th>'
+      +'<th style="'+thS+';text-align:left;padding-left:7px">Seleção</th><th style="'+thS+'">Grupo</th>'
+      +'<th style="'+thS+'">Pts</th><th style="'+thS+'">SG</th><th style="'+thS+'">GP</th></tr></thead><tbody>';
+    thirds.forEach(function(t,i){
+      var cor = t.classificado ? 'background:#ECFDF5' : '';
+      var prov = (t.provisorio||t.parcial) ? ' <span title="Provisório/parcial" style="color:#D97706">⚠</span>' : '';
+      h+='<tr style="'+cor+'"><td style="'+tdS+';font-weight:700">'+(i+1)+'º</td>'
+        +'<td style="'+tdS+';text-align:left;padding-left:7px">'+flagImg(t.cod)+' '+esc(nomeSel(t.cod))+prov+'</td>'
+        +'<td style="'+tdS+'">'+t.grupo+'</td><td style="'+tdS+';font-weight:800;color:#0F4C5C">'+t.pts+'</td>'
+        +'<td style="'+tdS+'">'+(t.sg>0?'+':'')+t.sg+'</td><td style="'+tdS+'">'+t.gp+'</td></tr>';
+    });
+    h+='</tbody></table>';
+  }
+  cont.innerHTML=h;
 }
 
 function renderBolaoChave() {
