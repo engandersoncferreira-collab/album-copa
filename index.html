@@ -2530,6 +2530,15 @@ function toggleGrpBlk(g) {
   if(chevron) chevron.textContent=aberto?'⌃':'⌄';
 }
 
+// Rótulo amigável para um slot ainda não resolvido do chaveamento.
+function labelSlot(token){
+  if(/^([123])([A-L])$/.test(token)){var p=token[0],g=token[1];return (p==='1'?'1º':p==='2'?'2º':'3º')+' '+g;}
+  if(/^T1[A-L]$/.test(token)){var gs=(typeof THIRD_SLOT_GROUPS!=='undefined'&&THIRD_SLOT_GROUPS[token.slice(1)])||[];return '3º ('+gs.join('/')+')';}
+  if(token.indexOf('W#')===0){var jw=BOLAO_CHAVE.filter(function(x){return x.id===token.slice(2);})[0];return 'Vence J'+(jw?jw.num:'?');}
+  if(token.indexOf('L#')===0){var jl=BOLAO_CHAVE.filter(function(x){return x.id===token.slice(2);})[0];return 'Perde J'+(jl?jl.num:'?');}
+  return token;
+}
+
 function renderBolaoClassificacao() {
   var cont=document.getElementById('bolao-cnt'); if(!cont) return;
   var thS='padding:6px 4px;font-size:10px;font-weight:700;color:#fff;background:#0F4C5C;border:0.5px solid #0B3F4A;text-align:center';
@@ -2582,23 +2591,23 @@ function renderBolaoClassificacao() {
 function renderBolaoChave() {
   var cont=document.getElementById('bolao-cnt'); if(!cont) return;
   var fases=[
-    {id:'rodada32',l:'Rodada de 32  ·  Jul 4-8'},
-    {id:'oitavas',l:'Oitavas de Final  ·  Jul 10-13'},
-    {id:'quartas',l:'Quartas de Final  ·  Jul 17-18'},
-    {id:'semi',l:'Semifinais  ·  Jul 21-22'},
-    {id:'semifinal',l:'Semifinais (2ª rodada)  ·  Jul 25'},
-    {id:'terceiro',l:'🥉 Disputa de 3º Lugar  ·  Jul 25'},
-    {id:'final',l:'🏆 Grande Final  ·  Jul 26'}
+    {id:'rodada32',l:'Rodada de 32  ·  Jun 28 - Jul 3'},
+    {id:'oitavas',l:'Oitavas de Final  ·  Jul 4-7'},
+    {id:'quartas',l:'Quartas de Final  ·  Jul 9-11'},
+    {id:'semi',l:'Semifinais  ·  Jul 14-15'},
+    {id:'terceiro',l:'🥉 Disputa de 3º Lugar  ·  Jul 18'},
+    {id:'final',l:'🏆 Grande Final  ·  Jul 19'}
   ];
+  var TEAMS=getBracketTeams();
   var h='<div style="background:#F8FAFC;border:1px solid #E5E7EB;border-radius:10px;padding:11px 13px;margin-bottom:12px;font-size:12px;color:#475569">';
-  h+='<strong style="color:#0F4C5C">📋 Como funciona:</strong> Os times aparecem quando a fase anterior terminar. Admin atualiza os duelos. Aposte nos placares quando disponível.</div>';
+  h+='<strong style="color:#0F4C5C">📋 Como funciona:</strong> Os times aparecem automaticamente conforme a fase anterior termina. Aposte nos placares quando disponível.</div>';
   fases.forEach(function(fase){
     var jogos=BOLAO_CHAVE.filter(function(j){return j.fase===fase.id;});
     if(!jogos.length) return;
     h+='<div class="bfase-ttl">'+fase.l+'</div>';
     jogos.forEach(function(j){
-      var casaEq=bolaoChaveEq[j.id+'_c']||null;
-      var visEq=bolaoChaveEq[j.id+'_v']||null;
+      var casaEq=TEAMS[j.id+'_c']||null;
+      var visEq=TEAMS[j.id+'_v']||null;
       var res=bolaoResultados[j.id];
       var enc=res!==null&&res!==undefined;
       var minha=bolaoApostas[j.id]||null;
@@ -2608,9 +2617,9 @@ function renderBolaoChave() {
       h+='<div class="bjogo">';
       h+='<span style="font-size:10px;color:#94A3B8;min-width:18px;font-weight:700">'+j.num+'</span>';
       h+='<div style="display:flex;align-items:center;gap:6px;flex:1">';
-      h+=(casaEq?'<span class="bslot def">'+flagImg(casaEq)+casaEq+'</span>':'<span class="bslot">'+j.cL+'</span>');
+      h+=(casaEq?'<span class="bslot def">'+flagImg(casaEq)+casaEq+'</span>':'<span class="bslot">'+labelSlot(j.cL)+'</span>');
       h+='<span style="font-size:11px;color:#94A3B8">×</span>';
-      h+=(visEq?'<span class="bslot def">'+flagImg(visEq)+visEq+'</span>':'<span class="bslot">'+j.vL+'</span>');
+      h+=(visEq?'<span class="bslot def">'+flagImg(visEq)+visEq+'</span>':'<span class="bslot">'+labelSlot(j.vL)+'</span>');
       h+='</div>';
       if (enc&&pts!==null) {
         var penTxt = (res.c===res.v&&res.pen) ? ' <span style="font-size:10px;color:#94A3B8">(pên: '+(res.pen==='c'?(casaEq||'casa'):(visEq||'visit.'))+')</span>' : '';
@@ -2622,7 +2631,7 @@ function renderBolaoChave() {
         h+='<span class="jogo-sep" style="font-size:14px;margin:0 3px">×</span>';
         h+='<input class="jogo-inp" type="number" min="0" max="20" value="'+(minha&&minha.v!==undefined&&minha.v!==''?minha.v:'')+'" placeholder="—" style="width:36px;height:36px;font-size:15px" data-jid="'+j.id+'" data-lado="v">';
         var empAposta=minha&&minha.c!==''&&minha.c!==undefined&&minha.v!==''&&minha.v!==undefined&&Number(minha.c)===Number(minha.v);
-        var labC=casaEq?flagImg(casaEq)+casaEq:j.cL, labV=visEq?flagImg(visEq)+visEq:j.vL;
+        var labC=casaEq?flagImg(casaEq)+casaEq:labelSlot(j.cL), labV=visEq?flagImg(visEq)+visEq:labelSlot(j.vL);
         h+='<div class="pen-row" data-penfor="'+j.id+'" style="'+(empAposta?'display:flex;':'display:none;')+'flex-basis:100%;align-items:center;gap:6px;margin-top:7px;padding-top:7px;border-top:1px dashed #E5E7EB">';
         h+='<span style="font-size:11px;color:#78350F;font-weight:700;white-space:nowrap">🥅 Empate! Quem se classifica?</span>';
         h+='<button class="pen-btn'+(minha&&minha.pen==='c'?' on':'')+'" data-lado="c" onclick="salvarPenalti(\''+j.id+'\',\'c\')">'+labC+'</button>';
